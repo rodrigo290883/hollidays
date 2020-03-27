@@ -23,7 +23,7 @@ namespace mvc_dotnet.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Politicas()
         {
             return View();
         }

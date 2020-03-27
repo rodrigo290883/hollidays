@@ -16,6 +16,15 @@ a {
   color: #fff;
   background-color: #1b6ec2;
   border-color: #1861ac;
+  
+}
+
+.btn-desconectate {
+  color: #fff;
+  background-color: #821c60;
+  border-color: #821c60;
+  font-family: Gotham;
+  font-weight: bold;
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
@@ -36,10 +45,10 @@ html {
 }
 
 .border-top {
-  border-top: 1px solid #e5e5e5;
+  border-top: 0px solid #e5e5e5;
 }
 .border-bottom {
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 0px solid #e5e5e5;
 }
 
 .box-shadow {
@@ -69,3 +78,26 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+.navbar{
+  background-image: url("../images/bar_01.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: #e5e5e5;
+  font-family:Gotham; 
+}
+
+  @font-face {
+    font-family: Gotham;
+    src: url("Gotham-Font/GothamBook.ttf");
+	}
+	@font-face {
+    font-family: Gotham;
+    font-weight: bold;
+    src: url("Gotham-Font/GothamBold.ttf");
+	}
+	
+	
+	*{
+		font-family: Gotham;	
+	}

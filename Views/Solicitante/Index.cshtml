@@ -1,0 +1,46 @@
+@{
+    ViewData["Title"] = "Solicitante|Desconéctate";
+}
+
+<style>
+    body{
+        background-image: url("images/doodle-background.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: bottom right; 
+    }
+
+    #i_doodle{
+        width:30%;
+        position:absolute;
+        bottom:0px;
+        right:0px;
+    }
+</style>
+
+<link rel="stylesheet" href="lib/simple-calendar/dist/simple-calendar.css" />
+
+<div>
+    <img id="i_doodle" src="images/imagen.png">
+</div>
+
+<div class="container">
+    <div class="row">
+        <div id="d_calendar" class="col-4">
+
+        </div>
+    </div>
+</div>
+
+<script src="lib/simple-calendar/dist/jquery.simple-calendar.js"></script>
+
+<script>
+    $(function() {
+        $("#d_calendar").simpleCalendar({
+        //Defaults options below
+        //string of months starting from january
+        months: ['enero','febrero','marzo','abil','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'],
+        days: ['domingo','lunes','martes','miercoles','jueves','viernes','sabado']}
+        );
+    });
+</script>
