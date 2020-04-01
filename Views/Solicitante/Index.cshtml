@@ -1,5 +1,6 @@
 @{
     ViewData["Title"] = "Solicitante|Desconéctate";
+
 }
 
 <style>
@@ -8,6 +9,7 @@
         background-repeat: no-repeat;
         background-size: cover;
         background-position: bottom right; 
+        color : #5c2a7e;
     }
 
     #i_doodle{
@@ -15,6 +17,10 @@
         position:absolute;
         bottom:0px;
         right:0px;
+    }
+
+    .b_data{
+        color: 
     }
 </style>
 
@@ -26,8 +32,53 @@
 
 <div class="container">
     <div class="row">
-        <div id="d_calendar" class="col-4">
+        <div class="col-6">
+            
+                <div class="row" style="color:#b41547;">
+                    <h3 class="font-weight-bold">Juan Alberto Rodriguez Trejo</h3>
+                    <h4>IDSAP: 2839430</h4>
+                </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6"><b>ANTIGÜEDAD:</b></div>
+                    <div class="col-6"><b>FECHA ANIVERSARIO:</b></div>
+                </div>
+                <div class="row">
+                    <div class="col-6"><b>DÍAS POR DISFRUTAR:</b></div>
+                    <div class="col-6"><b>DÍAS CADUCAN:</b></div>
+                </div>
+                <div class="row">
+                    <div class="col-6"><b>DÍAS TOMADOS:</b></div>
+                    <div class="col-6"><b>PERIODO:</b></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="container" id="d_calendar"></div>
+        </div>
+    </div>
+    <div class="row">
+        
+    </div>
+    <div class="row">
+        <div class="col-10">
+            <table class="table table-striped">
+                <thead>
+                    <th>FOLIO</th>
+                    <th>TIPO</th>
+                    <th>FECHA INICIO</th>
+                    <th>FECHA FIN</th>
+                    <th>APROBADOR</th>
+                    <th>ESTATUS</th>
+                </thead>
+                <tbody>
 
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
@@ -36,11 +87,18 @@
 
 <script>
     $(function() {
+        var vacaciones = new Array();
+
         $("#d_calendar").simpleCalendar({
         //Defaults options below
         //string of months starting from january
-        months: ['enero','febrero','marzo','abil','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'],
-        days: ['domingo','lunes','martes','miercoles','jueves','viernes','sabado']}
-        );
+        months: ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'],
+        days: ['domingo','lunes','martes','miercoles','jueves','viernes','sabado'],
+        onDateSelect: function (date, events) {
+            //Se agrega la fecha al array de vacaciones
+            //Falta agregar una validacion para remover y no repetir fechas.
+            vacaciones.push(date); 
+            console.log(vacaciones);}
+        });
     });
 </script>

@@ -1,23 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/var/www/html/mvc_dotnet/mvc_dotnet.csproj": {}
+    "/Users/rodrigolira/Proyectos/hollidays/mvc_dotnet.csproj": {}
   },
   "projects": {
-    "/var/www/html/mvc_dotnet/mvc_dotnet.csproj": {
+    "/Users/rodrigolira/Proyectos/hollidays/mvc_dotnet.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/var/www/html/mvc_dotnet/mvc_dotnet.csproj",
+        "projectUniqueName": "/Users/rodrigolira/Proyectos/hollidays/mvc_dotnet.csproj",
         "projectName": "mvc_dotnet",
-        "projectPath": "/var/www/html/mvc_dotnet/mvc_dotnet.csproj",
-        "packagesPath": "/home/rodrigo/.nuget/packages/",
-        "outputPath": "/var/www/html/mvc_dotnet/obj/",
+        "projectPath": "/Users/rodrigolira/Proyectos/hollidays/mvc_dotnet.csproj",
+        "packagesPath": "/Users/rodrigolira/.nuget/packages/",
+        "outputPath": "/Users/rodrigolira/Proyectos/hollidays/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "/usr/share/dotnet/sdk/NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "/home/rodrigo/.nuget/NuGet/NuGet.Config"
+          "/Users/rodrigolira/.config/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
@@ -56,7 +53,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.201/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.1.200/RuntimeIdentifierGraph.json"
         }
       }
     }

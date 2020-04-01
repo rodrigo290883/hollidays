@@ -3,8 +3,8 @@
   overflow: hidden;
   text-transform: capitalize;
   text-align: center;
-  font: 15px/1em inherit;
-  color: #545A5C; }
+  font: 14px/1em inherit;
+  }
   .calendar a {
     text-decoration: none;
     color: inherit; }
@@ -43,13 +43,14 @@
       transform: rotate(45deg); }
   .calendar header .month {
     padding: 0;
-    margin: 0; }
+    margin: 0; 
+    color:#b41547;}
     .calendar header .month .year {
       font-size: 0.6em;
       font-weight: 100; }
   .calendar table {
     width: 100%;
-    margin: 20px 0;
+    margin: 10px 0;
     border-spacing: 0px; }
   .calendar thead {
     font-size: 1.0em;
@@ -84,7 +85,7 @@
       width: 4px;
       height: 4px;
       border-radius: 50%;
-      background: #6691CC; }
+      background: #b41547; }
     .calendar .day.disabled {
       cursor: default; }
       .calendar .day.disabled:hover {
