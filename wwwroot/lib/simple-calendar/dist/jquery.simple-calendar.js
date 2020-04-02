@@ -156,10 +156,14 @@
         var date = new Date($(this).data('date'));
         var events = plugin.getDateEvents(date);
         if (!$(this).hasClass('disabled')) {
-          if (!$(this).hasClass("has-event"))
-            $(this).addClass("has-event");
-          else
-            $(this).removeClass("has-event");
+            if (!$(this).hasClass("has-event")) {
+                $(this).addClass("has-event");
+                
+            }
+            else {
+                $(this).removeClass("has-event");
+                
+            }
           //plugin.fillUp(e.pageX, e.pageY);
           //plugin.displayEvents(events);
         }

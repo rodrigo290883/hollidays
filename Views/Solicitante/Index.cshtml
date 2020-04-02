@@ -62,7 +62,8 @@
         </div>
     </div>
     <div class="row">
-        
+        <div class="col-4">FECHA INICIO:<p id="p_fecha_inicio"></p></div>
+        <div class="col-4">FECHA FIN:<p id="p_fecha_fin"></p></div>
     </div>
     <div class="row">
         <div class="col-10">
@@ -97,8 +98,21 @@
         onDateSelect: function (date, events) {
             //Se agrega la fecha al array de vacaciones
             //Falta agregar una validacion para remover y no repetir fechas.
-            vacaciones.push(date); 
-            console.log(vacaciones);}
+            var fecha = date.valueOf();
+            if (vacaciones.indexOf(fecha) == -1) {
+                vacaciones.push(fecha);
+            }
+            else {
+                vacaciones.splice(vacaciones.indexOf(fecha), 1);
+            }
+            vacaciones.sort(function (a, b) { return a - b });
+            var fecha_inicio = new Date(vacaciones[0]);
+            var fecha_fin = new Date(vacaciones[vacaciones.length - 1]);
+            $("#p_fecha_inicio").html(fecha_inicio.toISOString());
+            $("#p_fecha_fin").html(fecha_fin.toISOString());
+
+            console.log(vacaciones);
+            }
         });
     });
 </script>
