@@ -25,6 +25,7 @@
 </style>
 
 <link rel="stylesheet" href="lib/simple-calendar/dist/simple-calendar.css" />
+<link rel="stylesheet" href="lib/bootstrap-select/dist/css/bootstrap-select.css" />
 
 <div>
     <img id="i_doodle" src="images/imagen.png">
@@ -44,42 +45,51 @@
         <div class="col-8">
             
             <div class="row">
-                <div class="col-6"><b>ANTIGÜEDAD:</b></div>
-                <div class="col-6"><b>FECHA ANIVERSARIO:</b></div>
+                <div class="col-6 font-weight-bold">ANTIGÜEDAD:</div>
+                <div class="col-6 font-weight-bold">FECHA ANIVERSARIO:</div>
             </div>
             <div class="row">
-                <div class="col-6"><b>DÍAS POR DISFRUTAR:</b></div>
-                <div class="col-6"><b>DÍAS CADUCAN:</b></div>
+                <div class="col-6 font-weight-bold">DÍAS POR DISFRUTAR:</div>
+                <div class="col-6 font-weight-bold">DÍAS CADUCAN:</div>
             </div>
             <div class="row">
-                <div class="col-6"><b>DÍAS TOMADOS:</b></div>
-                <div class="col-6"><b>PERIODO:</b></div>
+                <div class="col-6 font-weight-bold">DÍAS TOMADOS:</div>
+                <div class="col-6 font-weight-bold">PERIODO:</div>
             </div>
            
         </div> 
     </div>
 
-    <div class="row">
-        <div class="col-8">
+    <div class="row mt-5">
+        <div class="col-4">
             <div class="container">
                 <div class="row">
-                    <div class="col-6">
-                        <label for="FormControlSelect">Selecciona una opcion</label>
-                        <select class="form-control">
+                    <div class="dropdown col-12">
+                        <label for="FormControlSelect" class="font-weight-bold">SELECCIONA TU DESCONECTE:</label>
+                        <select class="selectpicker">
                             <option value="1">VACACIONES</option>
-                            <option value="2">PERMISO MATERNIDAD</option>
-                            <option value="3">PERMISO PATERNIDAD</option>
+                            <option value="2">ADELANTO VACACIONES</option>
+                            <option value="3">PERMISO MATERNIDAD</option>
+                            <option value="4">PERMISO PATERNIDAD</option>
                         </select>
                     </div>
-                </div>
-                <div class="row mt-2">
-                    <div class="col-6">FECHA INICIO:<p id="p_fecha_inicio"></p></div>
-                    <div class="col-6">FECHA FIN:<p id="p_fecha_fin"></p></div>
                 </div>
             </div>
         </div>
         <div class="col-4">
+            <label for="FormControlSelect" class="font-weight-bold">SELECCIONA INICIO Y FIN DE TU DESCONECTE:</label>
             <div id="d_calendar"></div>
+        </div>
+        <div class="col-4">
+            <div class="row mt-5">
+                <div class="col-6 font-weight-bold">FECHA INICIO:<p id="p_fecha_inicio"></p></div>
+                <div class="col-6 font-weight-bold">FECHA FIN:<p id="p_fecha_fin"></p></div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-6 d-flex justify-content-center">
+                    <input type="submit" class="btn btn-desconectate" value="SOLICITAR" />
+                </div>
+            </div>
         </div>
     </div>
     
@@ -105,6 +115,7 @@
 </div>
 
 <script src="lib/simple-calendar/dist/jquery.simple-calendar.js"></script>
+<script src="lib/bootstrap-select/dist/js/bootstrap-select.js"></script>
 
 <script>
     $(function() {
@@ -125,11 +136,20 @@
             else {
                 vacaciones.splice(vacaciones.indexOf(fecha), 1);
             }
-            vacaciones.sort(function (a, b) { return a - b });
-            var fecha_inicio = new Date(vacaciones[0]);
-            var fecha_fin = new Date(vacaciones[vacaciones.length - 1]);
-            $("#p_fecha_inicio").html(fecha_inicio.toISOString());
-            $("#p_fecha_fin").html(fecha_fin.toISOString());
+
+            if (vacaciones.length != 0) {
+                vacaciones.sort(function (a, b) { return a - b });
+                var fecha_inicio = new Date(vacaciones[0]);
+                var fecha_fin = new Date(vacaciones[vacaciones.length - 1]);
+                $("#p_fecha_inicio").html(fecha_inicio.toISOString().substr(0,10));
+                $("#p_fecha_fin").html(fecha_fin.toISOString().substr(0,10));
+            } else {
+                $("#p_fecha_inicio").html('');
+                $("#p_fecha_fin").html('');
+            }
+            
+            
+            
 
             console.log(vacaciones);
             }
