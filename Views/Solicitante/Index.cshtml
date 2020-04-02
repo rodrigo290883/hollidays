@@ -41,30 +41,50 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-6">
+        <div class="col-8">
+            
+            <div class="row">
+                <div class="col-6"><b>ANTIGÜEDAD:</b></div>
+                <div class="col-6"><b>FECHA ANIVERSARIO:</b></div>
+            </div>
+            <div class="row">
+                <div class="col-6"><b>DÍAS POR DISFRUTAR:</b></div>
+                <div class="col-6"><b>DÍAS CADUCAN:</b></div>
+            </div>
+            <div class="row">
+                <div class="col-6"><b>DÍAS TOMADOS:</b></div>
+                <div class="col-6"><b>PERIODO:</b></div>
+            </div>
+           
+        </div> 
+    </div>
+
+    <div class="row">
+        <div class="col-8">
             <div class="container">
                 <div class="row">
-                    <div class="col-6"><b>ANTIGÜEDAD:</b></div>
-                    <div class="col-6"><b>FECHA ANIVERSARIO:</b></div>
+                    <div class="col-6">
+                        <label for="FormControlSelect">Selecciona una opcion</label>
+                        <select class="form-control">
+                            <option value="1">VACACIONES</option>
+                            <option value="2">PERMISO MATERNIDAD</option>
+                            <option value="3">PERMISO PATERNIDAD</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="row">
-                    <div class="col-6"><b>DÍAS POR DISFRUTAR:</b></div>
-                    <div class="col-6"><b>DÍAS CADUCAN:</b></div>
-                </div>
-                <div class="row">
-                    <div class="col-6"><b>DÍAS TOMADOS:</b></div>
-                    <div class="col-6"><b>PERIODO:</b></div>
+                <div class="row mt-2">
+                    <div class="col-6">FECHA INICIO:<p id="p_fecha_inicio"></p></div>
+                    <div class="col-6">FECHA FIN:<p id="p_fecha_fin"></p></div>
                 </div>
             </div>
         </div>
         <div class="col-4">
-            <div class="container" id="d_calendar"></div>
+            <div id="d_calendar"></div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-4">FECHA INICIO:<p id="p_fecha_inicio"></p></div>
-        <div class="col-4">FECHA FIN:<p id="p_fecha_fin"></p></div>
-    </div>
+    
+
+
     <div class="row">
         <div class="col-10">
             <table class="table table-striped">
