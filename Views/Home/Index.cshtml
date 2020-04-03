@@ -60,13 +60,11 @@
             $('#d_start').hide(500,function(){
                 $('#d_form').show(500);
             });
-            
+
         });
 
         $('#frmAccs').submit(function (e) {
             e.preventDefault();
-
-            alert('submit');
 
             url = "@Url.Content("~/Home/Entrar")"
             parametros = $(this).serialize();
