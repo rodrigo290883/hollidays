@@ -1,11 +1,10 @@
 ﻿<Properties StartupConfiguration="{7790088E-0614-4C17-803A-0678261CD006}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Views/Administracion/Index.cshtml">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Views/Aprobador/Index.cshtml">
     <Files>
-      <File FileName="Views/Administracion/Index.cshtml" Line="50" Column="25" />
-      <File FileName="Controllers/AdministracionController.cs" />
-      <File FileName="Views/Shared/_ValidationScriptsPartial.cshtml" />
-      <File FileName="Views/Shared/_LayoutSession.cshtml" />
-      <File FileName="wwwroot/css/site.css" />
+      <File FileName="Views/Solicitante/Index.cshtml" Line="45" Column="65" />
+      <File FileName="Views/Home/Index.cshtml" Line="46" Column="92" />
+      <File FileName="Views/Administracion/Index.cshtml" Line="108" Column="26" />
+      <File FileName="Views/Aprobador/Index.cshtml" Line="40" Column="29" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -20,10 +19,10 @@
               <Node name="Models" expanded="True" />
               <Node name="Properties" expanded="True" />
               <Node name="Views" expanded="True">
-                <Node name="Administracion" expanded="True">
+                <Node name="Administracion" expanded="True" />
+                <Node name="Aprobador" expanded="True">
                   <Node name="Index.cshtml" selected="True" />
                 </Node>
-                <Node name="Aprobador" expanded="True" />
                 <Node name="Home" expanded="True" />
                 <Node name="Shared" expanded="True" />
                 <Node name="Solicitante" expanded="True" />
