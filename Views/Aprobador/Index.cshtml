@@ -1,0 +1,104 @@
+﻿@{
+    ViewData["Title"] = "Aprobador|Desconéctate";
+}
+
+<style>
+
+
+    body {
+        background-image: url("images/doodle-background.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: bottom right;
+        color: #5c2a7e;
+    }
+
+    #i_doodle {
+        width: 30%;
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+    }
+
+    .b_data {
+    }
+</style>
+
+<link rel="stylesheet" href="lib/bootstrap-select/dist/css/bootstrap-select.css" />
+
+<div>
+    <img id="i_doodle" src="images/imagen.png">
+</div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-6" style="color:#b41547;">
+                    <h3 class="font-weight-bold">Maribel Rodriguez Alcocer</h3>
+                    <h4>IDSAP: 48393</h4>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-12">
+                <Strong><span style="font-size:x-large;">Solicitudes Hechas</span></Strong>
+                <table class="table table-striped">
+                    <thead style="background-color: #821c61; color: white;">
+                        <tr>
+                            <th scope="col">ID SOLICITUD</th>
+                            <th>NOMBRE</th>
+                            <th scope="col">SOLICITUD</th>
+                            <th scope="col">FECHA INICIO</th>
+                            <th scope="col">FECHA FINAL</th>
+                            <th scope="col">ESTATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>Maria Perez</td>
+                            <td>Con goze</td>
+                            <td>06/04/2020</td>
+                            <td>08/04/2020</td>
+                            <td>
+                                <select class="selectpicker">
+                                    <option value="0">Pendiente</option>
+                                    <option value="1">Aprobado</option>
+                                    <option value="2">Rechazado</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>Juan Lopez</td>
+                            <td>Vacaciones</td>
+                            <td>16/04/2020</td>
+                            <td>20/04/2020</td>
+                            <td>
+                                <select class="selectpicker">
+                                    <option value="0">Pendiente</option>
+                                    <option value="1">Aprobado</option>
+                                    <option value="2">Rechazado</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>Enrique Sanchez</td>
+                            <td>Con goze</td>
+                            <td>06/04/2020</td>
+                            <td>08/04/2020</td>
+                            <td>
+                                <select class="selectpicker">
+                                    <option value="0">Pendiente</option>
+                                    <option value="1">Aprobado</option>
+                                    <option value="2">Rechazado</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="lib/bootstrap-select/dist/js/bootstrap-select.js"></script>

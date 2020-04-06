@@ -6,6 +6,8 @@
 
   <ItemGroup>
     <Folder Include="Views\Solicitante\" />
+    <Folder Include="Views\Aprobador\" />
+    <Folder Include="Views\Administracion\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.3" />

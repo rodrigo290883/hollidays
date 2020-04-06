@@ -55,7 +55,7 @@
 
 <script>
     $(function() {
-        //$('#a_form').hide();
+        
         $('#a_start').click(function(){
             $('#d_start').hide(500,function(){
                 $('#d_form').show(500);
@@ -71,7 +71,7 @@
 
             $.post(url, parametros, function (data) {
                 if (data == "1") {
-                    document.location.href = "@Url.Content("~/")";
+                    document.location.href = "@Url.Content("~/Solicitante")";
                 } else {
                     alert(data);
                 }

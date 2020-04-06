@@ -34,22 +34,8 @@ namespace mvc_dotnet.Controllers
             try
             {
                 
-                using (DesconectateContext db = new DesconectateContext())
-                {
-                    var lista = from d in db.Empleados
-                                where d.email == usuario && d.contrasena == contrasena && d.estatus == 1
-                                select d;
-
-                    if (lista.Count() > 0)
-                    {
-                        Session = lista.First();
-                        return Content("1");
-                    }
-                    else
-                    {
-                        return Content("Datos incorrectos");
-                    }
-                }
+                return Content("1");
+                    
             }
             catch (Exception ex)
             {

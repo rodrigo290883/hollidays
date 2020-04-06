@@ -1,0 +1,54 @@
+﻿@{
+    ViewData["Title"] = "Administración|Desconéctate";
+}
+
+<style>
+
+    body {
+        background-image: url("images/doodle-background.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: bottom right;
+        color: #5c2a7e;
+    }
+
+    #i_doodle {
+        width: 30%;
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+    }
+
+</style>
+
+<div>
+    <img id="i_doodle" src="images/imagen.png">
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-10">
+            <label for="filtro_idsap">Buscar:</label>
+            <input class="form-control" id="filtro_idsap" name="filtro_idsap" placeholder="Tu Busqueda..." />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-10">
+            <table class="table table-striped">
+                <thead style="background-color: #821c61; color: white;">
+                    <tr>
+                        <th scope="col">IDSAP</th>
+                        <th>NOMBRE</th>
+                        <th scope="col">AREA</th>
+                        <th scope="col">PUESTO</th>
+                        <th scope="col">NO POLIZA</th>
+                        <th scope="col">DESCARGA</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

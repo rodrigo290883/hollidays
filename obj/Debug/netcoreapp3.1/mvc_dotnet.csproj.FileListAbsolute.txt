@@ -38,6 +38,7 @@
 /var/www/html/mvc_dotnet/obj/Debug/netcoreapp3.1/Razor/Views/Solicitante/Index.cshtml.g.cs
 /Users/rodrigolira/Proyectos/hollidays/bin/Debug/netcoreapp3.1/appsettings.Development.json
 /Users/rodrigolira/Proyectos/hollidays/bin/Debug/netcoreapp3.1/appsettings.json
+/Users/rodrigolira/Proyectos/hollidays/bin/Debug/netcoreapp3.1/mono_crash.42f6ec1fa.0.json
 /Users/rodrigolira/Proyectos/hollidays/bin/Debug/netcoreapp3.1/Properties/launchSettings.json
 /Users/rodrigolira/Proyectos/hollidays/bin/Debug/netcoreapp3.1/mvc_dotnet.deps.json
 /Users/rodrigolira/Proyectos/hollidays/bin/Debug/netcoreapp3.1/mvc_dotnet.runtimeconfig.json
@@ -85,10 +86,13 @@
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/mvc_dotnet.TagHelpers.input.cache
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/mvc_dotnet.TagHelpers.output.cache
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/mvc_dotnet.RazorCoreGenerate.cache
+/Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/Administracion/Index.cshtml.g.cs
+/Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/Aprobador/Index.cshtml.g.cs
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/Home/Index.cshtml.g.cs
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/Home/Privacy.cshtml.g.cs
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/Shared/Error.cshtml.g.cs
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/Shared/_Layout.cshtml.g.cs
+/Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/Shared/_LayoutSession.cshtml.g.cs
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/Shared/_ValidationScriptsPartial.cshtml.g.cs
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/Solicitante/Index.cshtml.g.cs
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/_ViewImports.cshtml.g.cs
@@ -102,5 +106,3 @@
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/mvc_dotnet.dll
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/mvc_dotnet.pdb
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/mvc_dotnet.genruntimeconfig.cache
-/Users/rodrigolira/Proyectos/hollidays/bin/Debug/netcoreapp3.1/mono_crash.42f6ec1fa.0.json
-/Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/mvc_dotnet.csprojAssemblyReference.cache
