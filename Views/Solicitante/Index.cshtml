@@ -19,8 +19,11 @@
         right:0px;
     }
 
-    .b_data{
-        
+    #i_avatar {
+        width: 200px;
+        position: absolute;
+        top: 0px;
+        left: -200px;
     }
 </style>
 
@@ -33,14 +36,17 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-6">
-            
-                <div class="row" style="color:#b41547;">
-                    <h3 class="font-weight-bold">Juan Alberto Rodriguez Trejo</h3>
-                    <h4>IDSAP: 2839430</h4>
-                </div>
+        <div class="col-1">
+            <img id="i_avatar" src="images/Avatar.gif" />
         </div>
-        <div class="col-6 text-center">
+        <div class="col-6" style="color:#b41547;">
+            
+                
+                    <h3 class="font-weight-bold">Victoria Rodriguez Trejo</h3>
+                    <h4>IDSAP: 2839430</h4>
+                
+        </div>
+        <div class="col-5 text-center">
             <h4>Descargar Póliza de Seguro</h4>
             <button id="b_descargar" class="btn btn-desconectate" >DESCARGAR</button>
         </div>
@@ -49,16 +55,16 @@
         <div class="col-8">
             
             <div class="row">
-                <div class="col-6 font-weight-bold">ANTIGÜEDAD:</div>
-                <div class="col-6 font-weight-bold">FECHA ANIVERSARIO:</div>
+                <div class="col-6 font-weight-bold">ANTIGÜEDAD: 3 AÑOS</div>
+                <div class="col-6 font-weight-bold">FECHA ANIVERSARIO: 21 OCTUBRE</div>
             </div>
             <div class="row">
-                <div class="col-6 font-weight-bold">DÍAS POR DISFRUTAR:</div>
-                <div class="col-6 font-weight-bold">DÍAS CADUCAN:</div>
+                <div class="col-6 font-weight-bold">DÍAS POR DISFRUTAR: 11</div>
+                <div class="col-6 font-weight-bold">DÍAS CADUCAN: 22 OCTUBRE</div>
             </div>
             <div class="row">
-                <div class="col-6 font-weight-bold">DÍAS TOMADOS:</div>
-                <div class="col-6 font-weight-bold">PERIODO:</div>
+                <div class="col-6 font-weight-bold">DÍAS TOMADOS: 2</div>
+                <div class="col-6 font-weight-bold">PERIODO: 2019</div>
             </div>
            
         </div> 
@@ -104,7 +110,7 @@
             <table class="table table-striped">
                 <thead style="background-color: #821c61; color: white;">
                     <th>FOLIO</th>
-                    <th>TIPO</th>
+                    <th>SOLICITUD</th>
                     <th>FECHA INICIO</th>
                     <th>FECHA FIN</th>
                     <th>APROBADOR</th>
@@ -124,6 +130,8 @@
 <script>
     $(function() {
         var vacaciones = new Array();
+        var disfrutar = 11;
+        var bandera = 0;
 
         $("#d_calendar").simpleCalendar({
         //Defaults options below
@@ -143,6 +151,24 @@
 
             if (vacaciones.length != 0) {
                 vacaciones.sort(function (a, b) { return a - b });
+                // se cuentan los dias habiles
+                var cont = 0;
+                for (var i = 0; i < vacaciones.length; i++) {
+                    var aux = vacaciones[i];
+                    var dia = new Date(aux);
+                    var dia_sem = dia.getDay();
+                    if (dia_sem > 0 && dia_sem < 6)
+                        cont++;
+                }
+
+                if (cont > disfrutar) {
+                    alert('tu seleccion sobrepasa los dias permitidos.');
+                    bandera = 1;
+                }
+                else {
+                    bandera = 0;
+                }
+                // se cuentan los dias habiles
                 var fecha_inicio = new Date(vacaciones[0]);
                 var fecha_fin = new Date(vacaciones[vacaciones.length - 1]);
                 $("#p_fecha_inicio").html(fecha_inicio.toISOString().substr(0,10));

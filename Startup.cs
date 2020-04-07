@@ -6,11 +6,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using mvc_dotnet.Data;
+
 
 namespace mvc_dotnet
 {
@@ -32,10 +31,6 @@ namespace mvc_dotnet
             {
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-
-            services.AddDbContext<DesconectateContext>(options => {
-            options.UseSqlServer(Configuration.GetConnectionString("MyConnection"));
             });
 
             services.AddMvc();

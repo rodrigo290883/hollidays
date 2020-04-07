@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using mvc_dotnet.Data;
 using mvc_dotnet.Models;
 
 namespace mvc_dotnet.Controllers

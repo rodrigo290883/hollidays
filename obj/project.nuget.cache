@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "b0L6TEnhzuVxMkoRnak8erWZi2TQuznXTHOANTXPQvDYKalfbm4Gf4613598hd60L8e2Z2fSpDfdyEsiko4aAw==",
+  "dgSpecHash": "kTL4SDRrCeANVZaDdSfIXsx2DvZtPtFkh2+2+T1e7VDxrKqiCrW/qbT7L7UNQjzH0nfLEoc7hi/n/DgWopkd7g==",
   "success": true,
-  "projectFilePath": "/var/www/html/mvc_dotnet/mvc_dotnet.csproj",
+  "projectFilePath": "/Users/rodrigolira/Proyectos/hollidays/mvc_dotnet.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
