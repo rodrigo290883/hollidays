@@ -78,3 +78,12 @@
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/mvc_dotnet.genruntimeconfig.cache
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/mvc_dotnet.csprojAssemblyReference.cache
 /Users/rodrigolira/Proyectos/hollidays/bin/Debug/netcoreapp3.1/mono_crash.42f6ec1fa.1.json
+/Users/rodrigolira/Proyectos/hollidays/bin/Debug/netcoreapp3.1/System.Configuration.ConfigurationManager.dll
+/Users/rodrigolira/Proyectos/hollidays/bin/Debug/netcoreapp3.1/System.Data.SqlClient.dll
+/Users/rodrigolira/Proyectos/hollidays/bin/Debug/netcoreapp3.1/System.Security.Cryptography.ProtectedData.dll
+/Users/rodrigolira/Proyectos/hollidays/bin/Debug/netcoreapp3.1/runtimes/win-arm64/native/sni.dll
+/Users/rodrigolira/Proyectos/hollidays/bin/Debug/netcoreapp3.1/runtimes/win-x64/native/sni.dll
+/Users/rodrigolira/Proyectos/hollidays/bin/Debug/netcoreapp3.1/runtimes/win-x86/native/sni.dll
+/Users/rodrigolira/Proyectos/hollidays/bin/Debug/netcoreapp3.1/runtimes/unix/lib/netcoreapp2.1/System.Data.SqlClient.dll
+/Users/rodrigolira/Proyectos/hollidays/bin/Debug/netcoreapp3.1/runtimes/win/lib/netcoreapp2.1/System.Data.SqlClient.dll
+/Users/rodrigolira/Proyectos/hollidays/bin/Debug/netcoreapp3.1/runtimes/win/lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll

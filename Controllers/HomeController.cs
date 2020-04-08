@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Configuration;
+using System.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using mvc_dotnet.Models;
@@ -9,13 +14,17 @@ namespace mvc_dotnet.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+       
 
         public object Session { get; private set; }
 
-        public HomeController(ILogger<HomeController> logger)
+       
+
+        private readonly IConfiguration _configuration;
+
+        public HomeController(IConfiguration configuration)
         {
-            _logger = logger;
+            _configuration = configuration;
         }
 
         public IActionResult Index()
@@ -32,8 +41,21 @@ namespace mvc_dotnet.Controllers
         {
             try
             {
+                string connString = _configuration.GetConnectionString("MyConnection"); // Read the connection string from the web.config file
+                using (SqlConnection conn = new SqlConnection(connString))
+                {
                 
-                return Content("1");
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("Select count(*) from Empleados where email='" + usuario + "' and contrasena='" + contrasena + "'", conn);
+                    if (Convert.ToBoolean(cmd.ExecuteScalar())){
+                        return Content("1");
+                    }
+                    else
+                    {
+                        return Content("No se encontro el usuario o password incorrecto");
+                    }
+                }
+                //return Content("1");
                     
             }
             catch (Exception ex)
