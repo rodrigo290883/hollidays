@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Desconéctate";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
@@ -73,7 +74,7 @@
                 if (data == "1") {
                     document.location.href = "@Url.Content("~/Solicitante")";
                 } else {
-                    alert(data);
+                    swal("Ocurrio un Error", data, "error");
                 }
             });
         });

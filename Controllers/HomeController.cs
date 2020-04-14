@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Session;
 using Microsoft.Extensions.Logging;
 using mvc_dotnet.Models;
 
@@ -16,11 +18,12 @@ namespace mvc_dotnet.Controllers
     {
        
 
-        public object Session { get; private set; }
+  
 
        
 
         private readonly IConfiguration _configuration;
+
 
         public HomeController(IConfiguration configuration)
         {
@@ -48,6 +51,7 @@ namespace mvc_dotnet.Controllers
                     conn.Open();
                     SqlCommand cmd = new SqlCommand("Select count(*) from Empleados where email='" + usuario + "' and contrasena='" + contrasena + "'", conn);
                     if (Convert.ToBoolean(cmd.ExecuteScalar())){
+                        
                         return Content("1");
                     }
                     else
@@ -60,7 +64,7 @@ namespace mvc_dotnet.Controllers
             }
             catch (Exception ex)
             {
-                return Content("Ocurrio un error" + ex.Message);
+                return Content(ex.Message);
             }
         }
 
