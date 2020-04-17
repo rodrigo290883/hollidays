@@ -9,6 +9,16 @@
     <link rel="stylesheet" href="~/css/site.css" />
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <style>
+
+        #i_logo {
+            width: 100px;
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -37,7 +47,15 @@
 
     <footer class="border-top-0 footer text-muted">
         <div class="container">
-            &copy; 2020 - Desconéctate- <a asp-area="" asp-controller="Home" asp-action="Politicas">Políticas</a>
+            <div class="row">
+                <div class="col-1">
+                    <img id="i_logo" src="images/Beneficios_Modelo.png" />
+                </div>
+                <div class="col-6">
+                    &copy; 2020 - Desconéctate- <a asp-area="" asp-controller="Home" asp-action="Politicas">Políticas</a>
+                </div>
+            </div>
+            
         </div>
     </footer>
     

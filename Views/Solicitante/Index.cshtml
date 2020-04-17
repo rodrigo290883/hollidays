@@ -48,7 +48,7 @@
                 
         </div>
         <div class="col-5 text-center">
-            <h4>Descargar Póliza de Seguro</h4>
+            <h4>DESCARGA TU PÓLIZA DE GMM</h4>
             <button id="b_descargar" class="btn btn-desconectate" >DESCARGAR</button>
         </div>
     </div>
@@ -80,6 +80,7 @@
                         <select class="selectpicker">
                             <option value="1">VACACIONES</option>
                             <option value="2">ADELANTO VACACIONES</option>
+                            <option value="5">PERMISO</option>
                             <option value="3">PERMISO MATERNIDAD</option>
                             <option value="4">PERMISO PATERNIDAD</option>
                         </select>
@@ -98,7 +99,7 @@
             </div>
             <div class="row mt-2">
                 <div class="col-6 text-center">
-                    <input type="submit" class="btn btn-desconectate" value="SOLICITAR" />
+                    <input id="b_solicitar" type="submit" class="btn btn-desconectate" value="SOLICITAR" />
                 </div>
             </div>
         </div>
@@ -134,9 +135,19 @@
         var disfrutar = 11;
         var bandera = 0;
 
+        $("#b_solicitar").click(function () {
+            if (bandera == 0) {
+                swal("Felicidades", "Tu solicitud se registro Correctamente", "success");
+            }
+            else {
+                swal("Cuidado", "Tu seleccion sobrepasa los dias permitidos", "warning");
+            }
+        });
+
         $("#d_calendar").simpleCalendar({
         //Defaults options below
         //string of months starting from january
+
         months: ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'],
         days: ['domingo','lunes','martes','miercoles','jueves','viernes','sabado'],
         onDateSelect: function (date, events) {
@@ -163,7 +174,7 @@
                 }
 
                 if (cont > disfrutar) {
-                    alert('tu seleccion sobrepasa los dias permitidos.');
+                    swal("Cuidado","Tu seleccion sobrepasa los dias permitidos", "warning");
                     bandera = 1;
                 }
                 else {
@@ -179,10 +190,7 @@
                 $("#p_fecha_fin").html('');
             }
             
-            
-            
-
-            console.log(vacaciones);
+            //console.log(vacaciones);
             }
         });
     });

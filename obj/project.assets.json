@@ -648,6 +648,15 @@
           "ref/netstandard1.3/_._": {}
         }
       },
+      "System.Web.Http.Common/4.0.20126.16343": {
+        "type": "package",
+        "compile": {
+          "lib/net40/System.Web.Http.Common.dll": {}
+        },
+        "runtime": {
+          "lib/net40/System.Web.Http.Common.dll": {}
+        }
+      },
       "System.Windows.Extensions/4.7.0": {
         "type": "package",
         "dependencies": {
@@ -2504,6 +2513,19 @@
         "system.threading.tasks.nuspec"
       ]
     },
+    "System.Web.Http.Common/4.0.20126.16343": {
+      "sha512": "3tybnaxSQAWu2aLSAh+7PRZ8Cw4f/DIECPJZ5yBcnm5sQKjr95zViCasYH3p6Z1hxATSTmlecvCcvlt/FDy+8w==",
+      "type": "package",
+      "path": "system.web.http.common/4.0.20126.16343",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/System.Web.Http.Common.dll",
+        "lib/net40/System.Web.Http.Common.xml",
+        "system.web.http.common.4.0.20126.16343.nupkg.sha512",
+        "system.web.http.common.nuspec"
+      ]
+    },
     "System.Windows.Extensions/4.7.0": {
       "sha512": "CeWTdRNfRaSh0pm2gDTJFwVaXfTq6Xwv/sA887iwPTneW7oMtMlpvDIO+U60+3GWTB7Aom6oQwv5VZVUhQRdPQ==",
       "type": "package",
@@ -2531,7 +2553,8 @@
       "Microsoft.AspNetCore.Session >= 2.2.0",
       "System.Configuration.ConfigurationManager >= 4.7.0",
       "System.Data.SqlClient >= 4.8.1",
-      "System.Linq >= 4.3.0"
+      "System.Linq >= 4.3.0",
+      "System.Web.Http.Common >= 4.0.20126.16343"
     ]
   },
   "packageFolders": {
@@ -2584,6 +2607,10 @@
           "System.Linq": {
             "target": "Package",
             "version": "[4.3.0, )"
+          },
+          "System.Web.Http.Common": {
+            "target": "Package",
+            "version": "[4.0.20126.16343, )"
           }
         },
         "imports": [
@@ -2607,5 +2634,17 @@
         "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.1.200/RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'System.Web.Http.Common 4.0.20126.16343' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework '.NETCoreApp,Version=v3.1'. This package may not be fully compatible with your project.",
+      "libraryId": "System.Web.Http.Common",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.1"
+      ]
+    }
+  ]
 }

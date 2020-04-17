@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Web;
+using System.Web.Http.Common;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,7 +10,6 @@ using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Session;
 using Microsoft.Extensions.Logging;
 using mvc_dotnet.Models;
 
@@ -16,14 +17,9 @@ namespace mvc_dotnet.Controllers
 {
     public class HomeController : Controller
     {
-       
-
-  
-
-       
 
         private readonly IConfiguration _configuration;
-
+        
 
         public HomeController(IConfiguration configuration)
         {
@@ -47,17 +43,29 @@ namespace mvc_dotnet.Controllers
                 string connString = _configuration.GetConnectionString("MyConnection"); // Read the connection string from the web.config file
                 using (SqlConnection conn = new SqlConnection(connString))
                 {
-                
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand("Select count(*) from Empleados where email='" + usuario + "' and contrasena='" + contrasena + "'", conn);
-                    if (Convert.ToBoolean(cmd.ExecuteScalar())){
-                        
-                        return Content("1");
+                    if(usuario == null || contrasena == null)
+                    {
+                        return Content("Ingresa Usuario y Contraseña");
                     }
                     else
                     {
-                        return Content("No se encontro el usuario o password incorrecto");
+                        conn.Open();
+                        SqlCommand cmd = new SqlCommand("SELECT count(*) FROM Empleados WHERE email = @email AND contrasena = @contrasena", conn);
+                        cmd.Parameters.AddWithValue("@email", usuario);
+                        cmd.Parameters.AddWithValue("@contrasena", contrasena);
+
+                        if (Convert.ToBoolean(cmd.ExecuteScalar()))
+                        {
+                            conn.Close();
+                            return Content("1");
+                        }
+                        else
+                        {
+                            conn.Close();
+                            return Content("No se encontro el usuario o password incorrecto");
+                        }
                     }
+                    
                 }
                 //return Content("1");
                     

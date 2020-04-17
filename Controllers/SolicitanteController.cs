@@ -4,23 +4,63 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 using mvc_dotnet.Models;
+using System.Data.SqlClient;
 
 namespace mvc_dotnet.Controllers
 {
     public class SolicitanteController : Controller
     {
-        private readonly ILogger<SolicitanteController> _logger;
+        private readonly IConfiguration _configuration;
 
-        public SolicitanteController(ILogger<SolicitanteController> logger)
+
+        public SolicitanteController(IConfiguration configuration)
         {
-            _logger = logger;
+            _configuration = configuration;
         }
+
+
 
         public IActionResult Index()
         {
             return View();
+        }
+
+        public ActionResult Solicitar(int idsap,int tipo_solicitud, string fecha_inicio, string fecha_fin )
+        {
+            try
+            {
+                string connString = _configuration.GetConnectionString("MyConnection"); // Read the connection string from the web.config file
+                using (SqlConnection conn = new SqlConnection(connString))
+                {
+                    
+                        conn.Open();
+                        SqlCommand cmd = new SqlCommand("SELECT count(*) FROM Empleados WHERE email = @email AND contrasena = @contrasena", conn);
+                        cmd.Parameters.AddWithValue("@email", idsap);
+                        cmd.Parameters.AddWithValue("@contrasena", tipo_solicitud);
+
+                        if (Convert.ToBoolean(cmd.ExecuteScalar()))
+                        {
+                            //Session['usuario'] = usuario;
+                            conn.Close();
+                            return Content("1");
+                        }
+                        else
+                        {
+                            conn.Close();
+                            return Content("No se encontro el usuario o password incorrecto");
+                        }
+                    
+
+                }
+                //return Content("1");
+
+            }
+            catch (Exception ex)
+            {
+                return Content(ex.Message);
+            }
         }
 
 

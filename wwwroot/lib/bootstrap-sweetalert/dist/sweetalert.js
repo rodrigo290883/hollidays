@@ -17,7 +17,7 @@ var defaultParams = {
   closeOnConfirm: true,
   closeOnCancel: true,
   confirmButtonText: 'OK',
-  confirmButtonClass: 'btn-primary',
+  confirmButtonClass: 'btn-desconectate',
   cancelButtonText: 'Cancel',
   cancelButtonClass: 'btn-default',
   containerClass: '',

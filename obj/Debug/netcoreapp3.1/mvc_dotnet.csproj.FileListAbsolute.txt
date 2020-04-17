@@ -59,7 +59,6 @@
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/Administracion/Index.cshtml.g.cs
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/Aprobador/Index.cshtml.g.cs
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/Home/Index.cshtml.g.cs
-/Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/Home/Privacy.cshtml.g.cs
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/Shared/Error.cshtml.g.cs
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/Shared/_Layout.cshtml.g.cs
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/Shared/_LayoutSession.cshtml.g.cs
