@@ -82,6 +82,12 @@ namespace desconectate.Controllers
             }
         }
 
+        public ActionResult Salir()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
