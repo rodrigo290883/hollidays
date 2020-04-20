@@ -7,8 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using desconectate.Models;
 using System.Data.SqlClient;
+using Microsoft.AspNetCore.Http;
 
-namespace mvc_dotnet.Controllers
+namespace desconectate.Controllers
 {
     public class SolicitanteController : Controller
     {
@@ -24,7 +25,12 @@ namespace mvc_dotnet.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            string usuario = HttpContext.Session.GetString("usuario");
+            if (usuario != null)
+                return View();
+            else
+                return RedirectToAction("Index", "Home");
+            
         }
 
         public ActionResult Solicitar(int idsap,int tipo_solicitud, string fecha_inicio, string fecha_fin )

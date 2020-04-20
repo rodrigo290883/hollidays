@@ -12,8 +12,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Session;
 using desconectate.Models;
+using Microsoft.AspNetCore.Http;
 
-namespace mvc_dotnet.Controllers
+namespace desconectate.Controllers
 {
     public class HomeController : Controller
     {
@@ -28,7 +29,11 @@ namespace mvc_dotnet.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            string usuario = HttpContext.Session.GetString("usuario");
+            if(usuario == null)
+                return View();
+            else
+                return RedirectToAction("Index", "Solicitante");
         }
 
         public IActionResult Politicas()
@@ -56,7 +61,7 @@ namespace mvc_dotnet.Controllers
 
                         if (Convert.ToBoolean(cmd.ExecuteScalar()))
                         {
-                            //Session["usuario"] = 1;
+                            HttpContext.Session.SetString("usuario", usuario);
                             conn.Close();
                             return Content("1");
                         }
