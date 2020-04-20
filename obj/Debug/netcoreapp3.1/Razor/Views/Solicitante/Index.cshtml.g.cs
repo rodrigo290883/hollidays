@@ -14,20 +14,20 @@ namespace AspNetCore
     using Microsoft.AspNetCore.Mvc.ViewFeatures;
 #nullable restore
 #line 1 "/Users/rodrigolira/Proyectos/hollidays/Views/_ViewImports.cshtml"
-using mvc_dotnet;
+using desconectate;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 2 "/Users/rodrigolira/Proyectos/hollidays/Views/_ViewImports.cshtml"
-using mvc_dotnet.Models;
+using desconectate.Models;
 
 #line default
 #line hidden
 #nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"e37e2dd23777b81db9851c6bc646124b6de3dcb1", @"/Views/Solicitante/Index.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"c384c19b7b8c301be84450f34c8071306f6ce98f", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"1185a8b3bb4e90f1e146f85307bfc4dace37d116", @"/Views/_ViewImports.cshtml")]
     public class Views_Solicitante_Index : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<dynamic>
     {
         private static readonly global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute __tagHelperAttribute_0 = new global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute("value", "1", global::Microsoft.AspNetCore.Razor.TagHelpers.HtmlAttributeValueStyle.DoubleQuotes);
@@ -147,7 +147,7 @@ using mvc_dotnet.Models;
                         <label for=""FormControlSelect"" class=""font-weight-bold"">SELECCIONA TU DESCONECTE:</label>
                         <select class=""selectpicker"">
                             ");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e37e2dd23777b81db9851c6bc646124b6de3dcb17205", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e37e2dd23777b81db9851c6bc646124b6de3dcb17209", async() => {
                 WriteLiteral("VACACIONES");
             }
             );
@@ -163,7 +163,7 @@ using mvc_dotnet.Models;
             Write(__tagHelperExecutionContext.Output);
             __tagHelperExecutionContext = __tagHelperScopeManager.End();
             WriteLiteral("\r\n                            ");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e37e2dd23777b81db9851c6bc646124b6de3dcb18380", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e37e2dd23777b81db9851c6bc646124b6de3dcb18384", async() => {
                 WriteLiteral("ADELANTO VACACIONES");
             }
             );
@@ -179,7 +179,7 @@ using mvc_dotnet.Models;
             Write(__tagHelperExecutionContext.Output);
             __tagHelperExecutionContext = __tagHelperScopeManager.End();
             WriteLiteral("\r\n                            ");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e37e2dd23777b81db9851c6bc646124b6de3dcb19564", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e37e2dd23777b81db9851c6bc646124b6de3dcb19568", async() => {
                 WriteLiteral("PERMISO");
             }
             );
@@ -195,7 +195,7 @@ using mvc_dotnet.Models;
             Write(__tagHelperExecutionContext.Output);
             __tagHelperExecutionContext = __tagHelperScopeManager.End();
             WriteLiteral("\r\n                            ");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e37e2dd23777b81db9851c6bc646124b6de3dcb110736", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e37e2dd23777b81db9851c6bc646124b6de3dcb110740", async() => {
                 WriteLiteral("PERMISO MATERNIDAD");
             }
             );
@@ -211,7 +211,7 @@ using mvc_dotnet.Models;
             Write(__tagHelperExecutionContext.Output);
             __tagHelperExecutionContext = __tagHelperScopeManager.End();
             WriteLiteral("\r\n                            ");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e37e2dd23777b81db9851c6bc646124b6de3dcb111920", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("option", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e37e2dd23777b81db9851c6bc646124b6de3dcb111924", async() => {
                 WriteLiteral("PERMISO PATERNIDAD");
             }
             );

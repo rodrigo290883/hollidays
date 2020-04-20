@@ -1,6 +1,6 @@
 using System;
 
-namespace mvc_dotnet.Models
+namespace desconectate.Models
 {
     public class ErrorViewModel
     {

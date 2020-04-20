@@ -51,10 +51,6 @@
             "System.Linq": {
               "target": "Package",
               "version": "[4.3.0, )"
-            },
-            "System.Web.Http.Common": {
-              "target": "Package",
-              "version": "[4.0.20126.16343, )"
             }
           },
           "imports": [

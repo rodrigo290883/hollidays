@@ -14,20 +14,20 @@ namespace AspNetCore
     using Microsoft.AspNetCore.Mvc.ViewFeatures;
 #nullable restore
 #line 1 "/Users/rodrigolira/Proyectos/hollidays/Views/_ViewImports.cshtml"
-using mvc_dotnet;
+using desconectate;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 2 "/Users/rodrigolira/Proyectos/hollidays/Views/_ViewImports.cshtml"
-using mvc_dotnet.Models;
+using desconectate.Models;
 
 #line default
 #line hidden
 #nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"0e484b72cc7a32c541929fd7584030a85f4edecd", @"/Views/Home/Index.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"c384c19b7b8c301be84450f34c8071306f6ce98f", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"1185a8b3bb4e90f1e146f85307bfc4dace37d116", @"/Views/_ViewImports.cshtml")]
     public class Views_Home_Index : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<dynamic>
     {
         private static readonly global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute __tagHelperAttribute_0 = new global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute("id", new global::Microsoft.AspNetCore.Html.HtmlString("frmAccs"), global::Microsoft.AspNetCore.Razor.TagHelpers.HtmlAttributeValueStyle.DoubleQuotes);
@@ -97,7 +97,7 @@ using mvc_dotnet.Models;
             <div class=""card"" style=""background-color:rgba(255, 255, 255, 0.5);"">
                 <div class=""card-body"">
                     ");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "0e484b72cc7a32c541929fd7584030a85f4edecd4647", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "0e484b72cc7a32c541929fd7584030a85f4edecd4651", async() => {
                 WriteLiteral(@"
                         <div class=""form-group"">
                             <label for=""usuario"">Email address</label>

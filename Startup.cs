@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 
-namespace mvc_dotnet
+namespace desconectate
 {
     public class Startup
     {
@@ -27,6 +27,15 @@ namespace mvc_dotnet
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(10);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -56,10 +65,14 @@ namespace mvc_dotnet
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            
+
+            //app.UseHttpContextItemsMiddleware();
+
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {

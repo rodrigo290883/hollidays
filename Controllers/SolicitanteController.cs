@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using mvc_dotnet.Models;
+using desconectate.Models;
 using System.Data.SqlClient;
 
 namespace mvc_dotnet.Controllers

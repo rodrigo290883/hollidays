@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Web;
-using System.Web.Http.Common;
+
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,8 +10,8 @@ using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using mvc_dotnet.Models;
+using Microsoft.AspNetCore.Session;
+using desconectate.Models;
 
 namespace mvc_dotnet.Controllers
 {
@@ -56,6 +56,7 @@ namespace mvc_dotnet.Controllers
 
                         if (Convert.ToBoolean(cmd.ExecuteScalar()))
                         {
+                            //Session["usuario"] = 1;
                             conn.Close();
                             return Content("1");
                         }

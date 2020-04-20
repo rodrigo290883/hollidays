@@ -1,26 +1,33 @@
 ﻿<Properties StartupConfiguration="{7790088E-0614-4C17-803A-0678261CD006}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Views/Shared/_LayoutSession.cshtml">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Views/_ViewImports.cshtml">
     <Files>
-      <File FileName="Views/Solicitante/Index.cshtml" Line="23" Column="4" />
-      <File FileName="Controllers/HomeController.cs" />
-      <File FileName="Properties/launchSettings.json" Line="28" Column="1" />
-      <File FileName="Views/Shared/_Layout.cshtml" Line="19" Column="19" />
-      <File FileName="Views/Shared/_LayoutSession.cshtml" Line="1" Column="1" />
+      <File FileName="Controllers/HomeController.cs" Line="14" Column="19" />
+      <File FileName="Models/Empleados.cs" Line="21" Column="1" />
+      <File FileName="Models/solicitudes.cs" Line="2" Column="23" />
+      <File FileName="Models/ErrorViewModel.cs" Line="3" Column="23" />
+      <File FileName="Controllers/AdministracionController.cs" Line="1" Column="1" />
+      <File FileName="Controllers/AprobadorController.cs" Line="1" Column="1" />
+      <File FileName="Controllers/SolicitanteController.cs" Line="8" Column="19" />
+      <File FileName="Startup.cs" Line="15" Column="23" />
+      <File FileName="Program.cs" Line="25" Column="6" />
+      <File FileName="appsettings.json" Line="1" Column="1" />
+      <File FileName="Properties/launchSettings.json" Line="1" Column="1" />
+      <File FileName="Properties/PublishProfiles/FolderProfile.pubxml" Line="1" Column="1" />
+      <File FileName="Properties/PublishProfiles/FolderProfile 1.pubxml" Line="1" Column="1" />
+      <File FileName="Views/_ViewImports.cshtml" Line="2" Column="18" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="mvc_dotnet" expanded="True">
-            <Node name="mvc_dotnet" expanded="True">
-              <Node name="Properties" expanded="True" />
-              <Node name="Views" expanded="True">
-                <Node name="Shared" expanded="True">
-                  <Node name="_LayoutSession.cshtml" selected="True" />
-                </Node>
-                <Node name="Solicitante" expanded="True" />
+            <Node name="Desconectate" expanded="True">
+              <Node name="Dependencies" expanded="True">
+                <Node name="PackageDependencies" expanded="True" />
               </Node>
-              <Node name="wwwroot" expanded="True">
-                <Node name="images" expanded="True" />
+              <Node name="Controllers" expanded="True" />
+              <Node name="Models" expanded="True" />
+              <Node name="Views" expanded="True">
+                <Node name="_ViewImports.cshtml" selected="True" />
               </Node>
             </Node>
           </Node>
@@ -28,9 +35,9 @@
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.ItemProperties.mvc__dotnet PreferredExecutionTarget="/Applications/Google Chrome.app" />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.Desconectate PreferredExecutionTarget="/Applications/Google Chrome.app" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
