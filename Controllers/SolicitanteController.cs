@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using desconectate.Models;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Http;
+using System.Data;
 
 namespace desconectate.Controllers
 {
@@ -27,46 +28,65 @@ namespace desconectate.Controllers
         {
             string usuario = HttpContext.Session.GetString("usuario");
             if (usuario != null)
-                return View();
+            {
+                Empleados empleado = new Empleados();
+
+                string connString = _configuration.GetConnectionString("MyConnection"); // Read the connection string from the web.config file
+                using (SqlConnection conn = new SqlConnection(connString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("select e.*,DATEDIFF(month,e.fecha_ingreso,GETDATE()) as antiguedad,rd.caducidad, DATEDIFF(month,e.ultimo_desconecte,GETDATE()) as meses_ultimo_desconecte from dbo.empleados e left join dbo.registros_dias rd on e.IdSAP  = rd.IdSAP WHERE e.IdSAP = @IdSAP and rd.id_tipo_solicitud = 0 and rd.periodo =2019", conn);
+                    cmd.Parameters.AddWithValue("@IdSAP", usuario);
+
+                    SqlDataReader sqlReader = cmd.ExecuteReader();
+
+                    sqlReader.Read();
+
+                    empleado.IdSAP = sqlReader.GetInt32(0);
+                    empleado.Nombre = sqlReader[1].ToString();
+                    empleado.email = sqlReader[2].ToString();
+                    empleado.fecha_ingreso = Convert.ToDateTime(sqlReader.IsDBNull(7) ? null : sqlReader[7]);
+                    empleado.ultimo_desconecte = Convert.ToDateTime(sqlReader.IsDBNull(9) ? null : sqlReader[9]);
+                    empleado.url_poliza = sqlReader[10].ToString();
+                    empleado.estatus = sqlReader.GetInt32(4);
+                    empleado.dias_disponibles = sqlReader.GetInt32(8);
+                    empleado.antiguedad = sqlReader.GetInt32(14);
+                    empleado.sexo = sqlReader[13].ToString()[0];
+                    empleado.caducidad = Convert.ToDateTime(sqlReader.IsDBNull(15) ? null : sqlReader[15]);
+                    empleado.meses_ultimo_desconecte = sqlReader.GetInt32(16);
+
+                    conn.Close();
+                    return View(empleado);
+                }
+            }
             else
                 return RedirectToAction("Index", "Home");
             
         }
 
-        public ActionResult Solicitar(int idsap,int tipo_solicitud, string fecha_inicio, string fecha_fin )
+        public IActionResult ObtieneTipos()
         {
-            try
-            {
                 string connString = _configuration.GetConnectionString("MyConnection"); // Read the connection string from the web.config file
                 using (SqlConnection conn = new SqlConnection(connString))
                 {
-                    
                         conn.Open();
-                        SqlCommand cmd = new SqlCommand("SELECT count(*) FROM Empleados WHERE email = @email AND contrasena = @contrasena", conn);
-                        cmd.Parameters.AddWithValue("@email", idsap);
-                        cmd.Parameters.AddWithValue("@contrasena", tipo_solicitud);
+                        SqlCommand cmd = new SqlCommand("SELECT * FROM ctipos_solicitud WHERE seleccionable = 1", conn);
 
-                        if (Convert.ToBoolean(cmd.ExecuteScalar()))
-                        {
-                            //Session['usuario'] = usuario;
-                            conn.Close();
-                            return Content("1");
-                        }
-                        else
-                        {
-                            conn.Close();
-                            return Content("No se encontro el usuario o password incorrecto");
-                        }
-                    
+                        SqlDataReader sqlReader = cmd.ExecuteReader();
 
+                        
+
+                        
+
+                        sqlReader.Close();
+                        cmd.Dispose();
+                        conn.Close();
+
+                    return Content("1");
                 }
-                //return Content("1");
 
-            }
-            catch (Exception ex)
-            {
-                return Content(ex.Message);
-            }
+                        
+
         }
 
 

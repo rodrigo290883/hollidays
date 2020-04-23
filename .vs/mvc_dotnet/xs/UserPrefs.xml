@@ -1,37 +1,25 @@
 ﻿<Properties StartupConfiguration="{7790088E-0614-4C17-803A-0678261CD006}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Views/Shared/_LayoutSession.cshtml">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/SolicitanteController.cs">
     <Files>
-      <File FileName="Startup.cs" Line="75" Column="30" />
-      <File FileName="Controllers/HomeController.cs" Line="19" Column="45" />
+      <File FileName=".gitignore" Line="1" Column="1" />
+      <File FileName="Views/Solicitante/Index.cshtml" Line="145" Column="13" />
+      <File FileName="Controllers/SolicitanteController.cs" Line="32" Column="25" />
+      <File FileName="Controllers/HomeController.cs" Line="59" Column="25" />
+      <File FileName="Views/Home/Index.cshtml" Line="79" Column="16" />
       <File FileName="Models/Empleados.cs" Line="1" Column="1" />
-      <File FileName="Controllers/SolicitanteController.cs" Line="72" Column="36" />
-      <File FileName="Controllers/AprobadorController.cs" Line="10" Column="23" />
-      <File FileName="Controllers/AdministracionController.cs" Line="10" Column="23" />
-      <File FileName="Views/Solicitante/Index.cshtml" Line="1" Column="1" />
-      <File FileName="wwwroot/js/site.js" Line="6" Column="1" />
-      <File FileName="Views/Home/Index.cshtml" Line="38" Column="67" />
-      <File FileName="Views/Shared/_Layout.cshtml" Line="35" Column="140" />
-      <File FileName="Views/Shared/_LayoutSession.cshtml" Line="45" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="mvc_dotnet" expanded="True">
             <Node name="Desconectate" expanded="True">
-              <Node name="Dependencies" expanded="True">
-                <Node name="PackageDependencies" expanded="True" />
+              <Node name="Controllers" expanded="True">
+                <Node name="SolicitanteController.cs" selected="True" />
               </Node>
-              <Node name="Controllers" expanded="True" />
               <Node name="Models" expanded="True" />
               <Node name="Views" expanded="True">
                 <Node name="Home" expanded="True" />
-                <Node name="Shared" expanded="True">
-                  <Node name="_LayoutSession.cshtml" selected="True" />
-                </Node>
                 <Node name="Solicitante" expanded="True" />
-              </Node>
-              <Node name="wwwroot" expanded="True">
-                <Node name="js" expanded="True" />
               </Node>
             </Node>
           </Node>

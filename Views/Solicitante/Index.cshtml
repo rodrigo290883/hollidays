@@ -1,23 +1,47 @@
+
+@model desconectate.Models.Empleados;
+
 @{
     ViewData["Title"] = "Solicitante|Desconéctate";
     Layout = "~/Views/Shared/_LayoutSession.cshtml";
 
+    string avatar = "";
+
+    if (Model.sexo == 'M')
+    {
+        if (Model.meses_ultimo_desconecte <= 2)
+            avatar = "mujer_0.png";
+        else if (Model.meses_ultimo_desconecte > 2 && Model.meses_ultimo_desconecte <= 6)
+            avatar = "mujer_1.png";
+        else
+            avatar = "mujer_2.png";
+    }
+    else
+    {
+        if (Model.meses_ultimo_desconecte <= 2)
+            avatar = "hombre_0.png";
+        else if (Model.meses_ultimo_desconecte > 2 && Model.meses_ultimo_desconecte <= 6)
+            avatar = "hombre_1.png";
+        else 
+            avatar = "hombre_2.png";
+    }
+
 }
 
 <style>
-    body{
+    body {
         background-image: url("images/doodle-background.png");
         background-repeat: no-repeat;
         background-size: cover;
-        background-position: bottom right; 
-        color : #5c2a7e;
+        background-position: bottom right;
+        color: #5c2a7e;
     }
 
-    #i_doodle{
-        width:30%;
-        position:absolute;
-        bottom:0px;
-        right:0px;
+    #i_doodle {
+        width: 30%;
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
     }
 
     #i_avatar {
@@ -38,37 +62,37 @@
 <div class="container">
     <div class="row">
         <div class="col-1">
-            <img id="i_avatar" src="images/Avatar.gif" />
+            <img id="i_avatar" src="images/@avatar" />
         </div>
         <div class="col-6" style="color:#b41547;">
-            
-                
-                    <h3 class="font-weight-bold">Victoria Rodriguez Trejo</h3>
-                    <h4>IDSAP: 2839430</h4>
-                
+
+
+            <h3 class="font-weight-bold">@Model.Nombre</h3>
+            <h4>IDSAP: @Model.IdSAP</h4>
+
         </div>
         <div class="col-5 text-center">
             <h4>DESCARGA TU PÓLIZA DE GMM</h4>
-            <button id="b_descargar" class="btn btn-desconectate" >DESCARGAR</button>
+            <button id="b_descargar" class="btn btn-desconectate">DESCARGAR</button>
         </div>
     </div>
     <div class="row">
         <div class="col-8">
-            
+
             <div class="row">
-                <div class="col-6 font-weight-bold">ANTIGÜEDAD: 3 AÑOS</div>
-                <div class="col-6 font-weight-bold">FECHA ANIVERSARIO: 21 OCTUBRE</div>
+                <div class="col-6 font-weight-bold">ANTIGÜEDAD: @Model.antiguedad</div>
+                <div class="col-6 font-weight-bold">FECHA ANIVERSARIO: @Model.fecha_ingreso.ToString().Substring(0,10)</div>
             </div>
             <div class="row">
-                <div class="col-6 font-weight-bold">DÍAS POR DISFRUTAR: 11</div>
-                <div class="col-6 font-weight-bold">DÍAS CADUCAN: 22 OCTUBRE</div>
+                <div class="col-6 font-weight-bold">DÍAS POR DISFRUTAR: @Model.dias_disponibles</div>
+                <div class="col-6 font-weight-bold">DÍAS CADUCAN: @Model.caducidad.ToString().Substring(0, 10)</div>
             </div>
             <div class="row">
-                <div class="col-6 font-weight-bold">DÍAS TOMADOS: 2</div>
+                <div class="col-6 font-weight-bold">DÍAS TOMADOS: </div>
                 <div class="col-6 font-weight-bold">PERIODO: 2019</div>
             </div>
-           
-        </div> 
+
+        </div>
     </div>
 
     <div class="row mt-5">
@@ -104,22 +128,21 @@
             </div>
         </div>
     </div>
-    
+
 
 
     <div class="row">
         <div class="col-10">
             <table class="table table-striped">
                 <thead style="background-color: #821c61; color: white;">
-                    <th>FOLIO</th>
-                    <th>SOLICITUD</th>
-                    <th>FECHA INICIO</th>
-                    <th>FECHA FIN</th>
-                    <th>APROBADOR</th>
-                    <th>ESTATUS</th>
+                <th>FOLIO</th>
+                <th>SOLICITUD</th>
+                <th>FECHA INICIO</th>
+                <th>FECHA FIN</th>
+                <th>APROBADOR</th>
+                <th>ESTATUS</th>
                 </thead>
                 <tbody>
-
                 </tbody>
             </table>
         </div>
@@ -134,6 +157,9 @@
         var vacaciones = new Array();
         var disfrutar = 11;
         var bandera = 0;
+
+      
+        
 
         $("#b_solicitar").click(function () {
             if (bandera == 0) {
@@ -189,7 +215,7 @@
                 $("#p_fecha_inicio").html('');
                 $("#p_fecha_fin").html('');
             }
-            
+
             //console.log(vacaciones);
             }
         });
