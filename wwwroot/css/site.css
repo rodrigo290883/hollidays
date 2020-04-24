@@ -23,7 +23,6 @@ a {
   color: #fff;
   background-color: #821c60;
   border-color: #821c60;
-  font-family: Gotham;
   font-weight: bold;
 }
 
@@ -97,7 +96,3 @@ body {
     src: url("Gotham-Font/GothamBold.ttf");
 	}
 	
-	
-	*{
-		font-family: Gotham;	
-	}

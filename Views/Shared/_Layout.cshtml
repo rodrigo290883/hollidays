@@ -5,9 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-sweetalert/dist/sweetalert.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <style>
+
+        #i_logo {
+            width: 100px;
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -23,9 +34,6 @@
                         <li class="nav-item">
                             <a class="nav-link text-light font-weight-bold" asp-area="" asp-controller="Home" asp-action="Index">INICIO</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light font-weight-bold" asp-area="" asp-controller="Home" asp-action="Politicas">POLÍTICAS</a>
-                        </li>
                     </ul>
                 </div>
             </div>
@@ -39,11 +47,20 @@
 
     <footer class="border-top-0 footer text-muted">
         <div class="container">
-            &copy; 2020 - Desconéctate- <a asp-area="" asp-controller="Home" asp-action="Politicas">Políticas</a>
+            <div class="row">
+                <div class="col-1">
+                    <img id="i_logo" src="images/Beneficios_Modelo.png" />
+                </div>
+                <div class="col-6">
+                    &copy; 2020 - Desconéctate- <a asp-area="" asp-controller="Home" asp-action="Politicas">Políticas</a>
+                </div>
+            </div>
+            
         </div>
     </footer>
     
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/bootstrap-sweetalert/dist/sweetalert.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
