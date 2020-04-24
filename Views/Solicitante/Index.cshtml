@@ -1,26 +1,55 @@
+
+@model desconectate.Models.Empleados;
+
 @{
     ViewData["Title"] = "Solicitante|Desconéctate";
+    Layout = "~/Views/Shared/_LayoutSession.cshtml";
 
+    string avatar = "";
+
+    if (Model.sexo == 'M')
+    {
+        if (Model.meses_ultimo_desconecte <= 2)
+            avatar = "mujer_0.png";
+        else if (Model.meses_ultimo_desconecte > 2 && Model.meses_ultimo_desconecte <= 6)
+            avatar = "mujer_1.png";
+        else
+            avatar = "mujer_2.png";
+    }
+    else
+    {
+        if (Model.meses_ultimo_desconecte <= 2)
+            avatar = "hombre_0.png";
+        else if (Model.meses_ultimo_desconecte > 2 && Model.meses_ultimo_desconecte <= 6)
+            avatar = "hombre_1.png";
+        else 
+            avatar = "hombre_2.png";
+    }
+
+    string antiguedad = (@Model.antiguedad/12)+" años y "+(@Model.antiguedad%12)+ " meses";
 }
 
 <style>
-    body{
+    body {
         background-image: url("images/doodle-background.png");
         background-repeat: no-repeat;
         background-size: cover;
-        background-position: bottom right; 
-        color : #5c2a7e;
+        background-position: bottom right;
+        color: #5c2a7e;
     }
 
-    #i_doodle{
-        width:30%;
-        position:absolute;
-        bottom:0px;
-        right:0px;
+    #i_doodle {
+        width: 30%;
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
     }
 
-    .b_data{
-        color: 
+    #i_avatar {
+        width: 200px;
+        position: absolute;
+        top: 0px;
+        left: -200px;
     }
 </style>
 
@@ -33,31 +62,43 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-6">
-            
-                <div class="row" style="color:#b41547;">
-                    <h3 class="font-weight-bold">Juan Alberto Rodriguez Trejo</h3>
-                    <h4>IDSAP: 2839430</h4>
-                </div>
+        <div class="col-1">
+            <img id="i_avatar" src="images/@avatar" />
+        </div>
+        <div class="col-6" style="color:#b41547;">
+
+
+            <h3 class="font-weight-bold">@Model.Nombre</h3>
+            <h4>IDSAP: @Model.IdSAP</h4>
+
+        </div>
+        <div class="col-5 text-center">
+            <h4>DESCARGA TU PÓLIZA DE GMM</h4>
+            <button id="b_descargar" class="btn btn-desconectate">DESCARGAR</button>
         </div>
     </div>
     <div class="row">
         <div class="col-8">
+
+            <div class="row">
+                <div class="col-6 font-weight-bold">ANTIGÜEDAD: @antiguedad</div>
+                <div class="col-6 font-weight-bold">FECHA ANIVERSARIO: @Model.fecha_ingreso.ToString().Substring(0, 10)</div>
+            </div>
+            <div class="row">
+                <div class="col-6 font-weight-bold">DÍAS POR DISFRUTAR: @Model.dias_disponibles</div>
+                <div class="col-6 font-weight-bold">DÍAS CADUCAN: @Model.caducidad.ToString().Substring(0, 10)</div>
+            </div>
+            <div class="row">
+                <div class="col-6 font-weight-bold">DÍAS TOMADOS: </div>
+                <div class="col-6 font-weight-bold">PERIODO: 2019</div>
+            </div>
+            <div class="row">
+                <div class="col-6 font-weight-bold"></div>
+                <div class="col-6 font-weight-bold">ÚLTIMO DESCONECTE: @Model.ultimo_desconecte.ToString().Substring(0, 10)</div>
+            </div>
+
             
-            <div class="row">
-                <div class="col-6 font-weight-bold">ANTIGÜEDAD:</div>
-                <div class="col-6 font-weight-bold">FECHA ANIVERSARIO:</div>
-            </div>
-            <div class="row">
-                <div class="col-6 font-weight-bold">DÍAS POR DISFRUTAR:</div>
-                <div class="col-6 font-weight-bold">DÍAS CADUCAN:</div>
-            </div>
-            <div class="row">
-                <div class="col-6 font-weight-bold">DÍAS TOMADOS:</div>
-                <div class="col-6 font-weight-bold">PERIODO:</div>
-            </div>
-           
-        </div> 
+        </div>
     </div>
 
     <div class="row mt-5">
@@ -69,6 +110,7 @@
                         <select class="selectpicker">
                             <option value="1">VACACIONES</option>
                             <option value="2">ADELANTO VACACIONES</option>
+                            <option value="5">PERMISO</option>
                             <option value="3">PERMISO MATERNIDAD</option>
                             <option value="4">PERMISO PATERNIDAD</option>
                         </select>
@@ -86,28 +128,27 @@
                 <div class="col-6 font-weight-bold">FECHA FIN:<p id="p_fecha_fin"></p></div>
             </div>
             <div class="row mt-2">
-                <div class="col-6 d-flex justify-content-center">
-                    <input type="submit" class="btn btn-desconectate" value="SOLICITAR" />
+                <div class="col-6 text-center">
+                    <input id="b_solicitar" type="submit" class="btn btn-desconectate" value="SOLICITAR" />
                 </div>
             </div>
         </div>
     </div>
-    
+
 
 
     <div class="row">
         <div class="col-10">
             <table class="table table-striped">
-                <thead>
-                    <th>FOLIO</th>
-                    <th>TIPO</th>
-                    <th>FECHA INICIO</th>
-                    <th>FECHA FIN</th>
-                    <th>APROBADOR</th>
-                    <th>ESTATUS</th>
+                <thead style="background-color: #821c61; color: white;">
+                <th>FOLIO</th>
+                <th>SOLICITUD</th>
+                <th>FECHA INICIO</th>
+                <th>FECHA FIN</th>
+                <th>APROBADOR</th>
+                <th>ESTATUS</th>
                 </thead>
                 <tbody>
-
                 </tbody>
             </table>
         </div>
@@ -120,10 +161,25 @@
 <script>
     $(function() {
         var vacaciones = new Array();
+        var disfrutar = 11;
+        var bandera = 0;
+
+      
+        
+
+        $("#b_solicitar").click(function () {
+            if (bandera == 0) {
+                swal("Felicidades", "Tu solicitud se registro Correctamente", "success");
+            }
+            else {
+                swal("Cuidado", "Tu seleccion sobrepasa los dias permitidos", "warning");
+            }
+        });
 
         $("#d_calendar").simpleCalendar({
         //Defaults options below
         //string of months starting from january
+
         months: ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'],
         days: ['domingo','lunes','martes','miercoles','jueves','viernes','sabado'],
         onDateSelect: function (date, events) {
@@ -139,6 +195,24 @@
 
             if (vacaciones.length != 0) {
                 vacaciones.sort(function (a, b) { return a - b });
+                // se cuentan los dias habiles
+                var cont = 0;
+                for (var i = 0; i < vacaciones.length; i++) {
+                    var aux = vacaciones[i];
+                    var dia = new Date(aux);
+                    var dia_sem = dia.getDay();
+                    if (dia_sem > 0 && dia_sem < 6)
+                        cont++;
+                }
+
+                if (cont > disfrutar) {
+                    swal("Cuidado","Tu seleccion sobrepasa los dias permitidos", "warning");
+                    bandera = 1;
+                }
+                else {
+                    bandera = 0;
+                }
+                // se cuentan los dias habiles
                 var fecha_inicio = new Date(vacaciones[0]);
                 var fecha_fin = new Date(vacaciones[vacaciones.length - 1]);
                 $("#p_fecha_inicio").html(fecha_inicio.toISOString().substr(0,10));
@@ -147,11 +221,8 @@
                 $("#p_fecha_inicio").html('');
                 $("#p_fecha_fin").html('');
             }
-            
-            
-            
 
-            console.log(vacaciones);
+            //console.log(vacaciones);
             }
         });
     });

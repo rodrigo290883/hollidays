@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Desconéctate";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
@@ -34,9 +35,9 @@
                 <div class="card-body">
                     <form id="frmAccs">
                         <div class="form-group">
-                            <label for="usuario">Email address</label>
-                            <input type="email" class="form-control" id="usuario" name="usuario" aria-describedby="emailHelp" placeholder="Email">
-                            <small id="emailHelp" class="form-text text-muted">El susuario es tu IdSharp.</small>
+                            <label for="usuario">Ingresa tu ID SAP</label>
+                            <input type="text" class="form-control" id="usuario" name="usuario"  placeholder="IdSAP">
+                    
                         </div>
                         <div class="form-group">
                             <label for="contrasena">Password</label>
@@ -55,27 +56,25 @@
 
 <script>
     $(function() {
-        //$('#a_form').hide();
+        
         $('#a_start').click(function(){
             $('#d_start').hide(500,function(){
                 $('#d_form').show(500);
             });
-            
+
         });
 
         $('#frmAccs').submit(function (e) {
             e.preventDefault();
-
-            alert('submit');
 
             url = "@Url.Content("~/Home/Entrar")"
             parametros = $(this).serialize();
 
             $.post(url, parametros, function (data) {
                 if (data == "1") {
-                    document.location.href = "@Url.Content("~/")";
+                    document.location.href = "@Url.Content("~/Solicitante")";
                 } else {
-                    alert(data);
+                    swal("Ocurrio un Error", data, "error");
                 }
             });
         });
