@@ -1,11 +1,11 @@
 ﻿using System;
 namespace desconectate.Models
 {
-    public class solicitudes
+    public class Solicitud
     {
         
-        public int id_solicitud { get; set; }
-        public Nullable<int> is_sap { get; set; }
+        public int folio { get; set; }
+        public Nullable<int> id_sap { get; set; }
         public string tipo_solicitud { get; set; }
         public Nullable<System.DateTime> fecha_solicitud { get; set; }
         public Nullable<System.DateTime> fecha_inicio { get; set; }

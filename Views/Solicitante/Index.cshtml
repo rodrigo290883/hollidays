@@ -1,5 +1,5 @@
 
-@model desconectate.Models.Empleados;
+@model desconectate.Models.Solicitud;
 
 @{
     ViewData["Title"] = "Solicitante|Desconéctate";
@@ -7,26 +7,28 @@
 
     string avatar = "";
 
-    if (Model.sexo == 'M')
+    Empleados empleado = ViewBag.empleado;
+
+    if (empleado.sexo == 'M')
     {
-        if (Model.meses_ultimo_desconecte <= 2)
+        if (empleado.meses_ultimo_desconecte <= 2)
             avatar = "mujer_0.png";
-        else if (Model.meses_ultimo_desconecte > 2 && Model.meses_ultimo_desconecte <= 6)
+        else if (empleado.meses_ultimo_desconecte > 2 && empleado.meses_ultimo_desconecte <= 6)
             avatar = "mujer_1.png";
         else
             avatar = "mujer_2.png";
     }
     else
     {
-        if (Model.meses_ultimo_desconecte <= 2)
+        if (empleado.meses_ultimo_desconecte <= 2)
             avatar = "hombre_0.png";
-        else if (Model.meses_ultimo_desconecte > 2 && Model.meses_ultimo_desconecte <= 6)
+        else if (empleado.meses_ultimo_desconecte > 2 && empleado.meses_ultimo_desconecte <= 6)
             avatar = "hombre_1.png";
         else 
             avatar = "hombre_2.png";
     }
 
-    string antiguedad = (@Model.antiguedad/12)+" años y "+(@Model.antiguedad%12)+ " meses";
+    string antiguedad = (@empleado.antiguedad/12)+" años y "+(@empleado.antiguedad%12)+ " meses";
 }
 
 <style>
@@ -68,8 +70,8 @@
         <div class="col-6" style="color:#b41547;">
 
 
-            <h3 class="font-weight-bold">@Model.Nombre</h3>
-            <h4>IDSAP: @Model.IdSAP</h4>
+            <h3 class="font-weight-bold">@empleado.Nombre</h3>
+            <h4>IDSAP: @empleado.IdSAP</h4>
 
         </div>
         <div class="col-5 text-center">
@@ -82,64 +84,66 @@
 
             <div class="row">
                 <div class="col-6 font-weight-bold">ANTIGÜEDAD: @antiguedad</div>
-                <div class="col-6 font-weight-bold">FECHA ANIVERSARIO: @Model.fecha_ingreso.ToString().Substring(0, 10)</div>
+                <div class="col-6 font-weight-bold">FECHA ANIVERSARIO: @empleado.fecha_ingreso.ToString().Substring(0, 10)</div>
             </div>
             <div class="row">
-                <div class="col-6 font-weight-bold">DÍAS POR DISFRUTAR: @Model.dias_disponibles</div>
-                <div class="col-6 font-weight-bold">DÍAS CADUCAN: @Model.caducidad.ToString().Substring(0, 10)</div>
+                <div class="col-6 font-weight-bold">DÍAS POR DISFRUTAR: @empleado.dias_disponibles</div>
+                <div class="col-6 font-weight-bold">DÍAS CADUCAN: @empleado.caducidad.ToString().Substring(0, 10)</div>
             </div>
             <div class="row">
                 <div class="col-6 font-weight-bold">DÍAS TOMADOS: </div>
-                <div class="col-6 font-weight-bold">PERIODO: 2019</div>
+                <div class="col-6 font-weight-bold">PERIODO: </div>
             </div>
             <div class="row">
                 <div class="col-6 font-weight-bold"></div>
-                <div class="col-6 font-weight-bold">ÚLTIMO DESCONECTE: @Model.ultimo_desconecte.ToString().Substring(0, 10)</div>
+                <div class="col-6 font-weight-bold">ÚLTIMO DESCONECTE: @empleado.ultimo_desconecte.ToString().Substring(0, 10)</div>
             </div>
 
-            
+
         </div>
     </div>
+    <form id="frmSolicitud">
+        <div class="row mt-5">
 
-    <div class="row mt-5">
-        <div class="col-4">
-            <div class="container">
-                <div class="row">
-                    <div class="dropdown col-12">
-                        <label for="FormControlSelect" class="font-weight-bold">SELECCIONA TU DESCONECTE:</label>
-                        <select class="selectpicker">
-                            <option value="1">VACACIONES</option>
-                            <option value="2">ADELANTO VACACIONES</option>
-                            <option value="5">PERMISO</option>
-                            <option value="3">PERMISO MATERNIDAD</option>
-                            <option value="4">PERMISO PATERNIDAD</option>
-                        </select>
+            <div class="col-4">
+                <div class="container">
+                    <div class="row">
+                        <div class="dropdown col-12">
+                            <label for="FormControlSelect" class="font-weight-bold">SELECCIONA TU DESCONECTE:</label>
+                            <select id="s_tipo_solicitud" class="selectpicker" name="tipo_solicitud">
+                                @foreach (var opt in ViewBag.Opciones)
+                                {
+                                    <option value="@opt.id_tipo_solicitud" aux="@opt.maximo_dias" aux="@opt.consume_vacaciones">@opt.solicitud</option>
+                                }
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-4">
-            <label for="FormControlSelect" class="font-weight-bold">SELECCIONA INICIO Y FIN DE TU DESCONECTE:</label>
-            <div id="d_calendar"></div>
-        </div>
-        <div class="col-4">
-            <div class="row mt-5">
-                <div class="col-6 font-weight-bold">FECHA INICIO:<p id="p_fecha_inicio"></p></div>
-                <div class="col-6 font-weight-bold">FECHA FIN:<p id="p_fecha_fin"></p></div>
+            <div class="col-4">
+                <label for="FormControlSelect" class="font-weight-bold">SELECCIONA INICIO Y FIN DE TU DESCONECTE:</label>
+                <div id="d_calendar"></div>
             </div>
-            <div class="row mt-2">
-                <div class="col-6 text-center">
-                    <input id="b_solicitar" type="submit" class="btn btn-desconectate" value="SOLICITAR" />
+            <div class="col-4">
+                <div class="row mt-5">
+                    <div class="col-6 font-weight-bold">FECHA INICIO:<input name="fecha_inicio" id="p_fecha_inicio" /></div>
+                    <div class="col-6 font-weight-bold">FECHA FIN:<input name="fecha_fin" id="p_fecha_fin" /></div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-6 text-center">
+                        <input style="display:none" name="id_sap" value="@empleado.IdSAP" />
+                        <input type="submit" class="btn btn-desconectate" value="SOLICITAR" />
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
+        </div>
+    </form>
 
 
     <div class="row">
         <div class="col-10">
-            <table class="table table-striped">
+            <table id="t_solicitudes" class="table table-striped">
                 <thead style="background-color: #821c61; color: white;">
                 <th>FOLIO</th>
                 <th>SOLICITUD</th>
@@ -163,17 +167,28 @@
         var vacaciones = new Array();
         var disfrutar = 11;
         var bandera = 0;
+        var maximo_dias = 30;
+        var consume_vacaciones = 'S';
 
-      
-        
+        $("#s_tipo_solicitud").change(function () {
+            maximo_dias = $("#s_tipo_solicitud option:selected").attr("aux");
+            consume_vacaciones = $("#s_tipo_solicitud option:selected").attr("aux2");
+        });
 
-        $("#b_solicitar").click(function () {
-            if (bandera == 0) {
-                swal("Felicidades", "Tu solicitud se registro Correctamente", "success");
-            }
-            else {
-                swal("Cuidado", "Tu seleccion sobrepasa los dias permitidos", "warning");
-            }
+        $('#frmSolicitud').submit(function (e) {
+            e.preventDefault();
+
+            url = "@Url.Content("~/Solicitante/CreaSolicitud")"
+            parametros = $(this).serialize();
+
+            $.post(url, parametros, function (data) {
+                if (data == "1") {
+                    actualizaLista();
+                    swal("Felicidades", "Tu solicitud se registro Correctamente", "success");
+                } else {
+                    swal("Ocurrio un Error", data, "error");
+                }
+            });
         });
 
         $("#d_calendar").simpleCalendar({
@@ -215,15 +230,36 @@
                 // se cuentan los dias habiles
                 var fecha_inicio = new Date(vacaciones[0]);
                 var fecha_fin = new Date(vacaciones[vacaciones.length - 1]);
-                $("#p_fecha_inicio").html(fecha_inicio.toISOString().substr(0,10));
-                $("#p_fecha_fin").html(fecha_fin.toISOString().substr(0,10));
+                $("#p_fecha_inicio").val(fecha_inicio.toISOString().substr(0,10));
+                $("#p_fecha_fin").val(fecha_fin.toISOString().substr(0,10));
             } else {
-                $("#p_fecha_inicio").html('');
-                $("#p_fecha_fin").html('');
+                $("#p_fecha_inicio").val('');
+                $("#p_fecha_fin").val('');
             }
 
             //console.log(vacaciones);
             }
         });
+
+        actualizaLista();
+
+        function actualizaLista() {
+
+            url = "@Url.Content("~/Solicitante/EnlistaSolicitudes")"
+
+            $.post(url, { "id_sap":@empleado.IdSAP}, function (data) {
+
+                var num = data.length;
+                var html = "";
+                $("#t_solicitudes tbody").html("");
+                for (var i = 0; i < num; i++) {
+                    var dato = data[i];
+                    html = "<tr><td>" + dato.folio + "</td><td>" + dato.tipo_solicitud + "</td><td>" + dato.fecha_inicio + "</td><td>" + dato.fecha_fin + "</td><td></td><td></td></tr>";
+                    $("#t_solicitudes tbody").append(html);
+                }
+                
+            });
+
+        }
     });
 </script>

@@ -7,12 +7,11 @@
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'mvc_dotnet' ">
     <StartAction>Project</StartAction>
+    <ExternalConsole>true</ExternalConsole>
     <ApplicationURL>https://localhost:5001;http://localhost:5000</ApplicationURL>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Views\Solicitante\" />
-    <Folder Include="Views\Aprobador\" />
-    <Folder Include="Views\Administracion\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />

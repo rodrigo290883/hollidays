@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using desconectate.Models;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Http;
 using System.Data;
+
 
 namespace desconectate.Controllers
 {
@@ -55,8 +55,25 @@ namespace desconectate.Controllers
                     empleado.caducidad = Convert.ToDateTime(sqlReader.IsDBNull(15) ? null : sqlReader[15]);
                     empleado.meses_ultimo_desconecte = sqlReader.GetInt32(16);
 
+                    ViewBag.Empleado = empleado;
+
+                    sqlReader.Close();
+
+                    List<TipoSolicitud> lst = new List<TipoSolicitud>();
+
+                    cmd = new SqlCommand("SELECT * FROM ctipos_solicitud WHERE seleccionable = 1", conn);
+
+                    sqlReader = cmd.ExecuteReader();
+
+                    while (sqlReader.Read())
+                    {
+                        lst.Add(new TipoSolicitud{  id_tipo_solicitud = sqlReader.GetInt32(0), solicitud = sqlReader[1].ToString(), maximo_dias = sqlReader.GetInt32(2), consume_vacaciones = sqlReader[4].ToString()[0] });
+                    }
+
+                    ViewBag.Opciones = lst;
+
                     conn.Close();
-                    return View(empleado);
+                    return View();
                 }
             }
             else
@@ -64,29 +81,44 @@ namespace desconectate.Controllers
             
         }
 
-        public IActionResult ObtieneTipos()
+        public IActionResult CreaSolicitud(Solicitud solicitud)
         {
-                string connString = _configuration.GetConnectionString("MyConnection"); // Read the connection string from the web.config file
-                using (SqlConnection conn = new SqlConnection(connString))
+            string connString = _configuration.GetConnectionString("MyConnection"); // Read the connection string from the web.config file
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("insert into dbo.solicitudes (id_sap,tipo_solicitud,fecha_solicitud,fecha_inicio,fecha_fin) VALUES (@IdSAP,@tipo_solicitud,GETDATE(),@fecha_inicio,@fecha_fin)", conn);
+                cmd.Parameters.AddWithValue("@IdSAP", solicitud.id_sap);
+                cmd.Parameters.AddWithValue("@tipo_solicitud", solicitud.tipo_solicitud);
+                cmd.Parameters.AddWithValue("@fecha_inicio", solicitud.fecha_inicio);
+                cmd.Parameters.AddWithValue("@fecha_fin", solicitud.fecha_fin);
+
+                var aux = cmd.ExecuteNonQuery();
+                return Content(Convert.ToString(aux));
+            }
+        }
+
+        public List<Solicitud> EnlistaSolicitudes(int id_sap)
+        {
+            List<Solicitud> lst = new List<Solicitud>();
+
+            string connString = _configuration.GetConnectionString("MyConnection"); // Read the connection string from the web.config file
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("SELECT sol.folio,ts.solicitud,sol.fecha_inicio,sol.fecha_fin FROM solicitudes sol LEFT JOIN ctipos_solicitud ts ON sol.tipo_solicitud = ts.id_tipo_solicitud  WHERE id_sap = @IdSAP", conn);
+                cmd.Parameters.AddWithValue("@IdSAP", id_sap);
+
+                SqlDataReader sqlReader = cmd.ExecuteReader();
+
+                while (sqlReader.Read())
                 {
-                        conn.Open();
-                        SqlCommand cmd = new SqlCommand("SELECT * FROM ctipos_solicitud WHERE seleccionable = 1", conn);
-
-                        SqlDataReader sqlReader = cmd.ExecuteReader();
-
-                        
-
-                        
-
-                        sqlReader.Close();
-                        cmd.Dispose();
-                        conn.Close();
-
-                    return Content("1");
+                    lst.Add(new Solicitud { folio = sqlReader.GetInt32(0), tipo_solicitud = sqlReader[1].ToString(), fecha_inicio = Convert.ToDateTime(sqlReader.IsDBNull(2) ? null : sqlReader[2]), fecha_fin = Convert.ToDateTime(sqlReader.IsDBNull(3) ? null : sqlReader[3]) });
                 }
 
-                        
-
+                conn.Close();
+                return lst;
+            }
         }
 
 
