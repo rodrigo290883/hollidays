@@ -184,6 +184,7 @@
             $.post(url, parametros, function (data) {
                 if (data == "1") {
                     actualizaLista();
+                    limpiaForma();
                     swal("Felicidades", "Tu solicitud se registro Correctamente", "success");
                 } else {
                     swal("Ocurrio un Error", data, "error");
@@ -241,6 +242,14 @@
             }
         });
 
+        function limpiaForma() {
+            $("#p_fecha_inicio").val('');
+            $("#p_fecha_fin").val('');
+            maximo_dias = 30;
+            consume_vacaciones = 'S';
+            $("#s_tipo_solicitud").val(0);
+        }
+
         actualizaLista();
 
         function actualizaLista() {
@@ -251,10 +260,24 @@
 
                 var num = data.length;
                 var html = "";
+                var estatus = "";
                 $("#t_solicitudes tbody").html("");
                 for (var i = 0; i < num; i++) {
                     var dato = data[i];
-                    html = "<tr><td>" + dato.folio + "</td><td>" + dato.tipo_solicitud + "</td><td>" + dato.fecha_inicio + "</td><td>" + dato.fecha_fin + "</td><td></td><td></td></tr>";
+
+                    switch (dato.estatus) {
+                        case 0:
+                            estatus = "PENDIENTE";
+                            break;
+                        case 1:
+                            estatus = "APROBADO";
+                            break;
+                        case 2:
+                            estatus = "DENEGADO";
+                            break;
+                    }
+
+                    html = "<tr><td>" + dato.folio + "</td><td>" + dato.tipo_solicitud + "</td><td>" + dato.fecha_inicio + "</td><td>" + dato.fecha_fin + "</td><td></td><td>" + estatus + "</td></tr>";
                     $("#t_solicitudes tbody").append(html);
                 }
                 
