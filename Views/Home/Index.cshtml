@@ -16,21 +16,29 @@
     #i_start{
         width: 100%;
     }
+
+    @@media (max-width: 479px) {
+
+        body {
+            background-position: center center;
+        }
+    }
+
 </style>
 
 <div id="d_principal" class="container">
     <div class="row">
-        <div class='col-6'>
+        <div class='col-sm-12 col-md-6'>
             <img id="i_desconectate" src="images/desconectate2.png">
         </div>
     </div>
     <div class="row">
-        <div id="d_start" class="col-3 offset-3 my-3" >
+        <div id="d_start" class="col-sm-6 col-md-3 offset-2 my-3" >
             <a id="a_start" ><img id="i_start" src="images/start boton.png"></a>
         </div>
     </div>
     <div class="row">
-        <div id="d_form" class="col-4 my-3" style="display: none;">
+        <div id="d_form" class="col-sm-12 col-md-4 my-3" style="display: none;">
             <div class="card" style="background-color:rgba(255, 255, 255, 0.5);">
                 <div class="card-body">
                     <form id="frmAccs">
