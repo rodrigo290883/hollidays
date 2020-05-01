@@ -145,7 +145,7 @@
     </form>
 
 
-    <div class="row">
+    <div class="row mt-5 mb-5">
         <div class="col-sm-12 col-md-10">
             <table id="t_solicitudes" class="table table-responsive table-striped">
                 <thead style="background-color: #821c61; color: white;">
@@ -254,8 +254,9 @@
             $("#p_fecha_fin").val('');
             maximo_dias = 30;
             consume_vacaciones = 'S';
-            $("#s_tipo_solicitud").prop('selectedIndex', 0);
-            $("#d_calendar").init();
+            vacaciones = new Array();
+            $("#s_tipo_solicitud").selectpicker('val', '0');
+            $("#d_calendar .day").removeClass("has-event");
         }
 
         actualizaLista();
@@ -286,7 +287,7 @@
                             break;
                     }
 
-                    html = "<tr><td>" + dato.folio + "</td><td>" + dato.tipo_solicitud + "</td><td>" + dato.fecha_inicio + "</td><td>" + dato.fecha_fin + "</td><td></td><td>" + estatus + "</td></tr>";
+                    html = "<tr><td>" + dato.folio + "</td><td>" + dato.tipo_solicitud + "</td><td>" + dato.fecha_inicio.substring(0, 10) + "</td><td>" + dato.fecha_fin.substring(0, 10) + "</td><td></td><td>" + estatus + "</td></tr>";
                     $("#t_solicitudes tbody").append(html);
                 }
                 
