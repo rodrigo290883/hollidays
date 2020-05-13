@@ -1,19 +1,27 @@
 ﻿<Properties StartupConfiguration="{7790088E-0614-4C17-803A-0678261CD006}|Default">
-  <MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/SolicitanteController.cs">
+    <Files>
+      <File FileName="Views/Solicitante/Index.cshtml" Line="245" Column="40" />
+      <File FileName="Controllers/SolicitanteController.cs" Line="116" Column="1" />
+      <File FileName="Models/Solicitud.cs" Line="13" Column="34" />
+    </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="mvc_dotnet" expanded="True">
             <Node name="Desconectate" expanded="True">
-              <Node name="Controllers" expanded="True" />
+              <Node name="Dependencies" expanded="True">
+                <Node name="PackageDependencies" expanded="True" />
+              </Node>
+              <Node name="Controllers" expanded="True">
+                <Node name="SolicitanteController.cs" selected="True" />
+              </Node>
               <Node name="Models" expanded="True" />
               <Node name="Properties" expanded="True" />
               <Node name="Views" expanded="True">
                 <Node name="Administracion" expanded="True" />
                 <Node name="Aprobador" expanded="True" />
-                <Node name="Home" expanded="True">
-                  <Node name="Index.cshtml" selected="True" />
-                </Node>
+                <Node name="Home" expanded="True" />
                 <Node name="Shared" expanded="True" />
                 <Node name="Solicitante" expanded="True" />
               </Node>
@@ -24,6 +32,9 @@
                     <Node name="dist" expanded="True">
                       <Node name="js" expanded="True" />
                     </Node>
+                  </Node>
+                  <Node name="bootstrap-sweetalert" expanded="True">
+                    <Node name="dist" expanded="True" />
                   </Node>
                   <Node name="simple-calendar" expanded="True">
                     <Node name="dist" expanded="True" />

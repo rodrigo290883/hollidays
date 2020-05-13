@@ -20,5 +20,6 @@ namespace desconectate.Models
         public string url_poliza { get; set; }
         public Nullable<int> Idsap_padre { get; set; }
         public Nullable<int> meses_ultimo_desconecte { get; set; }
+        public string esquema { get; set; }
     }
 }

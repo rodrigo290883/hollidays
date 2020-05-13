@@ -10,9 +10,10 @@ namespace desconectate.Models
         public Nullable<System.DateTime> fecha_solicitud { get; set; }
         public Nullable<System.DateTime> fecha_inicio { get; set; }
         public Nullable<System.DateTime> fecha_fin { get; set; }
-        public string observaciones_solicitante { get; set; }
+        public string observacion_solicitante { get; set; }
         public Nullable<int> estatus { get; set; }
         public Nullable<int> id_sap_aprobador { get; set; }
+        public string aprobador { get; set; }
         public Nullable<System.DateTime> fecha_aprobacion { get; set; }
         public string observacion_aprobador { get; set; }
         

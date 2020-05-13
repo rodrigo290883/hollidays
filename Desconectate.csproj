@@ -12,6 +12,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Views\Solicitante\" />
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />

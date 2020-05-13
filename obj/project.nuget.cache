@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "j+qcAih1mWJ7lvCITEIKnA3RDFENZ90SvQbHlBE4EkF5GNzc95bNPfDY5+eeM4hQSEg+x1vAzaxX7eabH+Vg8w==",
+  "dgSpecHash": "HP0O/CmntVWYNAgd/B2aJIRnX+SPWakU+C1aHqlquXZF/tzfbEg7OmT8o8ysXzbnK/99J50a2k3Vio3JVcedbw==",
   "success": true,
-  "projectFilePath": "/Users/rodrigolira/Proyectos/hollidays/mvc_dotnet.csproj",
+  "projectFilePath": "/Users/rodrigolira/Proyectos/hollidays/Desconectate.csproj",
   "expectedPackageFiles": [
     "/Users/rodrigolira/.nuget/packages/microsoft.aspnetcore.cryptography.internal/2.2.0/microsoft.aspnetcore.cryptography.internal.2.2.0.nupkg.sha512",
     "/Users/rodrigolira/.nuget/packages/microsoft.aspnetcore.dataprotection/2.2.0/microsoft.aspnetcore.dataprotection.2.2.0.nupkg.sha512",
