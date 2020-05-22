@@ -21,5 +21,6 @@ namespace desconectate.Models
         public Nullable<int> Idsap_padre { get; set; }
         public Nullable<int> meses_ultimo_desconecte { get; set; }
         public string esquema { get; set; }
+        public string avatar { get; set; }
     }
 }

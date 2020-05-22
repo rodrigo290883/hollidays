@@ -9,7 +9,8 @@ using System.Data.SqlClient;
 using Microsoft.AspNetCore.Http;
 using System.Data;
 using System.Net.Mail;
-
+using System.Net;
+using System.IO;
 
 namespace desconectate.Controllers
 {
@@ -37,7 +38,7 @@ namespace desconectate.Controllers
                 {
                     conn.Open();
                     SqlCommand cmd = new SqlCommand("select e.IdSAP,e.nombre,e.email,e.estatus,e.fecha_ingreso,e.dias_disponibles,e.ultimo_desconecte,e.url_poliza,e.idsap_padre,e.esquema,e.sexo," +
-                        "DATEDIFF(month,e.fecha_ingreso,GETDATE()) as antiguedad, DATEDIFF(month,e.ultimo_desconecte,GETDATE()) as meses_ultimo_desconecte,iif(DATEDIFF(DAY,CONCAT(datepart(yyyy,getdate()),'-',(datepart(mm,e.fecha_ingreso)+1),'-',datepart(dd,e.fecha_ingreso)),getdate()) <=0,datepart(yyyy,getdate())-1,datepart(yyyy,getdate())) " +
+                        "DATEDIFF(month,e.fecha_ingreso,GETDATE()) as antiguedad, DATEDIFF(month,e.ultimo_desconecte,GETDATE()) as meses_ultimo_desconecte,iif(DATEDIFF(DAY,CONCAT(datepart(yyyy,getdate()),'-',(datepart(mm,e.fecha_ingreso)+1),'-',datepart(dd,e.fecha_ingreso)),getdate()) <=0,datepart(yyyy,getdate())-1,datepart(yyyy,getdate())) ,e.avatar " +
                         "from dbo.empleados e  WHERE e.IdSAP = @IdSAP ", conn);
                     cmd.Parameters.AddWithValue("@IdSAP", usuario);
 
@@ -61,9 +62,10 @@ namespace desconectate.Controllers
                     empleado.antiguedad = sqlReader.GetInt32(11);
                     empleado.meses_ultimo_desconecte = sqlReader.GetInt32(12);
                     empleado.caducidad = Convert.ToDateTime(sqlReader.IsDBNull(6) ? null : sqlReader[6]);
-                    
-                    
-                    
+                    empleado.avatar = sqlReader[14].ToString();
+
+
+
 
                     ViewBag.Empleado = empleado;
 
@@ -98,7 +100,8 @@ namespace desconectate.Controllers
             {
                 int folio = 0;
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("insert into dbo.solicitudes (id_sap,tipo_solicitud,fecha_solicitud,fecha_inicio,fecha_fin,estatus,id_sap_aprobador,observacion_solicitante) VALUES (@IdSAP,@tipo_solicitud,GETDATE(),@fecha_inicio,@fecha_fin,0,@id_sap_aprobador,@observaciones); " + "SELECT CAST(scope_identity() AS int)", conn);
+                SqlCommand cmd = new SqlCommand("insert into dbo.solicitudes (id_sap,tipo_solicitud,fecha_solicitud,fecha_inicio,fecha_fin,estatus,id_sap_aprobador,observacion_solicitante) " +
+                    "VALUES (@IdSAP,@tipo_solicitud,GETDATE(),@fecha_inicio,@fecha_fin,0,@id_sap_aprobador,@observaciones); " + "SELECT CAST(scope_identity() AS int)", conn);
                 cmd.Parameters.AddWithValue("@IdSAP", solicitud.id_sap);
                 cmd.Parameters.AddWithValue("@tipo_solicitud", solicitud.tipo_solicitud);
                 cmd.Parameters.AddWithValue("@fecha_inicio", solicitud.fecha_inicio);
@@ -124,7 +127,9 @@ namespace desconectate.Controllers
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("select sol.id_sap, emp.nombre as solicitante,sol.id_sap_aprobador,ap.nombre as aprobador, ap.email as email_aprobador,tip.solicitud ,sol.fecha_inicio ,sol.fecha_fin ,sol.fecha_solicitud,sol.observacion_solicitante from solicitudes sol left join empleados ap on sol.id_sap_aprobador = ap.IdSAP left join empleados emp on sol.id_sap = emp.IdSAP left join ctipos_solicitud tip on sol.tipo_solicitud = tip.id_tipo_solicitud where sol.folio = @folio ", conn);
+                SqlCommand cmd = new SqlCommand("select sol.id_sap, emp.nombre as solicitante,sol.id_sap_aprobador,ap.nombre as aprobador, ap.email as email_aprobador,tip.solicitud ,sol.fecha_inicio ," +
+                    "sol.fecha_fin ,sol.fecha_solicitud,sol.observacion_solicitante from solicitudes sol left join empleados ap on sol.id_sap_aprobador = ap.IdSAP left join empleados emp on sol.id_sap = emp.IdSAP" +
+                    " left join ctipos_solicitud tip on sol.tipo_solicitud = tip.id_tipo_solicitud where sol.folio = @folio ", conn);
 
                 cmd.Parameters.AddWithValue("@folio", folio);
 
@@ -147,7 +152,7 @@ namespace desconectate.Controllers
                     
                     string pass = "AbrilSantiago";
                     string asunto = "Solicitud pendiente de Aprobacion Folio:" + folio;
-                    string mensage = "<table><tr><td>Se realizo una solicitud de vacaciones por parte del colaborador: <b>"+empleado+"</b></td></tr><tr><td>Tipo Solicitud: "+solicitud+"</td></tr><tr><td>Fecha Inicio: "+fecha_inicio+"</td></tr><tr><td>Fecha Fin: "+fecha_fin+"</td></tr><tr><td>Observacion Solicitante: "+observacion+"</td></tr><tr><td>Favor de ingresar al sitio de <a href='#'>vacaciones</a> para su aprobacion.</td></tr></table>";
+                    string mensage = "<head></head><table style='padding:0px;marging:0px;border:0px;'><tr style='background-color:#edc52f;'><td><img src='https://i.postimg.cc/R0mwZggG/Desconectate.png' /></td></tr><tr><td>Se realizo una solicitud de vacaciones por parte del colaborador: <b>" + empleado+"</b></td></tr><tr><td>Tipo Solicitud: "+solicitud+"</td></tr><tr><td>Fecha Inicio: "+fecha_inicio+"</td></tr><tr><td>Fecha Fin: "+fecha_fin+"</td></tr><tr><td>Observacion Solicitante: "+observacion+"</td></tr><tr><td>Favor de ingresar al sitio de <a href='#'>vacaciones</a> para su aprobacion.</td></tr></table>";
 
 
                     MailMessage correo = new MailMessage(origen, destino);
@@ -182,7 +187,8 @@ namespace desconectate.Controllers
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT sol.folio,ts.solicitud,sol.fecha_inicio,sol.fecha_fin,sol.estatus,em.nombre,sol.observacion_solicitante FROM solicitudes sol LEFT JOIN ctipos_solicitud ts ON sol.tipo_solicitud = ts.id_tipo_solicitud LEFT JOIN empleados em ON sol.id_sap_aprobador = em.IdSAP WHERE id_sap = @IdSAP", conn);
+                SqlCommand cmd = new SqlCommand("SELECT sol.folio,ts.solicitud,sol.fecha_inicio,sol.fecha_fin,sol.estatus,em.nombre,sol.observacion_solicitante FROM solicitudes sol " +
+                    "LEFT JOIN ctipos_solicitud ts ON sol.tipo_solicitud = ts.id_tipo_solicitud LEFT JOIN empleados em ON sol.id_sap_aprobador = em.IdSAP WHERE id_sap = @IdSAP", conn);
                 cmd.Parameters.AddWithValue("@IdSAP", id_sap);
 
                 SqlDataReader sqlReader = cmd.ExecuteReader();
@@ -198,6 +204,26 @@ namespace desconectate.Controllers
         }
 
 
+        public ActionResult DescargaPoliza()
+        {
+            WebClient cliente = new WebClient();
+
+            string idsap = HttpContext.Session.GetString("usuario");
+            try
+            {
+                string repositorio = "";
+                byte[] archivo = cliente.DownloadData(repositorio+idsap + ".pdf");
+                return File(archivo, "application/pdf", "PGMM_" + idsap + ".pdf");
+            }
+            catch (Exception ex)
+            {
+                return Content("No se encontro el archivo de poliza, favor de contactar a recursos humanos.");
+            }
+            
+
+        }
+
+        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

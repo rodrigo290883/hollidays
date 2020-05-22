@@ -62,6 +62,7 @@ namespace desconectate.Controllers
                         if (Convert.ToBoolean(cmd.ExecuteScalar()))
                         {
                             HttpContext.Session.SetString("usuario", usuario);
+                          
                             conn.Close();
                             return Content("1");
                         }

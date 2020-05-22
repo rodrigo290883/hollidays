@@ -1,0 +1,135 @@
+﻿
+@{
+    ViewData["Title"] = "Avatares|Desconéctate";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+
+    body {
+        background-image: url("images/doodle-background.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: bottom right;
+        color: #5c2a7e;
+    }
+
+    img{
+        width:80%;
+        position:relative;
+        left:10%;
+        top:10%;
+        opacity:0.8;
+    }
+
+    img:hover {
+        width: 80%;
+        position: relative;
+        left: 10%;
+        top: 10%;
+        opacity:1;
+    }
+</style>
+<div class="row">
+    <div class="col">
+        <h2>Antes de continuar...</h2>
+        <h2>Elige tu Avatar, haciendo click en el:</h2>
+    </div>
+</div>
+
+<div class="row" >
+    <div class="col-sm-6 col-md-4" >
+        <img class="avatar" alt="mujoaz" src="images/mujoaz.png" />
+    </div >
+    <div class="col-sm-6 col-md-4">
+        <img class="avatar" alt="mujoro" src="images/mujoro.png" />
+    </div>
+    <div class="col-sm-6 col-md-4">
+        <img class="avatar" alt="mujoam" src="images/mujoam.png" />
+    </div>
+</div >
+<div class="row">
+    <div class="col-sm-6 col-md-4">
+        <img class="avatar" alt="mugraz" src="images/mugraz.png" />
+    </div>
+    <div class="col-sm-6 col-md-4">
+        <img class="avatar" alt="mugrro" src="images/mugrro.png" />
+    </div>
+    <div class="col-sm-6 col-md-4">
+        <img class="avatar" alt="mugram" src="images/mugram.png" />
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6 col-md-4">
+        <img class="avatar" alt="hojoam" src="images/hojoam.png" />
+    </div>
+    <div class="col-sm-6 col-md-4">
+        <img class="avatar" alt="hojoaz" src="images/hojoaz.png" />
+    </div>
+    <div class="col-sm-6 col-md-4">
+        <img class="avatar" alt="hojoac" src="images/hojoac.png" />
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6 col-md-4">
+        <img class="avatar" alt="hogrve" src="images/hogrve.png" />
+    </div>
+    <div class="col-sm-6 col-md-4">
+        <img class="avatar" alt="hogrro" src="images/hogrro.png" />
+    </div>
+    <div class="col-sm-6 col-md-4">
+        <img class="avatar" alt="hogram" src="images/hogram.png" />
+    </div>
+</div>
+
+<div class="modal" id="avatarModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmacion Avatar</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Seleccionaste este avatar, ¿Quieres asignarlo a tu cuenta?</p>
+                <img id="avatar_preview" src="" />
+
+            </div>
+            <div class="modal-footer">
+                <button id="b_asignar" type="button" class="btn btn-primary">Asignar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        var avatar = "";
+
+        $(".avatar").click(function () {
+
+            avatar = $(this).attr('alt');
+            $("#avatar_preview").attr('src', "images/"+avatar + ".png");
+            $("#avatarModal").modal('show');
+
+        });
+
+        $("#b_asignar").click(function () {
+
+            url = "@Url.Content("~/Avatares/CambiaAvatar")";
+
+            $.post(url, { "avatar":avatar }, function (data) {
+                if (data != 1) {
+                    swal("Ocurrio un Error", data, "error");
+                }
+                else {
+                    document.location.href = "@Url.Content("~/Solicitante")";
+                }
+            });
+        });
+
+    });
+</script>

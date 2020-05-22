@@ -5,27 +5,29 @@
     ViewData["Title"] = "Solicitante|Desconéctate";
     Layout = "~/Views/Shared/_LayoutSession.cshtml";
 
-    string avatar = "";
+
 
     Empleados empleado = ViewBag.empleado;
+
+    string avatar = empleado.avatar;
 
     if (empleado.sexo == 'M')
     {
         if (empleado.meses_ultimo_desconecte <= 2)
-            avatar = "mujer_0.png";
+            avatar = avatar+".png";
         else if (empleado.meses_ultimo_desconecte > 2 && empleado.meses_ultimo_desconecte <= 6)
-            avatar = "mujer_1.png";
+            avatar = avatar + ".png";
         else
-            avatar = "mujer_2.png";
+            avatar = avatar + ".png";
     }
     else
     {
         if (empleado.meses_ultimo_desconecte <= 2)
-            avatar = "hombre_0.png";
+            avatar = avatar + ".png";
         else if (empleado.meses_ultimo_desconecte > 2 && empleado.meses_ultimo_desconecte <= 6)
-            avatar = "hombre_1.png";
-        else 
-            avatar = "hombre_2.png";
+            avatar = avatar + ".png";
+        else
+            avatar = avatar + ".png";
     }
 
     string antiguedad = (@empleado.antiguedad/12)+" años y "+(@empleado.antiguedad%12)+ " meses";
@@ -51,10 +53,10 @@
 
     
     #i_avatar{
-        width: 80%;
+        width: 100%;
         position: relative;
         top: 0px;
-        left: 10%;
+        left: 0%;
     }
 
     </style>
@@ -69,7 +71,9 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-12 col-md-2">
-            <img id="i_avatar_md" class="" src="images/@avatar" />
+            <a  asp-area="" asp-controller="Avatares" asp-action="Index">
+                <img id="i_avatar" class="" src="images/@avatar" />
+            </a>
         </div>
         <div class="col-sm-12 col-md-5 align-self-center" style="color:#b41547;">
 
@@ -237,6 +241,13 @@
             }
         });
 
+
+        $("#b_descargar").click(function () {
+            url = "@Url.Content("~/Solicitante/DescargaPoliza")";
+
+            window.open(url)
+        });
+       
 
         function EnviaCorreo(folio) {
 

@@ -1,9 +1,14 @@
 ﻿<Properties StartupConfiguration="{7790088E-0614-4C17-803A-0678261CD006}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/SolicitanteController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Views/Solicitante/Index.cshtml">
     <Files>
-      <File FileName="Views/Solicitante/Index.cshtml" Line="245" Column="40" />
-      <File FileName="Controllers/SolicitanteController.cs" Line="116" Column="1" />
-      <File FileName="Models/Solicitud.cs" Line="13" Column="34" />
+      <File FileName="Controllers/SolicitanteController.cs" Line="41" Column="354" />
+      <File FileName="Views/Solicitante/Index.cshtml" Line="59" Column="16" />
+      <File FileName="Views/Avatares/Index.cshtml" />
+      <File FileName="Controllers/AvataresController.cs" />
+      <File FileName="Views/Home/Index.cshtml" />
+      <File FileName="Controllers/HomeController.cs" />
+      <File FileName="Models/Empleados.cs" />
+      <File FileName="Views/Shared/_LayoutSession.cshtml" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -13,33 +18,18 @@
               <Node name="Dependencies" expanded="True">
                 <Node name="PackageDependencies" expanded="True" />
               </Node>
-              <Node name="Controllers" expanded="True">
-                <Node name="SolicitanteController.cs" selected="True" />
-              </Node>
+              <Node name="Controllers" expanded="True" />
               <Node name="Models" expanded="True" />
-              <Node name="Properties" expanded="True" />
               <Node name="Views" expanded="True">
-                <Node name="Administracion" expanded="True" />
-                <Node name="Aprobador" expanded="True" />
+                <Node name="Avatares" expanded="True" />
                 <Node name="Home" expanded="True" />
                 <Node name="Shared" expanded="True" />
-                <Node name="Solicitante" expanded="True" />
+                <Node name="Solicitante" expanded="True">
+                  <Node name="Index.cshtml" selected="True" />
+                </Node>
               </Node>
               <Node name="wwwroot" expanded="True">
                 <Node name="images" expanded="True" />
-                <Node name="lib" expanded="True">
-                  <Node name="bootstrap-select" expanded="True">
-                    <Node name="dist" expanded="True">
-                      <Node name="js" expanded="True" />
-                    </Node>
-                  </Node>
-                  <Node name="bootstrap-sweetalert" expanded="True">
-                    <Node name="dist" expanded="True" />
-                  </Node>
-                  <Node name="simple-calendar" expanded="True">
-                    <Node name="dist" expanded="True" />
-                  </Node>
-                </Node>
               </Node>
             </Node>
           </Node>
