@@ -1,6 +1,13 @@
 ﻿@{
     ViewData["Title"] = "Aprobador|Desconéctate";
-    Layout = "~/Views/Shared/_LayoutSession.cshtml";
+    if (ViewBag.tipo == "S")
+        Layout = "~/Views/Shared/_LayoutSessionS.cshtml";
+    else
+        Layout = "~/Views/Shared/_LayoutSessionA.cshtml";
+
+    Empleados empleado = ViewBag.empleado;
+
+
 }
 
 <style>
@@ -31,59 +38,33 @@
     <img id="i_doodle" src="images/imagen.png">
 </div>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-6" style="color:#b41547;">
-                    <h3 class="font-weight-bold">Maribel Rodriguez Alcocer</h3>
-                    <h4>IDSAP: 48393</h4>
-            </div>
+<div class="container">
+    <div class="row">
+        <div class="col-6" style="color:#b41547;">
+            <h3 class="font-weight-bold">@empleado.Nombre</h3>
+            <h4>IDSAP: @empleado.IdSAP</h4>
         </div>
-        <div class="row mt-2">
-            <div class="col-12">
-                <Strong><span style="font-size:x-large;">Solicitudes Hechas</span></Strong>
-                <table class="table table-striped">
-                    <thead style="background-color: #821c61; color: white;">
-                        <tr>
-                            <th scope="col">FOLIO</th>
-                            <th>NOMBRE</th>
-                            <th scope="col">SOLICITUD</th>
-                            <th scope="col">FECHA INICIO</th>
-                            <th scope="col">FECHA FINAL</th>
-                            <th scope="col">ESTATUS</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="renglon" alt="1">
-                            <th scope="row">433</th>
-                            <td>MARIA PEREZ ROSALES</td>
-                            <td>VACACIONES</td>
-                            <td>2020-04-06</td>
-                            <td>2020-04-08</td>
-                            <td id="td_1">PENDIENTE
-                            </td>
-                        </tr>
-                        <tr class="renglon" alt="2">
-                            <th scope="row">434</th>
-                            <td>JUAN LOPEZ IBARRA</td>
-                            <td>VACACIONES</td>
-                            <td>2020-04-16</td>
-                            <td>2020-04-20</td>
-                            <td id="td_2">PENDIENTE
-                            </td>
-                        </tr>
-                        <tr class="renglon" alt="3">
-                            <th scope="row">456</th>
-                            <td>ENRIQUE SANCHEZ CORTES</td>
-                            <td>PERMISO PATERNIDAD</td>
-                            <td>2020-05-02</td>
-                            <td>2020-05-12</td>
-                            <td id="td_3">PENDIENTE
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-12">
+            <Strong><span style="font-size:x-large;">Solicitudes Hechas</span></Strong>
+            <table class="table table-responsive table-striped" id="t_Slt_Pendiente">
+                <thead style="background-color: #821c61; color: white;">
+                    <tr>
+                        <th scope="col">FOLIO</th>
+                        <th>NOMBRE</th>
+                        <th scope="col">SOLICITUD</th>
+                        <th scope="col">FECHA INICIO</th>
+                        <th scope="col">FECHA FINAL</th>
+                        <th scope="col">ESTATUS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
+    </div>
+    <form id="frmAprobadorSolicitud">
         <div class="row mt-2">
             <div class="col-8">
                 <div class="container">
@@ -114,123 +95,112 @@
                         <div class="col-6 font-weight-bold">FECHA FIN: <b id="data_fin"></b></div>
                     </div>
                 </div>
-             </div>
+            </div>
             <div class="col-4 mt-2">
                 <div class="container">
                     <div class="row">
                         <label>CAMBIAR ESTATUS:</label>
-                        <select id="s_estatus" class="selectpicker">
-                            <option>PENDIENTE</option>
-                            <option>APROBADO</option>
-                            <option>DENEGADO</option>
+                        <select id="s_estatus" name="s_estatus" class="selectpicker">
+                            <option value="0">PENDIENTE</option>
+                            <option value="1">APROBADO</option>
+                            <option value="2">DENEGADO</option>
                         </select>
                     </div>
                     <div class="row rounded mt-2">
-                        <textarea class="form-control" rows="3">Observaciones...</textarea>
+                        <textarea id="comentarios" name="comentarios" class="form-control" rows="3" placeholder="Observaciones..."></textarea>
                     </div>
                     <div class="row mt-2 text-center">
-                        <button id="b_guardar" class="btn btn-desconectate" >GUARDAR</button>
+                        <input type="hidden" name="id_folio" id="id_folio" value=""/>
+                        <input type="submit" class="btn btn-desconectate" value="GUARDAR" />
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
+</div>
 
 
     <script src="lib/bootstrap-select/dist/js/bootstrap-select.js"></script>
 
     <script>
         $(function () {
-            var alt = '';
-            $(".renglon").click(function () {
-                alt = $(this).attr('alt');
-                
-                switch (alt) {
-                    case '1':
-                        var nombre = "MARIA PEREZ ROSALES";
-                        var idsap = 3489;
-                        var antiguedad = 5;
-                        var aniversario = '12 NOVIEMBRE';
-                        var dias_disfrutar = 8;
-                        var dias_caducan = '2020-11-13';
-                        var dias_tomados = 2;
-                        var periodo = 2019;
-                        var tipo = 'VACACIONES';
-                        var fecha_inicio = '2020-04-06';
-                        var fecha_fin = '2020-04-08';
-                        break;
-                    case '2':
-                        var nombre = "JUAN LOPEZ IBARRA";
-                        var idsap = 3587;
-                        var antiguedad = 2;
-                        var aniversario = '02 MARZO';
-                        var dias_disfrutar = 10;
-                        var dias_caducan = '2020-03-03';
-                        var dias_tomados = 0;
-                        var periodo = 2019;
-                        var tipo = 'VACACIONES';
-                        var fecha_inicio = '2020-04-16';
-                        var fecha_fin = '2020-04-20';
-                        break;
+            var folio = '';
+            actualizaLista();
 
-                    case '3':
-                        var nombre = "ENRIQUE SANCHEZ CORTES";
-                        var idsap = 2457;
-                        var antiguedad = 3;
-                        var aniversario = '23 AGOSTO';
-                        var dias_disfrutar = 2;
-                        var dias_caducan = '2020-08-24';
-                        var dias_tomados = 8;
-                        var periodo = 2019;
-                        var tipo = 'PERMISO PATERNIDAD';
-                        var fecha_inicio = '2020-05-02';
-                        var fecha_fin = '2020-05-12';
-                        break;
-                }
+            function actualizaLista() {
+                url = "@Url.Content("~/Aprobador/SolicitudesPendientes")"
 
-                $("#data_nombre").html(nombre);
-                $("#data_idsap").html(idsap);
-                $("#data_antiguedad").html(antiguedad);
-                $("#data_aniversario").html(aniversario);
-                $("#data_disfrutar").html(dias_disfrutar);
-                $("#data_caducan").html(dias_caducan);
-                $("#data_tomados").html(dias_tomados);
-                $("#data_periodo").html(periodo);
-                $("#data_tipo").html(tipo);
-                $("#data_inicio").html(fecha_inicio);
-                $("#data_fin").html(fecha_fin);
+                $.post(url, { "id_sap":@empleado.IdSAP}, function (data) {
+                    var num = data.length;
+                    $("#t_Slt_Pendiente tbody").html("");
+                    for (var i = 0; i < num; i++) {
+                        var dato = data[i];
+
+                        switch (dato.estatus) {
+                            case 0:
+                                estatus = "PENDIENTE";
+                                break;
+                            case 1:
+                                estatus = "APROBADO";
+                                break;
+                            case 2:
+                                estatus = "DENEGADO";
+                                break;
+                        }
+                        html = '<tr class="renglon" alt="' + dato.folio + '" id="folio"><th scope="row">' + dato.folio + '</th><td>' + dato.nombre + '</td><td>' + dato.solicitudName + '</td><td>' + dato.fecha_inicio.substring(0, 10) + '</td><td>' + dato.fecha_fin.substring(0, 10) + '</td><td>' + dato.estatusDescripcion + '</td></tr>';
+                        $("#t_Slt_Pendiente tbody").append(html);
+                    }
+                });
+            }
+
+            $("#t_Slt_Pendiente tbody").on("click", "tr", function () {
+                folio = $(this).attr('alt');
+
+                url = "@Url.Content("~/Aprobador/solicitudInfo")"
+
+                $.post(url, { "id_folio": folio }, function (data) {
+
+                    // alert(data.antiguedad); ya se obtiene el id_sap de que solicita el permiso
+                    $("#data_idsap").html(data.id_sap);
+                    $("#data_nombre").html(data.nombre);
+                    $("#data_antiguedad").html((data.antiguedad / 12) + " años y " + (data.antiguedad % 12) + " meses ");
+                    $("#data_aniversario").html(data.aniversario.substring(0, 10));
+                    $("#data_disfrutar").html(data.fecha_fin - data.fecha_inicio);
+                    $("#data_tipo").html(data.solicitudName);
+                    $("#data_caducan").html(4);
+                    $("#data_tomados").html(0);
+                    $("#data_periodo").html(2020);
+                    $("#data_inicio").html(data.fecha_inicio.substring(0, 10));
+                    $("#data_fin").html(data.fecha_fin.substring(0, 10));
+                    $("#id_folio").val(data.folio);
+
+                });
+
+
+            });
+            function limpiarForma(){
+                $("#id_folio").val('');
+                $("#comentarios").html('');
+                $("#s_estatus").selectpicker('val', '0');
+            }
+
+
+            $("#frmAprobadorSolicitud").submit(function (e) {
+                e.preventDefault();
+
+                url = "@Url.Content("~/Aprobador/ActualizarSolicitud")"
+                parametros = $(this).serialize();
+
+                $.post(url, parametros, function (data) {
+                    if (data = "1") {
+                        limpiarForma();
+                        actualizaLista();
+                        swal("Se actualizo la solicitud correctamente", "Ok", "success");
+                    } else {
+                        swal("Ocurrio un Error", data, "error");
+                    }
+                });
             });
 
-            $("#b_guardar").click(function () {
-                $("#data_nombre").html('');
-                $("#data_idsap").html('');
-                $("#data_antiguedad").html('');
-                $("#data_aniversario").html('');
-                $("#data_disponibles").html('');
-                $("#data_caducan").html('');
-                $("#data_tomados").html('');
-                $("#data_periodo").html('');
-                $("#data_tipo").html('');
-                $("#data_inicio").html('');
-                $("#data_fin").html('');
-
-                
-
-                var estatus = $("#s_estatus").val();
-
-                switch (alt) {
-                    case '1':
-                        $('#td_1').html(estatus);
-                        break;
-                    case '2':
-                        $('#td_2').html(estatus);
-                        break;
-                    case '3':
-                        $('#td_3').html(estatus);
-                        break;
-                }
-
-                $("#s_estatus").val('');
-            });
         });
     </script>

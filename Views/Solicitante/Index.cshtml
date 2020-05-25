@@ -3,31 +3,37 @@
 
 @{
     ViewData["Title"] = "Solicitante|Desconéctate";
-    Layout = "~/Views/Shared/_LayoutSession.cshtml";
-
-
+    if(ViewBag.tipo == "S")
+        Layout = "~/Views/Shared/_LayoutSessionS.cshtml";
+    else
+        Layout = "~/Views/Shared/_LayoutSessionA.cshtml";
 
     Empleados empleado = ViewBag.empleado;
 
     string avatar = empleado.avatar;
-
-    if (empleado.sexo == 'M')
-    {
-        if (empleado.meses_ultimo_desconecte <= 2)
-            avatar = avatar+".png";
-        else if (empleado.meses_ultimo_desconecte > 2 && empleado.meses_ultimo_desconecte <= 6)
-            avatar = avatar + ".png";
-        else
-            avatar = avatar + ".png";
+    if (avatar == "") {
+        avatar = "sin_avatar.png";
     }
     else
     {
-        if (empleado.meses_ultimo_desconecte <= 2)
-            avatar = avatar + ".png";
-        else if (empleado.meses_ultimo_desconecte > 2 && empleado.meses_ultimo_desconecte <= 6)
-            avatar = avatar + ".png";
+        if (empleado.sexo == 'M')
+        {
+            if (empleado.meses_ultimo_desconecte <= 2)
+                avatar = avatar + ".png";
+            else if (empleado.meses_ultimo_desconecte > 2 && empleado.meses_ultimo_desconecte <= 6)
+                avatar = avatar + ".png";
+            else
+                avatar = avatar + ".png";
+        }
         else
-            avatar = avatar + ".png";
+        {
+            if (empleado.meses_ultimo_desconecte <= 2)
+                avatar = avatar + ".png";
+            else if (empleado.meses_ultimo_desconecte > 2 && empleado.meses_ultimo_desconecte <= 6)
+                avatar = avatar + ".png";
+            else
+                avatar = avatar + ".png";
+        }
     }
 
     string antiguedad = (@empleado.antiguedad/12)+" años y "+(@empleado.antiguedad%12)+ " meses";
@@ -75,7 +81,7 @@
                 <img id="i_avatar" class="" src="images/@avatar" />
             </a>
         </div>
-        <div class="col-sm-12 col-md-5 align-self-center" style="color:#b41547;">
+        <div class="col-sm-12 col-md-5 align-self-center" style="color:#b41547; ">
 
 
             <h3 class="font-weight-bold">@empleado.Nombre</h3>

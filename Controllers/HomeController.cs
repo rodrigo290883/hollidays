@@ -55,22 +55,28 @@ namespace desconectate.Controllers
                     else
                     {
                         conn.Open();
-                        SqlCommand cmd = new SqlCommand("SELECT count(*) FROM Empleados WHERE IdSAP = @idsap AND contrasena = @contrasena", conn);
+                        SqlCommand cmd = new SqlCommand("SELECT tipo FROM Empleados WHERE IdSAP = @idsap AND contrasena = @contrasena", conn);
                         cmd.Parameters.AddWithValue("@idsap", usuario);
                         cmd.Parameters.AddWithValue("@contrasena", contrasena);
 
-                        if (Convert.ToBoolean(cmd.ExecuteScalar()))
+                        SqlDataReader sqlReader = cmd.ExecuteReader();
+
+                        try
                         {
+                            sqlReader.Read();
+                            string tipo  = sqlReader[0].ToString();
                             HttpContext.Session.SetString("usuario", usuario);
-                          
+                            HttpContext.Session.SetString("tipo", tipo);
+
                             conn.Close();
                             return Content("1");
                         }
-                        else
+                        catch (Exception ex)
                         {
                             conn.Close();
-                            return Content("No se encontro el usuario o password incorrecto");
+                            return Content("No se encontro el usuario o contraseña incorrecta");
                         }
+
                     }
                     
                 }

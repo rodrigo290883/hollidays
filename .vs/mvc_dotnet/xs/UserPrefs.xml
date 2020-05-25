@@ -1,14 +1,13 @@
 ﻿<Properties StartupConfiguration="{7790088E-0614-4C17-803A-0678261CD006}|Default">
   <MonoDevelop.Ide.Workbench ActiveDocument="Views/Solicitante/Index.cshtml">
     <Files>
-      <File FileName="Controllers/SolicitanteController.cs" Line="41" Column="354" />
-      <File FileName="Views/Solicitante/Index.cshtml" Line="59" Column="16" />
+      <File FileName="Controllers/SolicitanteController.cs" Line="32" Column="13" />
+      <File FileName="Views/Solicitante/Index.cshtml" Line="15" Column="35" />
+      <File FileName="Controllers/AprobadorController.cs" />
+      <File FileName="Views/Aprobador/Index.cshtml" />
+      <File FileName="Controllers/HomeController.cs" />
       <File FileName="Views/Avatares/Index.cshtml" />
       <File FileName="Controllers/AvataresController.cs" />
-      <File FileName="Views/Home/Index.cshtml" />
-      <File FileName="Controllers/HomeController.cs" />
-      <File FileName="Models/Empleados.cs" />
-      <File FileName="Views/Shared/_LayoutSession.cshtml" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -18,11 +17,7 @@
               <Node name="Dependencies" expanded="True">
                 <Node name="PackageDependencies" expanded="True" />
               </Node>
-              <Node name="Controllers" expanded="True" />
-              <Node name="Models" expanded="True" />
               <Node name="Views" expanded="True">
-                <Node name="Avatares" expanded="True" />
-                <Node name="Home" expanded="True" />
                 <Node name="Shared" expanded="True" />
                 <Node name="Solicitante" expanded="True">
                   <Node name="Index.cshtml" selected="True" />

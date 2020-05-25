@@ -29,6 +29,7 @@ namespace desconectate.Controllers
         public IActionResult Index()
         {
             string usuario = HttpContext.Session.GetString("usuario");
+            ViewBag.tipo = HttpContext.Session.GetString("tipo");
             if (usuario != null)
             {
                 Empleados empleado = new Empleados();
@@ -152,7 +153,7 @@ namespace desconectate.Controllers
                     
                     string pass = "AbrilSantiago";
                     string asunto = "Solicitud pendiente de Aprobacion Folio:" + folio;
-                    string mensage = "<head></head><table style='padding:0px;marging:0px;border:0px;'><tr style='background-color:#edc52f;'><td><img src='https://i.postimg.cc/R0mwZggG/Desconectate.png' /></td></tr><tr><td>Se realizo una solicitud de vacaciones por parte del colaborador: <b>" + empleado+"</b></td></tr><tr><td>Tipo Solicitud: "+solicitud+"</td></tr><tr><td>Fecha Inicio: "+fecha_inicio+"</td></tr><tr><td>Fecha Fin: "+fecha_fin+"</td></tr><tr><td>Observacion Solicitante: "+observacion+"</td></tr><tr><td>Favor de ingresar al sitio de <a href='#'>vacaciones</a> para su aprobacion.</td></tr></table>";
+                    string mensage = "<head><style>img{width:100%;padding:0px;margin:0px;}tr{background-image:url('https://i.postimg.cc/FzTgvcWz/cuerpo-mail.png'); background-repeat: repeat-y;background-size:100% 100%; padding:0px; margin:0px;}td{padding:0px; margin:0px;}</style></head><table style='padding:0px;marging:0px;border:0px;border-collapse: collapse;border-spacing:0px;'><tr><td><img src='https://i.postimg.cc/1319y6Dv/encabezado-mail.png' /></td></tr><tr><td style='padding:5% 5%; color:#b41547; font-size: 18px; text-align: center;'>Se realizo una solicitud de vacaciones por parte de:<br>" + empleado+ "</td></tr><tr><td style='padding:0% 5%; color: #5c2a7e; font-size: 18px; text-align: left;'>Tipo Solicitud: " + solicitud+ "</td></tr><tr><td style='padding:0% 5%; color: #5c2a7e; font-size: 18px; text-align: left;'>Fecha Inicio: " + fecha_inicio+ "</td></tr><tr><td style=' padding:0% 5%; color: #5c2a7e; font-size: 18px; text-align: left;'>Fecha Fin: " + fecha_fin+ "</td></tr><tr><td style=' padding:0% 5%; color: #5c2a7e; font-size: 18px; text-align: left;'>Observacion Solicitante: " + observacion+ "</td></tr><tr><td style=' padding:5% 5%; color:#b41547; font-size: 18px; text-align: center; '>Favor de ingresar al sitio de <a href='#'>vacaciones</a> para su aprobacion.</td></tr><tr><td><img src='https://i.postimg.cc/hvSK9qPN/pie-mail.png' /></td></tr></table>";
 
 
                     MailMessage correo = new MailMessage(origen, destino);
