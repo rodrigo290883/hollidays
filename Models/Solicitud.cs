@@ -9,7 +9,8 @@ namespace desconectate.Models
         public string solicitudName { get; set; }
         public string estatusDescripcion { get; set; }
         public Nullable<int> id_sap { get; set; }
-        public string tipo_solicitud { get; set; }
+        public int tipo_solicitud { get; set; }
+        public int tipo_solicitud_goce { get; set; }
         public Nullable<System.DateTime> fecha_solicitud { get; set; }
         public Nullable<System.DateTime> fecha_inicio { get; set; }
         public Nullable<System.DateTime> fecha_fin { get; set; }
@@ -23,6 +24,7 @@ namespace desconectate.Models
         public int maximo_dias { get; set; }
         public int dias_disponibles { get; set; }
         public Nullable<System.DateTime> aniversario { get; set; }
-        
+        public string con_goce { get; set; }
+
     }
 }

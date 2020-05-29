@@ -196,7 +196,7 @@ namespace desconectate.Controllers
 
                 while (sqlReader.Read())
                 {
-                    lst.Add(new Solicitud { folio = sqlReader.GetInt32(0), tipo_solicitud = sqlReader[1].ToString(), fecha_inicio = Convert.ToDateTime(sqlReader.IsDBNull(2) ? null : sqlReader[2]), fecha_fin = Convert.ToDateTime(sqlReader.IsDBNull(3) ? null : sqlReader[3]), estatus = sqlReader.GetInt32(4), aprobador = sqlReader[5].ToString(),observacion_solicitante = sqlReader[6].ToString() });
+                    lst.Add(new Solicitud { folio = sqlReader.GetInt32(0), solicitudName = sqlReader[1].ToString(), fecha_inicio = Convert.ToDateTime(sqlReader.IsDBNull(2) ? null : sqlReader[2]), fecha_fin = Convert.ToDateTime(sqlReader.IsDBNull(3) ? null : sqlReader[3]), estatus = sqlReader.GetInt32(4), aprobador = sqlReader[5].ToString(),observacion_solicitante = sqlReader[6].ToString() });
                 }
 
                 conn.Close();

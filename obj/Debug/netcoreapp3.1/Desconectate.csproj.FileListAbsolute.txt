@@ -8,6 +8,7 @@
 /Users/rodrigolira/Proyectos/hollidays/bin/Debug/netcoreapp3.1/Desconectate.pdb
 /Users/rodrigolira/Proyectos/hollidays/bin/Debug/netcoreapp3.1/Desconectate.Views.dll
 /Users/rodrigolira/Proyectos/hollidays/bin/Debug/netcoreapp3.1/Desconectate.Views.pdb
+/Users/rodrigolira/Proyectos/hollidays/bin/Debug/netcoreapp3.1/ExcelDataReader.dll
 /Users/rodrigolira/Proyectos/hollidays/bin/Debug/netcoreapp3.1/System.Configuration.ConfigurationManager.dll
 /Users/rodrigolira/Proyectos/hollidays/bin/Debug/netcoreapp3.1/System.Data.SqlClient.dll
 /Users/rodrigolira/Proyectos/hollidays/bin/Debug/netcoreapp3.1/System.Security.Cryptography.ProtectedData.dll
@@ -32,6 +33,8 @@
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/Home/Index.cshtml.g.cs
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/Shared/Error.cshtml.g.cs
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/Shared/_Layout.cshtml.g.cs
+/Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/Shared/_LayoutSessionA.cshtml.g.cs
+/Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/Shared/_LayoutSessionS.cshtml.g.cs
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/Shared/_ValidationScriptsPartial.cshtml.g.cs
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/Solicitante/Index.cshtml.g.cs
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/_ViewImports.cshtml.g.cs
@@ -45,6 +48,3 @@
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Desconectate.dll
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Desconectate.pdb
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Desconectate.genruntimeconfig.cache
-/Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/Shared/_LayoutSessionS.cshtml.g.cs
-/Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Desconectate.csprojAssemblyReference.cache
-/Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Razor/Views/Shared/_LayoutSessionA.cshtml.g.cs

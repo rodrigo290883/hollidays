@@ -1,4 +1,5 @@
 ﻿@{
+
     ViewData["Title"] = "Aprobador|Desconéctate";
     if (ViewBag.tipo == "S")
         Layout = "~/Views/Shared/_LayoutSessionS.cshtml";
@@ -7,11 +8,9 @@
 
     Empleados empleado = ViewBag.empleado;
 
-
 }
 
 <style>
-
 
     body {
         background-image: url("images/doodle-background.png");
@@ -28,8 +27,6 @@
         right: 0px;
     }
 
-    .b_data {
-    }
 </style>
 
 <link rel="stylesheet" href="lib/bootstrap-select/dist/css/bootstrap-select.css" />
@@ -66,7 +63,7 @@
     </div>
     <form id="frmAprobadorSolicitud">
         <div class="row mt-2">
-            <div class="col-8">
+            <div class="col-sm-12 col-md-8">
                 <div class="container">
                     <div class="row">
                         <div class="col-8">
@@ -94,9 +91,14 @@
                         <div class="col-6 font-weight-bold">FECHA INICIO: <b id="data_inicio"></b></div>
                         <div class="col-6 font-weight-bold">FECHA FIN: <b id="data_fin"></b></div>
                     </div>
+                    <div class="row">
+                        <div class="col-12 font-weight-bold">
+                            OBSERVACION SOLICITANTE: <b id="observacion_solicitante"></b>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-4 mt-2">
+            <div class="col-sm-12 col-md-4 mt-2">
                 <div class="container">
                     <div class="row">
                         <label>CAMBIAR ESTATUS:</label>
@@ -106,8 +108,19 @@
                             <option value="2">DENEGADO</option>
                         </select>
                     </div>
+                    <div id="d_con_goce" class="row">
+                        <label> Permiso:  </label>
+                        <div class="form-check">
+                            <input id="i_con_goce_s" type="radio" class="form-check-input" name="con_goce" value="S" checked/>
+                            <label class="form-check-label" for="i_con_goce_s">Con goce   </label>
+                        </div>
+                        <div class="form-check">
+                            <input id="i_con_goce_n" type="radio" class="form-check-input" name="con_goce" value="N" />
+                            <label class="form-check-label" for="i_con_goce_n">Sin goce</label>
+                        </div>
+                    </div>
                     <div class="row rounded mt-2">
-                        <textarea id="comentarios" name="comentarios" class="form-control" rows="3" placeholder="Observaciones..."></textarea>
+                        <textarea id="ta_comentarios" name="comentarios" class="form-control" rows="3" placeholder="Observaciones..."></textarea>
                     </div>
                     <div class="row mt-2 text-center">
                         <input type="hidden" name="id_folio" id="id_folio" value=""/>
@@ -126,6 +139,7 @@
         $(function () {
             var folio = '';
             actualizaLista();
+            limpiarForma();
 
             function actualizaLista() {
                 url = "@Url.Content("~/Aprobador/SolicitudesPendientes")"
@@ -154,13 +168,19 @@
             }
 
             $("#t_Slt_Pendiente tbody").on("click", "tr", function () {
+                limpiarForma();
                 folio = $(this).attr('alt');
 
                 url = "@Url.Content("~/Aprobador/solicitudInfo")"
 
                 $.post(url, { "id_folio": folio }, function (data) {
+                    alert(JSON.stringify(data));
+                    if (data.tipo_solicitud_goce == 1)
+                        $("#d_con_goce").show();
+                    else
+                        $("#d_con_goce").hide();
+                           
 
-                    // alert(data.antiguedad); ya se obtiene el id_sap de que solicita el permiso
                     $("#data_idsap").html(data.id_sap);
                     $("#data_nombre").html(data.nombre);
                     $("#data_antiguedad").html((data.antiguedad / 12) + " años y " + (data.antiguedad % 12) + " meses ");
@@ -173,6 +193,9 @@
                     $("#data_inicio").html(data.fecha_inicio.substring(0, 10));
                     $("#data_fin").html(data.fecha_fin.substring(0, 10));
                     $("#id_folio").val(data.folio);
+                    $("#observacion_solicitante").val(data.observacion_solicitante);
+
+                    
 
                 });
 
@@ -180,8 +203,10 @@
             });
             function limpiarForma(){
                 $("#id_folio").val('');
-                $("#comentarios").html('');
+                $("#ta_comentarios").val('');
                 $("#s_estatus").selectpicker('val', '0');
+                $("#i_con_goce_s").prop("checked", true);
+                $("#d_con_goce").hide();
             }
 
 
@@ -190,6 +215,8 @@
 
                 url = "@Url.Content("~/Aprobador/ActualizarSolicitud")"
                 parametros = $(this).serialize();
+
+                alert(JSON.stringify(parametros));
 
                 $.post(url, parametros, function (data) {
                     if (data = "1") {

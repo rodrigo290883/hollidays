@@ -34,7 +34,7 @@ namespace desconectate.Controllers
             string connString = _configuration.GetConnectionString("MyConnection"); // Read the connection string from the web.config file
             using (SqlConnection conn = new SqlConnection(connString))
             {
-                int folio = 0;
+               
                 conn.Open();
                 SqlCommand cmd = new SqlCommand("Update empleados Set avatar = @avatar Where IdSAP = @IdSAP ", conn);
                 cmd.Parameters.AddWithValue("@IdSAP", id_sap);

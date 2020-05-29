@@ -36,6 +36,10 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
+            "ExcelDataReader": {
+              "target": "Package",
+              "version": "[3.6.0, )"
+            },
             "Microsoft.AspNetCore.Session": {
               "target": "Package",
               "version": "[2.2.0, )"
@@ -47,10 +51,6 @@
             "System.Data.SqlClient": {
               "target": "Package",
               "version": "[4.8.1, )"
-            },
-            "System.Linq": {
-              "target": "Package",
-              "version": "[4.3.0, )"
             }
           },
           "imports": [

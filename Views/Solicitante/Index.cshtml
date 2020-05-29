@@ -357,7 +357,7 @@
                             break;
                     }
 
-                    html = "<tr data-toggle='tooltip' title='" + dato.observacion_solicitante + "'><td>" + dato.folio + "</td><td>" + dato.tipo_solicitud + "</td><td>" + dato.fecha_inicio.substring(0, 10) + "</td><td>" + dato.fecha_fin.substring(0, 10) + "</td><td>" + dato.aprobador + "</td><td>" + estatus + "</td></tr>";
+                    html = "<tr data-toggle='tooltip' title='" + dato.observacion_solicitante + "'><td>" + dato.folio + "</td><td>" + dato.solicitudName + "</td><td>" + dato.fecha_inicio.substring(0, 10) + "</td><td>" + dato.fecha_fin.substring(0, 10) + "</td><td>" + dato.aprobador + "</td><td>" + estatus + "</td></tr>";
                     $("#t_solicitudes tbody").append(html);
                 }
                 $('[data-toggle="tooltip"]').tooltip();
