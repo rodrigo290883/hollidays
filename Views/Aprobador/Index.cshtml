@@ -174,7 +174,7 @@
                 url = "@Url.Content("~/Aprobador/solicitudInfo")"
 
                 $.post(url, { "id_folio": folio }, function (data) {
-                    alert(JSON.stringify(data));
+                    //alert(JSON.stringify(data));
                     if (data.tipo_solicitud_goce == 1)
                         $("#d_con_goce").show();
                     else
@@ -183,7 +183,7 @@
 
                     $("#data_idsap").html(data.id_sap);
                     $("#data_nombre").html(data.nombre);
-                    $("#data_antiguedad").html((data.antiguedad / 12) + " años y " + (data.antiguedad % 12) + " meses ");
+                    $("#data_antiguedad").html(parseInt(data.antiguedad / 12) + " años y " + (data.antiguedad % 12) + " meses ");
                     $("#data_aniversario").html(data.aniversario.substring(0, 10));
                     $("#data_disfrutar").html(data.fecha_fin - data.fecha_inicio);
                     $("#data_tipo").html(data.solicitudName);
@@ -216,7 +216,7 @@
                 url = "@Url.Content("~/Aprobador/ActualizarSolicitud")"
                 parametros = $(this).serialize();
 
-                alert(JSON.stringify(parametros));
+                //alert(JSON.stringify(parametros));
 
                 $.post(url, parametros, function (data) {
                     if (data = "1") {

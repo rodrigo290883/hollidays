@@ -48,3 +48,4 @@
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Desconectate.dll
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Desconectate.pdb
 /Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Desconectate.genruntimeconfig.cache
+/Users/rodrigolira/Proyectos/hollidays/obj/Debug/netcoreapp3.1/Desconectate.csprojAssemblyReference.cache
