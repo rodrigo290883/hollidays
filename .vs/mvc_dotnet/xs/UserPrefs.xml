@@ -1,28 +1,22 @@
 ﻿<Properties StartupConfiguration="{7790088E-0614-4C17-803A-0678261CD006}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Views/Aprobador/Index.cshtml">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Properties/launchSettings.json">
     <Files>
-      <File FileName="Properties/launchSettings.json" Line="6" Column="29" />
-      <File FileName="Controllers/SolicitanteController.cs" />
-      <File FileName="Controllers/AprobadorController.cs" />
-      <File FileName="Views/Aprobador/Index.cshtml" Line="199" Column="1" />
-      <File FileName="Models/TipoSolicitud.cs" />
-      <File FileName="Models/Solicitud.cs" />
-      <File FileName="Views/Solicitante/Index.cshtml" />
-      <File FileName="Views/Home/Index.cshtml" />
+      <File FileName="Controllers/AprobadorController.cs" Line="1" Column="1" />
+      <File FileName="Views/Aprobador/Index.cshtml" Line="1" Column="1" />
+      <File FileName="Properties/launchSettings.json" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="mvc_dotnet" expanded="True">
             <Node name="Desconectate" expanded="True">
-              <Node name="Dependencies" expanded="True" />
               <Node name="Controllers" expanded="True" />
               <Node name="Models" expanded="True" />
-              <Node name="Properties" expanded="True" />
+              <Node name="Properties" expanded="True">
+                <Node name="launchSettings.json" selected="True" />
+              </Node>
               <Node name="Views" expanded="True">
-                <Node name="Aprobador" expanded="True">
-                  <Node name="Index.cshtml" selected="True" />
-                </Node>
+                <Node name="Aprobador" expanded="True" />
                 <Node name="Home" expanded="True" />
                 <Node name="Solicitante" expanded="True" />
               </Node>
@@ -33,7 +27,7 @@
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />
   <MonoDevelop.Ide.ItemProperties.Desconectate PreferredExecutionTarget="/Applications/Google Chrome.app" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

@@ -193,7 +193,7 @@
                     $("#data_inicio").html(data.fecha_inicio.substring(0, 10));
                     $("#data_fin").html(data.fecha_fin.substring(0, 10));
                     $("#id_folio").val(data.folio);
-                    $("#observacion_solicitante").val(data.observacion_solicitante);
+                    $("#observacion_solicitante").html(data.observacion_solicitante);
 
 
 
@@ -201,7 +201,8 @@
 
 
             });
-            function limpiarForma(){
+            function limpiarForma() {
+                $("b").html('');
                 $("#id_folio").val('');
                 $("#ta_comentarios").val('');
                 $("#s_estatus").selectpicker('val', '0');
@@ -216,30 +217,35 @@
                 url = "@Url.Content("~/Aprobador/ActualizarSolicitud")"
                 parametros = $(this).serialize();
 
-                alert(JSON.stringify(parametros));
+                //alert(JSON.stringify(parametros));
 
-                if ($("#ta_comentarios").val() == '') {
-                    swal("Ocurrio un Error", "Debes ingresar una observacion, al cambio de estatus", "warning");
+                if ($("#id_folio").val() == '') {
+                    swal("Ocurrio un Error", "Debes seleccionar un registro de solicitud", "warning");
                 }
                 else {
+                    if ($("#ta_comentarios").val() == '' || $("#s_estatus").val() == 0) {
+                        swal("Ocurrio un Error", "Debes ingresar una observacion y cambiar el estatus de la solicitud", "warning");
+                    }
+                    else {
 
-                    //alert(JSON.stringify(parametros));
+                        //alert(JSON.stringify(parametros));
 
-                    $.post(url, parametros, function (data) {
-                        if (data = "1") {
-                            url2 = "@Url.Content("~/Aprobador/EnviaCorreo")"
-                            $.post(url2, { "folio": $("#id_folio").val() }, function (data2) {
-                                if (data2 != 1) {
-                                    swal("Ocurrio un Error en el envio de correo", data, "error");
-                                }
-                            });
-                            limpiarForma();
-                            actualizaLista();
-                            swal("Se actualizo la solicitud correctamente", "Ok", "success");
-                        } else {
-                            swal("Ocurrio un Error", data, "error");
-                        }
-                    });
+                        $.post(url, parametros, function (data) {
+                            if (data = "1") {
+                                url2 = "@Url.Content("~/Aprobador/EnviaCorreo")"
+                                $.post(url2, { "folio": $("#id_folio").val() }, function (data2) {
+                                    if (data2 != 1) {
+                                        swal("Ocurrio un Error en el envio de correo", data, "error");
+                                    }
+                                });
+                                limpiarForma();
+                                actualizaLista();
+                                swal("Se actualizo la solicitud correctamente", "Ok", "success");
+                            } else {
+                                swal("Ocurrio un Error", data, "error");
+                            }
+                        });
+                    }
                 }
             });
 

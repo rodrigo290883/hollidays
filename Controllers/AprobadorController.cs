@@ -147,8 +147,8 @@ namespace desconectate.Controllers
             {
                 conn.Open();
                 SqlCommand cmd = new SqlCommand("select sol.id_sap, emp.nombre as solicitante,sol.id_sap_aprobador,ap.nombre as aprobador, emp.email as email_solicitante,tip.solicitud ,sol.fecha_inicio ," +
-                    "sol.fecha_fin ,sol.fecha_solicitud,sol.observacion_solicitante,sol.observacion_aprobador,sol.estatus from solicitudes sol left join empleados ap on sol.id_sap_aprobador = ap.IdSAP left join empleados emp on sol.id_sap = emp.IdSAP" +
-                    " left join ctipos_solicitud tip on sol.tipo_solicitud = tip.id_tipo_solicitud where sol.folio = @folio ", conn);
+                    "sol.fecha_fin ,sol.fecha_solicitud,sol.observacion_solicitante,sol.observacion_aprobador,est.descripcion from solicitudes sol left join empleados ap on sol.id_sap_aprobador = ap.IdSAP left join empleados emp on sol.id_sap = emp.IdSAP" +
+                    " left join ctipos_solicitud tip on sol.tipo_solicitud = tip.id_tipo_solicitud left join cestatus est on sol.estatus = est.estatus where sol.folio = @folio ", conn);
 
                 cmd.Parameters.AddWithValue("@folio", folio);
 
@@ -166,7 +166,7 @@ namespace desconectate.Controllers
                 string fecha_solicitud = sqlReader[8].ToString();
                 string observacion = sqlReader[9].ToString();
                 string observacion_aprobador = sqlReader[10].ToString();
-                string estatus = "Pendiente";
+                string estatus = sqlReader[11].ToString();
 
                 try
                 {
@@ -174,7 +174,7 @@ namespace desconectate.Controllers
 
                     string pass = "AbrilSantiago";
                     string asunto = "Cambio de Estatus de la Solicitud Folio:" + folio;
-                    string mensage = "<head><style>img{width:100%;padding:0px;margin:0px;}tr{background-image:url('https://i.postimg.cc/FzTgvcWz/cuerpo-mail.png'); background-repeat: repeat-y;background-size:100% 100%; padding:0px; margin:0px;}td{padding:0px; margin:0px;}</style></head><table style='padding:0px;marging:0px;border:0px;border-collapse: collapse;border-spacing:0px;'><tr><td><img src='https://i.postimg.cc/1319y6Dv/encabezado-mail.png' /></td></tr><tr><td style='padding:5% 5%; color:#b41547; font-size: 18px; text-align: center;'>Se realizo un cambio de estatus de la  solicitud de vacaciones, por parte de:<br>" + aprobador + "</td></tr><tr><td style='padding:0% 5%; color: #5c2a7e; font-size: 18px; text-align: left;'>Tipo Solicitud: " + solicitud + "</td></tr><tr><td style='padding:0% 5%; color: #5c2a7e; font-size: 18px; text-align: left;'>Fecha Inicio: " + fecha_inicio + "</td></tr><tr><td style=' padding:0% 5%; color: #5c2a7e; font-size: 18px; text-align: left;'>Fecha Fin: " + fecha_fin + "</td></tr><tr><td style=' padding:0% 5%; color: #5c2a7e; font-size: 18px; text-align: left;'>Observacion Solicitante: " + observacion + "</td></tr><tr><td style=' padding:5% 5%; color:#b41547; font-size: 18px; text-align: center; '>Nuevo estatus:"+estatus+ "</td></tr><tr><td style=' padding:5% 5%; color:#b41547; font-size: 18px; text-align: center; '> Observacion Aprobador:" + observacion_aprobador + "</td></tr><tr><td><img src='https://i.postimg.cc/hvSK9qPN/pie-mail.png' /></td></tr></table>";
+                    string mensage = "<head><style>img{width:100%;padding:0px;margin:0px;}tr{background-image:url('https://i.postimg.cc/FzTgvcWz/cuerpo-mail.png'); background-repeat: repeat-y;background-size:100% 100%; padding:0px; margin:0px;}td{padding:0px; margin:0px;}</style></head><table style='padding:0px;marging:0px;border:0px;border-collapse: collapse;border-spacing:0px;'><tr><td><img src='https://i.postimg.cc/1319y6Dv/encabezado-mail.png' /></td></tr><tr><td style='padding:5% 5%; color:#b41547; font-size: 18px; text-align: center;'>Se realizo un cambio de estatus de la  solicitud de vacaciones, por parte de:<br>" + aprobador + "</td></tr><tr><td style='padding:0% 5%; color: #5c2a7e; font-size: 18px; text-align: left;'>Solicitante: " + empleado + "</td></tr><tr><td style='padding:0% 5%; color: #5c2a7e; font-size: 18px; text-align: left;'>Tipo Solicitud: " + solicitud + "</td></tr><tr><td style='padding:0% 5%; color: #5c2a7e; font-size: 18px; text-align: left;'>Fecha Inicio: " + fecha_inicio + "</td></tr><tr><td style=' padding:0% 5%; color: #5c2a7e; font-size: 18px; text-align: left;'>Fecha Fin: " + fecha_fin + "</td></tr><tr><td style=' padding:0% 5%; color: #5c2a7e; font-size: 18px; text-align: left;'>Observacion Solicitante: " + observacion + "</td></tr><tr><td style=' padding:5% 5% 0% 5%; color:#b41547; font-size: 18px; text-align: center; '>Nuevo estatus: "+estatus+ "</td></tr><tr><td style=' padding:0% 5%; color:#b41547; font-size: 18px; text-align: left; '> Observacion Aprobador: " + observacion_aprobador + "</td></tr><tr><td><img src='https://i.postimg.cc/hvSK9qPN/pie-mail.png' /></td></tr></table>";
 
 
                     MailMessage correo = new MailMessage(origen, destino);
