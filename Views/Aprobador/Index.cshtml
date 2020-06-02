@@ -179,7 +179,7 @@
                         $("#d_con_goce").show();
                     else
                         $("#d_con_goce").hide();
-                           
+
 
                     $("#data_idsap").html(data.id_sap);
                     $("#data_nombre").html(data.nombre);
@@ -195,7 +195,7 @@
                     $("#id_folio").val(data.folio);
                     $("#observacion_solicitante").val(data.observacion_solicitante);
 
-                    
+
 
                 });
 
@@ -216,17 +216,31 @@
                 url = "@Url.Content("~/Aprobador/ActualizarSolicitud")"
                 parametros = $(this).serialize();
 
-                //alert(JSON.stringify(parametros));
+                alert(JSON.stringify(parametros));
 
-                $.post(url, parametros, function (data) {
-                    if (data = "1") {
-                        limpiarForma();
-                        actualizaLista();
-                        swal("Se actualizo la solicitud correctamente", "Ok", "success");
-                    } else {
-                        swal("Ocurrio un Error", data, "error");
-                    }
-                });
+                if ($("#ta_comentarios").val() == '') {
+                    swal("Ocurrio un Error", "Debes ingresar una observacion, al cambio de estatus", "warning");
+                }
+                else {
+
+                    //alert(JSON.stringify(parametros));
+
+                    $.post(url, parametros, function (data) {
+                        if (data = "1") {
+                            url2 = "@Url.Content("~/Aprobador/EnviaCorreo")"
+                            $.post(url2, { "folio": $("#id_folio").val() }, function (data2) {
+                                if (data2 != 1) {
+                                    swal("Ocurrio un Error en el envio de correo", data, "error");
+                                }
+                            });
+                            limpiarForma();
+                            actualizaLista();
+                            swal("Se actualizo la solicitud correctamente", "Ok", "success");
+                        } else {
+                            swal("Ocurrio un Error", data, "error");
+                        }
+                    });
+                }
             });
 
         });

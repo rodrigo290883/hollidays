@@ -189,7 +189,7 @@ namespace desconectate.Controllers
             {
                 conn.Open();
                 SqlCommand cmd = new SqlCommand("SELECT sol.folio,ts.solicitud,sol.fecha_inicio,sol.fecha_fin,sol.estatus,em.nombre,sol.observacion_solicitante FROM solicitudes sol " +
-                    "LEFT JOIN ctipos_solicitud ts ON sol.tipo_solicitud = ts.id_tipo_solicitud LEFT JOIN empleados em ON sol.id_sap_aprobador = em.IdSAP WHERE id_sap = @IdSAP", conn);
+                    "LEFT JOIN ctipos_solicitud ts ON sol.tipo_solicitud = ts.id_tipo_solicitud LEFT JOIN empleados em ON sol.id_sap_aprobador = em.IdSAP WHERE id_sap = @IdSAP and fecha_inicio >= GETDATE()", conn);
                 cmd.Parameters.AddWithValue("@IdSAP", id_sap);
 
                 SqlDataReader sqlReader = cmd.ExecuteReader();

@@ -72,7 +72,7 @@ namespace desconectate.Controllers
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("select s.folio, e.nombre, ts.solicitud, s.fecha_inicio,s.fecha_fin,es.descripcion from solicitudes s inner join empleados e on s.id_sap = e.IdSAP inner join ctipos_solicitud ts on s.tipo_solicitud = ts.id_tipo_solicitud inner join cestatus es on es.estatus = s.estatus  where id_sap_aprobador = @IdSAP",conn);
+                SqlCommand cmd = new SqlCommand("select s.folio, e.nombre, ts.solicitud, s.fecha_inicio,s.fecha_fin,es.descripcion from solicitudes s inner join empleados e on s.id_sap = e.IdSAP inner join ctipos_solicitud ts on s.tipo_solicitud = ts.id_tipo_solicitud inner join cestatus es on es.estatus = s.estatus  where s.estatus = 0 and id_sap_aprobador = @IdSAP",conn);
                 cmd.Parameters.AddWithValue("@IdSAP",id_sap);
 
                 SqlDataReader sqlReader = cmd.ExecuteReader();
@@ -122,7 +122,7 @@ namespace desconectate.Controllers
             }
         }
         
-        public IActionResult ActualizarSolicitud(int id_folio, int s_estatus, String comentarios, string con_goce)
+        public IActionResult ActualizarSolicitud(int id_folio, int s_estatus, string comentarios, string con_goce)
         {
             string connString = _configuration.GetConnectionString("MyConnection");
 
@@ -146,8 +146,8 @@ namespace desconectate.Controllers
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("select sol.id_sap, emp.nombre as solicitante,sol.id_sap_aprobador,ap.nombre as aprobador, ap.email as email_aprobador,tip.solicitud ,sol.fecha_inicio ," +
-                    "sol.fecha_fin ,sol.fecha_solicitud,sol.observacion_solicitante from solicitudes sol left join empleados ap on sol.id_sap_aprobador = ap.IdSAP left join empleados emp on sol.id_sap = emp.IdSAP" +
+                SqlCommand cmd = new SqlCommand("select sol.id_sap, emp.nombre as solicitante,sol.id_sap_aprobador,ap.nombre as aprobador, emp.email as email_solicitante,tip.solicitud ,sol.fecha_inicio ," +
+                    "sol.fecha_fin ,sol.fecha_solicitud,sol.observacion_solicitante,sol.observacion_aprobador,sol.estatus from solicitudes sol left join empleados ap on sol.id_sap_aprobador = ap.IdSAP left join empleados emp on sol.id_sap = emp.IdSAP" +
                     " left join ctipos_solicitud tip on sol.tipo_solicitud = tip.id_tipo_solicitud where sol.folio = @folio ", conn);
 
                 cmd.Parameters.AddWithValue("@folio", folio);
@@ -158,20 +158,23 @@ namespace desconectate.Controllers
 
                 string empleado = sqlReader[1].ToString();
                 string id_empleado = sqlReader[0].ToString();
+                string aprobador = sqlReader[3].ToString();
                 string destino = sqlReader[4].ToString();
                 string solicitud = sqlReader[5].ToString();
                 string fecha_inicio = sqlReader[6].ToString();
                 string fecha_fin = sqlReader[7].ToString();
                 string fecha_solicitud = sqlReader[8].ToString();
                 string observacion = sqlReader[9].ToString();
+                string observacion_aprobador = sqlReader[10].ToString();
+                string estatus = "Pendiente";
 
                 try
                 {
                     string origen = "rodrigo290883@gmail.com";
 
                     string pass = "AbrilSantiago";
-                    string asunto = "Solicitud pendiente de Aprobacion Folio:" + folio;
-                    string mensage = "<head><style>img{width:100%;padding:0px;margin:0px;}tr{background-image:url('https://i.postimg.cc/FzTgvcWz/cuerpo-mail.png'); background-repeat: repeat-y;background-size:100% 100%; padding:0px; margin:0px;}td{padding:0px; margin:0px;}</style></head><table style='padding:0px;marging:0px;border:0px;border-collapse: collapse;border-spacing:0px;'><tr><td><img src='https://i.postimg.cc/1319y6Dv/encabezado-mail.png' /></td></tr><tr><td style='padding:5% 5%; color:#b41547; font-size: 18px; text-align: center;'>Se realizo una solicitud de vacaciones por parte de:<br>" + empleado + "</td></tr><tr><td style='padding:0% 5%; color: #5c2a7e; font-size: 18px; text-align: left;'>Tipo Solicitud: " + solicitud + "</td></tr><tr><td style='padding:0% 5%; color: #5c2a7e; font-size: 18px; text-align: left;'>Fecha Inicio: " + fecha_inicio + "</td></tr><tr><td style=' padding:0% 5%; color: #5c2a7e; font-size: 18px; text-align: left;'>Fecha Fin: " + fecha_fin + "</td></tr><tr><td style=' padding:0% 5%; color: #5c2a7e; font-size: 18px; text-align: left;'>Observacion Solicitante: " + observacion + "</td></tr><tr><td style=' padding:5% 5%; color:#b41547; font-size: 18px; text-align: center; '>Favor de ingresar al sitio de <a href='#'>vacaciones</a> para su aprobacion.</td></tr><tr><td><img src='https://i.postimg.cc/hvSK9qPN/pie-mail.png' /></td></tr></table>";
+                    string asunto = "Cambio de Estatus de la Solicitud Folio:" + folio;
+                    string mensage = "<head><style>img{width:100%;padding:0px;margin:0px;}tr{background-image:url('https://i.postimg.cc/FzTgvcWz/cuerpo-mail.png'); background-repeat: repeat-y;background-size:100% 100%; padding:0px; margin:0px;}td{padding:0px; margin:0px;}</style></head><table style='padding:0px;marging:0px;border:0px;border-collapse: collapse;border-spacing:0px;'><tr><td><img src='https://i.postimg.cc/1319y6Dv/encabezado-mail.png' /></td></tr><tr><td style='padding:5% 5%; color:#b41547; font-size: 18px; text-align: center;'>Se realizo un cambio de estatus de la  solicitud de vacaciones, por parte de:<br>" + aprobador + "</td></tr><tr><td style='padding:0% 5%; color: #5c2a7e; font-size: 18px; text-align: left;'>Tipo Solicitud: " + solicitud + "</td></tr><tr><td style='padding:0% 5%; color: #5c2a7e; font-size: 18px; text-align: left;'>Fecha Inicio: " + fecha_inicio + "</td></tr><tr><td style=' padding:0% 5%; color: #5c2a7e; font-size: 18px; text-align: left;'>Fecha Fin: " + fecha_fin + "</td></tr><tr><td style=' padding:0% 5%; color: #5c2a7e; font-size: 18px; text-align: left;'>Observacion Solicitante: " + observacion + "</td></tr><tr><td style=' padding:5% 5%; color:#b41547; font-size: 18px; text-align: center; '>Nuevo estatus:"+estatus+ "</td></tr><tr><td style=' padding:5% 5%; color:#b41547; font-size: 18px; text-align: center; '> Observacion Aprobador:" + observacion_aprobador + "</td></tr><tr><td><img src='https://i.postimg.cc/hvSK9qPN/pie-mail.png' /></td></tr></table>";
 
 
                     MailMessage correo = new MailMessage(origen, destino);
