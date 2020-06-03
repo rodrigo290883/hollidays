@@ -15,25 +15,13 @@
         avatar = "sin_avatar.png";
     }
     else
-    {
-        if (empleado.sexo == 'M')
-        {
-            if (empleado.meses_ultimo_desconecte <= 2)
-                avatar = avatar + ".png";
-            else if (empleado.meses_ultimo_desconecte > 2 && empleado.meses_ultimo_desconecte <= 6)
-                avatar = avatar + ".png";
-            else
-                avatar = avatar + ".png";
-        }
+    { 
+        if (empleado.meses_ultimo_desconecte <= 2)
+            avatar = avatar + ".png";
+        else if (empleado.meses_ultimo_desconecte > 2 && empleado.meses_ultimo_desconecte <= 6)
+            avatar = avatar + ".png";
         else
-        {
-            if (empleado.meses_ultimo_desconecte <= 2)
-                avatar = avatar + ".png";
-            else if (empleado.meses_ultimo_desconecte > 2 && empleado.meses_ultimo_desconecte <= 6)
-                avatar = avatar + ".png";
-            else
-                avatar = avatar + ".png";
-        }
+            avatar = avatar + ".png";
     }
 
     string antiguedad = (@empleado.antiguedad/12)+" años y "+(@empleado.antiguedad%12)+ " meses";

@@ -57,11 +57,11 @@ namespace desconectate.Controllers
                     empleado.url_poliza = sqlReader[7].ToString();
                     empleado.Idsap_padre = sqlReader.GetInt32(8);
                     empleado.esquema = sqlReader[9].ToString();
-                    empleado.sexo = sqlReader[10].ToString()[0];
+                    
                     ViewBag.periodo = sqlReader.GetInt32(13);
 
                     empleado.antiguedad = sqlReader.GetInt32(11);
-                    empleado.meses_ultimo_desconecte = sqlReader.GetInt32(12);
+                    empleado.meses_ultimo_desconecte = sqlReader.IsDBNull(12)?0: sqlReader.GetInt32(12);
                     empleado.caducidad = Convert.ToDateTime(sqlReader.IsDBNull(6) ? null : sqlReader[6]);
                     empleado.avatar = sqlReader[14].ToString();
 

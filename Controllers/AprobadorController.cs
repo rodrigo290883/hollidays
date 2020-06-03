@@ -41,15 +41,15 @@ namespace desconectate.Controllers
                 using (SqlConnection conn = new SqlConnection(connString))
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("SELECT * FROM empleados WHERE IdSAP = @IdSAP",conn);
+                    SqlCommand cmd = new SqlCommand("SELECT IdSAP,nombre FROM empleados WHERE IdSAP = @IdSAP",conn);
                     cmd.Parameters.AddWithValue("@IdSAP", usuario);
 
                     SqlDataReader sqlReader = cmd.ExecuteReader();
 
                     sqlReader.Read();
 
-                    empleado.IdSAP = sqlReader.GetInt32(1);
-                    empleado.Nombre = sqlReader[2].ToString();
+                    empleado.IdSAP = sqlReader.GetInt32(0);
+                    empleado.Nombre = sqlReader[1].ToString();
                     
                     ViewBag.Empleado = empleado;
 
