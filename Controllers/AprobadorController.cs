@@ -41,15 +41,15 @@ namespace desconectate.Controllers
                 using (SqlConnection conn = new SqlConnection(connString))
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("SELECT IdSAP,nombre FROM empleados WHERE IdSAP = @IdSAP",conn);
-                    cmd.Parameters.AddWithValue("@IdSAP", usuario);
+                    SqlCommand cmd = new SqlCommand("SELECT idsap,nombre FROM empleados WHERE idsap = @idsap",conn);
+                    cmd.Parameters.AddWithValue("@idsap", usuario);
 
                     SqlDataReader sqlReader = cmd.ExecuteReader();
 
                     sqlReader.Read();
 
-                    empleado.IdSAP = sqlReader.GetInt32(0);
-                    empleado.Nombre = sqlReader[1].ToString();
+                    empleado.idsap = sqlReader.GetInt32(0);
+                    empleado.nombre = sqlReader[1].ToString();
                     
                     ViewBag.Empleado = empleado;
 
@@ -72,8 +72,8 @@ namespace desconectate.Controllers
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("select s.folio, e.nombre, ts.solicitud, s.fecha_inicio,s.fecha_fin,es.descripcion from solicitudes s inner join empleados e on s.id_sap = e.IdSAP inner join ctipos_solicitud ts on s.tipo_solicitud = ts.id_tipo_solicitud inner join cestatus es on es.estatus = s.estatus  where s.estatus = 0 and id_sap_aprobador = @IdSAP",conn);
-                cmd.Parameters.AddWithValue("@IdSAP",id_sap);
+                SqlCommand cmd = new SqlCommand("select s.folio, e.nombre, ts.solicitud, s.fecha_inicio,s.fecha_fin,es.descripcion from solicitudes s inner join empleados e on s.idsap = e.idsap inner join ctipos_solicitud ts on s.tipo_solicitud = ts.id_tipo_solicitud inner join cestatus es on es.estatus = s.estatus  where s.estatus = 0 and idsap_aprobador = @idsap",conn);
+                cmd.Parameters.AddWithValue("@idsap",id_sap);
 
                 SqlDataReader sqlReader = cmd.ExecuteReader();
 
@@ -96,14 +96,14 @@ namespace desconectate.Controllers
             {
                 
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT s.id_sap,e.nombre,DATEDIFF(month,e.fecha_ingreso,GETDATE()) as antiguedad ,e.dias_disponibles, cts.maximo_dias, cts.solicitud as solicitudName, e.fecha_ingreso as aniversario, s.fecha_inicio, s.fecha_fin, s.folio,s.tipo_solicitud,cts.con_goce as tipo_solicitud_goce,s.observacion_solicitante  FROM solicitudes s inner join empleados e on s.id_sap = e.IdSAP inner join ctipos_solicitud cts on s.tipo_solicitud = cts.id_tipo_solicitud where s.folio = @folio ",conn);
+                SqlCommand cmd = new SqlCommand("SELECT s.idsap,e.nombre,DATEDIFF(month,e.fecha_ingreso_grupo,GETDATE()) as antiguedad ,e.dias_disponibles, cts.maximo_dias, cts.solicitud as solicitudName, e.fecha_ingreso_grupo as aniversario, s.fecha_inicio, s.fecha_fin, s.folio,s.tipo_solicitud,cts.con_goce as tipo_solicitud_goce,s.observacion_solicitante  FROM solicitudes s inner join empleados e on s.idsap = e.idsap inner join ctipos_solicitud cts on s.tipo_solicitud = cts.id_tipo_solicitud where s.folio = @folio ",conn);
                 cmd.Parameters.AddWithValue("@folio",id_folio);
 
                 SqlDataReader sqlReader = cmd.ExecuteReader();
 
                 sqlReader.Read();
 
-                infosolicitud.id_sap = sqlReader.GetInt32(0);
+                infosolicitud.idsap = sqlReader.GetInt32(0);
                 infosolicitud.nombre = sqlReader[1].ToString();
                 infosolicitud.antiguedad = sqlReader.GetInt32(2);
                 infosolicitud.dias_disponibles = sqlReader.GetInt32(3);
@@ -146,8 +146,8 @@ namespace desconectate.Controllers
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("select sol.id_sap, emp.nombre as solicitante,sol.id_sap_aprobador,ap.nombre as aprobador, emp.email as email_solicitante,tip.solicitud ,sol.fecha_inicio ," +
-                    "sol.fecha_fin ,sol.fecha_solicitud,sol.observacion_solicitante,sol.observacion_aprobador,est.descripcion from solicitudes sol left join empleados ap on sol.id_sap_aprobador = ap.IdSAP left join empleados emp on sol.id_sap = emp.IdSAP" +
+                SqlCommand cmd = new SqlCommand("select sol.idsap, emp.nombre as solicitante,sol.idsap_aprobador,ap.nombre as aprobador, emp.email as email_solicitante,tip.solicitud ,sol.fecha_inicio ," +
+                    "sol.fecha_fin ,sol.fecha_solicitud,sol.observacion_solicitante,sol.observacion_aprobador,est.descripcion from solicitudes sol left join empleados ap on sol.idsap_aprobador = ap.idsap left join empleados emp on sol.idsap = emp.idsap" +
                     " left join ctipos_solicitud tip on sol.tipo_solicitud = tip.id_tipo_solicitud left join cestatus est on sol.estatus = est.estatus where sol.folio = @folio ", conn);
 
                 cmd.Parameters.AddWithValue("@folio", folio);

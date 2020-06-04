@@ -55,7 +55,7 @@ namespace desconectate.Controllers
                     else
                     {
                         conn.Open();
-                        SqlCommand cmd = new SqlCommand("SELECT tipo FROM Empleados WHERE IdSAP = @idsap AND contrasena = @contrasena", conn);
+                        SqlCommand cmd = new SqlCommand("SELECT tipo FROM Empleados WHERE idsap = @idsap AND contrasena = @contrasena", conn);
                         cmd.Parameters.AddWithValue("@idsap", usuario);
                         cmd.Parameters.AddWithValue("@contrasena", contrasena);
 

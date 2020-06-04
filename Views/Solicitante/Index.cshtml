@@ -72,8 +72,8 @@
         <div class="col-sm-12 col-md-5 align-self-center" style="color:#b41547; ">
 
 
-            <h3 class="font-weight-bold">@empleado.Nombre</h3>
-            <h4>IDSAP: @empleado.IdSAP</h4>
+            <h3 class="font-weight-bold">@empleado.nombre</h3>
+            <h4>IDSAP: @empleado.idsap</h4>
 
         </div>
         <div class="col-sm-12 col-md-5 text-center align-self-center">
@@ -86,7 +86,7 @@
 
             <div class="row">
                 <div class="col-sm-12 col-md-6 font-weight-bold">ANTIGÜEDAD: @antiguedad</div>
-                <div class="col-sm-12 col-md-6 font-weight-bold">FECHA ANIVERSARIO: @empleado.fecha_ingreso.ToString().Substring(0, 10)</div>
+                <div class="col-sm-12 col-md-6 font-weight-bold">FECHA ANIVERSARIO: @empleado.fecha_ingreso_grupo.ToString().Substring(0, 10)</div>
             </div>
             <div class="row">
                 <div class="col-sm-12 col-md-6 font-weight-bold">DÍAS POR DISFRUTAR: @empleado.dias_disponibles</div>
@@ -133,8 +133,8 @@
                 </div>
                 <div class="row mt-2">
                     <div class="col-6 text-center">
-                        <input style="display:none" name="id_sap" value="@empleado.IdSAP" />
-                        <input style="display:none" name="id_sap_aprobador" value="@empleado.Idsap_padre" />
+                        <input style="display:none" name="id_sap" value="@empleado.idsap" />
+                        <input style="display:none" name="id_sap_aprobador" value="@empleado.idsap_padre" />
                         <input data-toggle="modal" data-target="#solicitudModal" class="btn btn-desconectate" value="SOLICITAR" />
                     </div>
                 </div>
@@ -212,8 +212,8 @@
             else {
                 url = "@Url.Content("~/Solicitante/CreaSolicitud")";
                 parametros = {
-                    "id_sap":@empleado.IdSAP,
-                    "id_sap_aprobador":@empleado.Idsap_padre,
+                    "idsap":@empleado.idsap,
+                    "idsap_aprobador":@empleado.idsap_padre,
                     "fecha_inicio": $("#i_fecha_inicio").val(),
                     "fecha_fin": $("#i_fecha_fin").val(),
                     "tipo_solicitud": $("#s_tipo_solicitud").val(),
@@ -324,7 +324,7 @@
 
             url = "@Url.Content("~/Solicitante/EnlistaSolicitudes")"
 
-            $.post(url, { "id_sap":@empleado.IdSAP}, function (data) {
+            $.post(url, { "id_sap":@empleado.idsap}, function (data) {
 
                 var num = data.length;
                 var html = "";

@@ -38,8 +38,8 @@
 <div class="container">
     <div class="row">
         <div class="col-6" style="color:#b41547;">
-            <h3 class="font-weight-bold">@empleado.Nombre</h3>
-            <h4>IDSAP: @empleado.IdSAP</h4>
+            <h3 class="font-weight-bold">@empleado.nombre</h3>
+            <h4>IDSAP: @empleado.idsap</h4>
         </div>
     </div>
     <div class="row mt-2">
@@ -144,7 +144,7 @@
             function actualizaLista() {
                 url = "@Url.Content("~/Aprobador/SolicitudesPendientes")"
 
-                $.post(url, { "id_sap":@empleado.IdSAP}, function (data) {
+                $.post(url, { "id_sap":@empleado.idsap}, function (data) {
                     var num = data.length;
                     $("#t_Slt_Pendiente tbody").html("");
                     for (var i = 0; i < num; i++) {
@@ -181,7 +181,7 @@
                         $("#d_con_goce").hide();
 
 
-                    $("#data_idsap").html(data.id_sap);
+                    $("#data_idsap").html(data.idsap);
                     $("#data_nombre").html(data.nombre);
                     $("#data_antiguedad").html(parseInt(data.antiguedad / 12) + " años y " + (data.antiguedad % 12) + " meses ");
                     $("#data_aniversario").html(data.aniversario.substring(0, 10));

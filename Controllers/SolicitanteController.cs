@@ -38,24 +38,24 @@ namespace desconectate.Controllers
                 using (SqlConnection conn = new SqlConnection(connString))
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("select e.IdSAP,e.nombre,e.email,e.estatus,e.fecha_ingreso,e.dias_disponibles,e.ultimo_desconecte,e.url_poliza,e.idsap_padre,e.esquema,e.sexo," +
-                        "DATEDIFF(month,e.fecha_ingreso,GETDATE()) as antiguedad, DATEDIFF(month,e.ultimo_desconecte,GETDATE()) as meses_ultimo_desconecte,iif(DATEDIFF(DAY,CONCAT(datepart(yyyy,getdate()),'-',(datepart(mm,e.fecha_ingreso)+1),'-',datepart(dd,e.fecha_ingreso)),getdate()) <=0,datepart(yyyy,getdate())-1,datepart(yyyy,getdate())) ,e.avatar " +
-                        "from dbo.empleados e  WHERE e.IdSAP = @IdSAP ", conn);
-                    cmd.Parameters.AddWithValue("@IdSAP", usuario);
+                    SqlCommand cmd = new SqlCommand("select e.idsap,e.nombre,e.email,e.estatus,e.fecha_ingreso_grupo,e.dias_disponibles,e.ultimo_desconecte,e.url_poliza,e.idsap_padre,e.esquema,e.sexo," +
+                        "DATEDIFF(month,e.fecha_ingreso_grupo,GETDATE()) as antiguedad, DATEDIFF(month,e.ultimo_desconecte,GETDATE()) as meses_ultimo_desconecte,iif(DATEDIFF(DAY,CONCAT(datepart(yyyy,getdate()),'-',(datepart(mm,e.fecha_ingreso_grupo)+1),'-',datepart(dd,e.fecha_ingreso_grupo)),getdate()) <=0,datepart(yyyy,getdate())-1,datepart(yyyy,getdate())) ,e.avatar " +
+                        "from dbo.empleados e  WHERE e.idsap = @idsap ", conn);
+                    cmd.Parameters.AddWithValue("@idsap", usuario);
 
                     SqlDataReader sqlReader = cmd.ExecuteReader();
 
                     sqlReader.Read();
 
-                    empleado.IdSAP = sqlReader.GetInt32(0);
-                    empleado.Nombre = sqlReader[1].ToString();
+                    empleado.idsap = sqlReader.GetInt32(0);
+                    empleado.nombre = sqlReader[1].ToString();
                     empleado.email = sqlReader[2].ToString();
                     empleado.estatus = sqlReader.GetInt32(3);
-                    empleado.fecha_ingreso = Convert.ToDateTime(sqlReader.IsDBNull(4) ? null : sqlReader[4]);
+                    empleado.fecha_ingreso_grupo = Convert.ToDateTime(sqlReader.IsDBNull(4) ? null : sqlReader[4]);
                     empleado.dias_disponibles = sqlReader.GetInt32(5);
                     empleado.ultimo_desconecte = Convert.ToDateTime(sqlReader.IsDBNull(6) ? null : sqlReader[6]);
                     empleado.url_poliza = sqlReader[7].ToString();
-                    empleado.Idsap_padre = sqlReader.GetInt32(8);
+                    empleado.idsap_padre = sqlReader.GetInt32(8);
                     empleado.esquema = sqlReader[9].ToString();
                     
                     ViewBag.periodo = sqlReader.GetInt32(13);
@@ -101,13 +101,13 @@ namespace desconectate.Controllers
             {
                 int folio = 0;
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("insert into dbo.solicitudes (id_sap,tipo_solicitud,fecha_solicitud,fecha_inicio,fecha_fin,estatus,id_sap_aprobador,observacion_solicitante) " +
-                    "VALUES (@IdSAP,@tipo_solicitud,GETDATE(),@fecha_inicio,@fecha_fin,0,@id_sap_aprobador,@observaciones); " + "SELECT CAST(scope_identity() AS int)", conn);
-                cmd.Parameters.AddWithValue("@IdSAP", solicitud.id_sap);
+                SqlCommand cmd = new SqlCommand("insert into dbo.solicitudes (idsap,tipo_solicitud,fecha_solicitud,fecha_inicio,fecha_fin,estatus,idsap_aprobador,observacion_solicitante) " +
+                    "VALUES (@idsap,@tipo_solicitud,GETDATE(),@fecha_inicio,@fecha_fin,0,@idsap_aprobador,@observaciones); " + "SELECT CAST(scope_identity() AS int)", conn);
+                cmd.Parameters.AddWithValue("@idsap", solicitud.idsap);
                 cmd.Parameters.AddWithValue("@tipo_solicitud", solicitud.tipo_solicitud);
                 cmd.Parameters.AddWithValue("@fecha_inicio", solicitud.fecha_inicio);
                 cmd.Parameters.AddWithValue("@fecha_fin", solicitud.fecha_fin);
-                cmd.Parameters.AddWithValue("@id_sap_aprobador", solicitud.id_sap_aprobador);
+                cmd.Parameters.AddWithValue("@idsap_aprobador", solicitud.idsap_aprobador);
                 cmd.Parameters.AddWithValue("@observaciones", solicitud.observacion_solicitante);
 
                 try
@@ -128,8 +128,8 @@ namespace desconectate.Controllers
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("select sol.id_sap, emp.nombre as solicitante,sol.id_sap_aprobador,ap.nombre as aprobador, ap.email as email_aprobador,tip.solicitud ,sol.fecha_inicio ," +
-                    "sol.fecha_fin ,sol.fecha_solicitud,sol.observacion_solicitante from solicitudes sol left join empleados ap on sol.id_sap_aprobador = ap.IdSAP left join empleados emp on sol.id_sap = emp.IdSAP" +
+                SqlCommand cmd = new SqlCommand("select sol.idsap, emp.nombre as solicitante,sol.idsap_aprobador,ap.nombre as aprobador, ap.email_line as email_aprobador,tip.solicitud ,sol.fecha_inicio ," +
+                    "sol.fecha_fin ,sol.fecha_solicitud,sol.observacion_solicitante from solicitudes sol left join empleados ap on sol.idsap_aprobador = ap.idsap left join empleados emp on sol.idsap = emp.idsap" +
                     " left join ctipos_solicitud tip on sol.tipo_solicitud = tip.id_tipo_solicitud where sol.folio = @folio ", conn);
 
                 cmd.Parameters.AddWithValue("@folio", folio);
@@ -189,8 +189,8 @@ namespace desconectate.Controllers
             {
                 conn.Open();
                 SqlCommand cmd = new SqlCommand("SELECT sol.folio,ts.solicitud,sol.fecha_inicio,sol.fecha_fin,sol.estatus,em.nombre,sol.observacion_solicitante FROM solicitudes sol " +
-                    "LEFT JOIN ctipos_solicitud ts ON sol.tipo_solicitud = ts.id_tipo_solicitud LEFT JOIN empleados em ON sol.id_sap_aprobador = em.IdSAP WHERE id_sap = @IdSAP and fecha_inicio >= GETDATE()", conn);
-                cmd.Parameters.AddWithValue("@IdSAP", id_sap);
+                    "LEFT JOIN ctipos_solicitud ts ON sol.tipo_solicitud = ts.id_tipo_solicitud LEFT JOIN empleados em ON sol.idsap_aprobador = em.idsap WHERE sol.idsap = @idsap and sol.fecha_inicio >= GETDATE()", conn);
+                cmd.Parameters.AddWithValue("@idsap", id_sap);
 
                 SqlDataReader sqlReader = cmd.ExecuteReader();
 
