@@ -27,6 +27,16 @@
         right: 0px;
     }
 
+
+    .wrap_date {
+        width: 150px; /* adjust to desired wrapping */
+        display: table;
+        white-space: pre-wrap; /* css-3 */
+        white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+        white-space: -pre-wrap; /* Opera 4-6 */
+        white-space: -o-pre-wrap; /* Opera 7 */
+        word-wrap: break-word; /* Internet Explorer 5.5+ */
+    }
 </style>
 
 <link rel="stylesheet" href="lib/bootstrap-select/dist/css/bootstrap-select.css" />
@@ -40,6 +50,10 @@
         <div class="col-6" style="color:#b41547;">
             <h3 class="font-weight-bold">@empleado.nombre</h3>
             <h4>IDSAP: @empleado.idsap</h4>
+        </div>
+        <div class="col-sm-12 col-md-5 text-center align-self-center">
+            <h4>VACACIONES EQUIPO DE TRABAJO</h4>
+            <button id="b_equipo" data-toggle="modal" data-target="#equipoModal" class="btn btn-desconectate">DETALLE</button>
         </div>
     </div>
     <div class="row mt-2">
@@ -111,7 +125,7 @@
                     <div id="d_con_goce" class="row">
                         <label> Permiso:  </label>
                         <div class="form-check">
-                            <input id="i_con_goce_s" type="radio" class="form-check-input" name="con_goce" value="S" checked/>
+                            <input id="i_con_goce_s" type="radio" class="form-check-input" name="con_goce" value="S" checked />
                             <label class="form-check-label" for="i_con_goce_s">Con goce   </label>
                         </div>
                         <div class="form-check">
@@ -123,13 +137,46 @@
                         <textarea id="ta_comentarios" name="comentarios" class="form-control" rows="3" placeholder="Observaciones..."></textarea>
                     </div>
                     <div class="row mt-2 text-center">
-                        <input type="hidden" name="id_folio" id="id_folio" value=""/>
+                        <input type="hidden" name="id_folio" id="id_folio" value="" />
                         <input type="submit" class="btn btn-desconectate" value="GUARDAR" />
                     </div>
                 </div>
             </div>
         </div>
     </form>
+
+
+    <div class="modal" id="equipoModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Información Equipo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Detalle de tu Equipo de Trabajo</p>
+                    <table class="table table-striped table-responsive" id="t_equipo">
+                        <thead>
+                            <tr>
+                                <th>IDSAP</th>
+                                <th>NOMBRE</th>
+                                <th>PUESTO</th>
+                                <th>INGRESO</th>
+                                <th>DISPONIBLES</th>
+                                <th>ULTIMO</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -167,6 +214,26 @@
                 });
             }
 
+            $("#b_equipo").click(function () {
+                url = "@Url.Content("~/Aprobador/infoEquipo")";
+                
+                $.post(url, {}, function (data) {
+                    var num = data.length;
+                    $("#t_equipo tbody").html("");
+                    for (var i = 0; i < num; i++) {
+                        var dato = data[i];
+
+                        if (dato.ultimo_desconecte.substring(0, 10) == "0001-01-01")
+                            var ultimo = '';
+                        else 
+                            var ultimo = dato.ultimo_desconecte.substring(0, 10);
+                        
+                        html = '<tr class="renglon"><th scope="row">' + dato.idsap + '</th><td>' + dato.nombre + '</td><td>' + dato.banda + '</td><td class="wrap_date">' + dato.fecha_ingreso_grupo.substring(0, 10) + '</td><td>' + dato.dias_disponibles + '</td><td  class="wrap_date">' + ultimo + '</td></tr>';
+                        $("#t_equipo tbody").append(html);
+                    }
+                });
+            });
+
             $("#t_Slt_Pendiente tbody").on("click", "tr", function () {
                 limpiarForma();
                 folio = $(this).attr('alt');
@@ -194,8 +261,6 @@
                     $("#data_fin").html(data.fecha_fin.substring(0, 10));
                     $("#id_folio").val(data.folio);
                     $("#observacion_solicitante").html(data.observacion_solicitante);
-
-
 
                 });
 

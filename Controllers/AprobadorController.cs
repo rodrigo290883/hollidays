@@ -87,6 +87,30 @@ namespace desconectate.Controllers
             }
         }
 
+        public List<Empleados> infoEquipo()
+        {
+            List<Empleados> lst = new List<Empleados>();
+
+            string connString = _configuration.GetConnectionString("MyConnection");
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+                string usuario = HttpContext.Session.GetString("usuario");
+                SqlCommand cmd = new SqlCommand("select idsap,nombre,area,banda,fecha_ingreso_grupo,dias_disponibles,ultimo_desconecte from empleados where idsap_padre = @idsap", conn);
+                cmd.Parameters.AddWithValue("@idsap", usuario);
+
+                SqlDataReader sqlReader = cmd.ExecuteReader();
+
+                while (sqlReader.Read())
+                {
+                    lst.Add(new Empleados { idsap = sqlReader.GetInt32(0), nombre = sqlReader[1].ToString(), area = sqlReader[2].ToString(), banda = sqlReader[3].ToString(), fecha_ingreso_grupo = Convert.ToDateTime(sqlReader.IsDBNull(4) ? null : sqlReader[4]), dias_disponibles = sqlReader.GetInt32(5), ultimo_desconecte = Convert.ToDateTime(sqlReader.IsDBNull(6) ? null : sqlReader[6]) });
+                }
+
+                conn.Close();
+                return lst;
+            }
+        }
+
         public Solicitud solicitudInfo(int id_folio){
 
             Solicitud infosolicitud = new Solicitud();
@@ -136,6 +160,43 @@ namespace desconectate.Controllers
                 cmd.Parameters.AddWithValue("@con_goce", con_goce);
 
                 var aux = cmd.ExecuteNonQuery();
+
+                conn.Close();
+
+                if (aux == 1 && s_estatus == 1)
+                {
+                    conn.Open();
+                    SqlCommand cmd2 = new SqlCommand("select e.idsap,e.dias_disponibles,DATEDIFF(day,sol.fecha_inicio,sol.fecha_fin) as dias,tsol.consume_vacaciones from empleados e,solicitudes sol left join ctipos_solicitud tsol on sol.tipo_solicitud = tsol.id_tipo_solicitud where e.idsap in (select s.idsap from solicitudes s where s.folio = @folio) and sol.folio = @folio", conn);
+                    cmd2.Parameters.AddWithValue("@folio", id_folio);
+
+                    SqlDataReader sqlReader = cmd2.ExecuteReader();
+
+                    sqlReader.Read();
+
+                    int idsap = sqlReader.GetInt32(0);
+                    int dias_disponibles = sqlReader.GetInt32(1);
+                    int dias = sqlReader.GetInt32(2);
+                    dias = dias_disponibles - (dias + 1);
+
+                    string consume_vacaciones = sqlReader[3].ToString();
+
+                    conn.Close();
+
+                    if (consume_vacaciones == "S")
+                    {
+                        conn.Open();
+                        SqlCommand cmd3 = new SqlCommand("update empleados SET dias_disponibles = @dias where idsap = @idsap", conn);
+                        cmd3.Parameters.AddWithValue("@idsap", idsap);
+                        cmd3.Parameters.AddWithValue("@dias", dias);
+
+
+                        aux = cmd3.ExecuteNonQuery();
+
+                        conn.Close();
+                    }
+                }
+
+                
                 return Content(Convert.ToString(aux));
             }
         }
