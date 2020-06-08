@@ -15,7 +15,7 @@
         avatar = "sin_avatar.png";
     }
     else
-    { 
+    {
         if (empleado.meses_ultimo_desconecte <= 2)
             avatar = avatar + ".png";
         else if (empleado.meses_ultimo_desconecte > 2 && empleado.meses_ultimo_desconecte <= 6)
@@ -27,7 +27,7 @@
     string antiguedad = (@empleado.antiguedad/12)+" años y "+(@empleado.antiguedad%12)+ " meses";
 }
 
-    <style>
+<style>
     body {
         background-image: url("images/doodle-background.png");
         background-repeat: no-repeat;
@@ -45,15 +45,14 @@
 
 
 
-    
-    #i_avatar{
+
+    #i_avatar {
         width: 100%;
         position: relative;
         top: 0px;
         left: 0%;
     }
-
-    </style>
+</style>
 
 <link rel="stylesheet" href="lib/simple-calendar/dist/simple-calendar.css" />
 <link rel="stylesheet" href="lib/bootstrap-select/dist/css/bootstrap-select.css" />
@@ -65,8 +64,9 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-12 col-md-2">
-            <a  asp-area="" asp-controller="Avatares" asp-action="Index">
+            <a asp-area="" asp-controller="Avatares" asp-action="Index">
                 <img id="i_avatar" class="" src="images/@avatar" />
+                <input type="hidden" id="statusEmpleado" value="@empleado.estatus">
             </a>
         </div>
         <div class="col-sm-12 col-md-5 align-self-center" style="color:#b41547; ">
@@ -115,7 +115,7 @@
                             <select id="s_tipo_solicitud" class="selectpicker" name="tipo_solicitud">
                                 @foreach (var opt in ViewBag.Opciones)
                                 {
-                                    <option value="@opt.id_tipo_solicitud" aux="@opt.maximo_dias" aux="@opt.consume_vacaciones">@opt.solicitud</option>
+                                <option value="@opt.id_tipo_solicitud" aux="@opt.maximo_dias" aux="@opt.consume_vacaciones">@opt.solicitud</option>
                                 }
                             </select>
                         </div>
@@ -153,11 +153,11 @@
                     </div>
                     <div class="modal-body">
                         <p>Utiliza este espacio, para realizar alguna observacion o comentario sobre tus dias que solicitas:</p>
-                        <textarea  class="form-control" rows="3" id="ta_observacion" name="observacion"></textarea>
+                        <textarea class="form-control" rows="3" id="ta_observacion" name="observacion"></textarea>
                     </div>
                     <div class="modal-footer">
                         <button id="b_solicitud" type="button" class="btn btn-primary">Guardar Solicitud</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" >Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -169,12 +169,12 @@
         <div class="col-sm-12 col-md-12">
             <table id="t_solicitudes" class="table table-responsive table-striped">
                 <thead style="background-color: #821c61; color: white;">
-                    <th>FOLIO</th>
-                    <th>SOLICITUD</th>
-                    <th>FECHA INICIO</th>
-                    <th>FECHA FIN</th>
-                    <th>APROBADOR</th>
-                    <th>ESTATUS</th>
+                <th>FOLIO</th>
+                <th>SOLICITUD</th>
+                <th>FECHA INICIO</th>
+                <th>FECHA FIN</th>
+                <th>APROBADOR</th>
+                <th>ESTATUS</th>
                 </thead>
                 <tbody>
                 </tbody>
@@ -189,6 +189,50 @@
 <script src="lib/bootstrap-select/dist/js/bootstrap-select.js"></script>
 
 <script>
+
+    window.onload = function () {
+
+        var estatus = document.getElementById("statusEmpleado").value;
+
+        if (estatus == 0) {
+
+            swal({
+                title: "Nuevo Usuario!",
+                text: "Ingresa tu nueva contraseña:",
+                type: "input",
+                showCancelButton: false,
+                closeOnConfirm: false,
+                animation: "slide-from-top",
+                inputPlaceholder: "Nueva Contraseña"
+            },
+                function (inputValue) {
+                    if (inputValue === false) return false;
+
+                    if (inputValue === "") {
+                        swal.showInputError("Escribe tu nueva contraseña!");
+                        return false
+                    }
+
+                    url = "@Url.Content("~/Solicitante/UpdatePassword")";
+
+                    parametros = {
+                        "id_sap":@empleado.idsap,
+                        "NewPass": inputValue,
+                    };
+
+                    $.post(url, parametros, function (data) {
+                        if (data == "1") {
+                            swal("Correcto!", "Tu contraseña: " + inputValue, "success");
+                        } else {
+                            swal("Error!", "No se actualizó tu información", "error");
+                        }
+                    });
+
+                });
+
+        }
+    }
+
     $(function() {
         var vacaciones = new Array();
         var disfrutar = 11;
@@ -241,7 +285,7 @@
 
             window.open(url)
         });
-       
+
 
         function EnviaCorreo(folio) {
 

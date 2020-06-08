@@ -218,7 +218,7 @@ namespace desconectate.Controllers
             }
             catch (Exception ex)
             {
-                return Content("No se encontro el archivo de poliza, favor de contactar a recursos humanos.");
+                return Content("No se encontro el archivo de poliza, favor de contactar a recursos humanos.",ex.Message);
             }
             
 
@@ -230,5 +230,22 @@ namespace desconectate.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
+        public IActionResult UpdatePassword(int id_sap, string NewPass) 
+        {
+            string connString = _configuration.GetConnectionString("MyConnection"); // Read the connection string from the web.config file
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+                SqlCommand cmd =  new SqlCommand("UPDATE empleados SET contrasena = @NewPass , estatus = 1 WHERE idsap = @idsap", conn);
+                cmd.Parameters.AddWithValue("@idsap", id_sap);
+                cmd.Parameters.AddWithValue("@NewPass",NewPass);
+
+                var aux = cmd.ExecuteNonQuery();
+                return Content(Convert.ToString(aux));
+            }
+        }
+
     }
 }
