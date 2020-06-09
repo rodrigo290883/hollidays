@@ -70,6 +70,7 @@ namespace desconectate.Controllers
                         {
                             conn.Close();
                             return Content("No se encontro el usuario o contraseña incorrecta");
+                            string nota = ex.ToString();
                         }
 
                     }
