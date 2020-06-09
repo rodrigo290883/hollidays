@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Web;
-
 using System.Diagnostics;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Session;
 using desconectate.Models;
 using Microsoft.AspNetCore.Http;
+
 
 namespace desconectate.Controllers
 {

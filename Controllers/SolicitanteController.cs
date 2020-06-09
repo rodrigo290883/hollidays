@@ -11,6 +11,7 @@ using System.Data;
 using System.Net.Mail;
 using System.Net;
 using System.IO;
+using System.Net.Http;
 
 namespace desconectate.Controllers
 {
@@ -208,20 +209,20 @@ namespace desconectate.Controllers
         public ActionResult DescargaPoliza()
         {
             WebClient cliente = new WebClient();
+            cliente.BaseAddress = null;
+            cliente.BaseAddress = @"\\RODRIGO-VOSTRO-3550\compartida\";
 
             string idsap = HttpContext.Session.GetString("usuario");
             try
             {
-                string repositorio = "";
-                byte[] archivo = cliente.DownloadData(repositorio+idsap + ".pdf");
+                
+                byte[] archivo = cliente.DownloadData(idsap + ".pdf");
                 return File(archivo, "application/pdf", "PGMM_" + idsap + ".pdf");
             }
             catch (Exception ex)
             {
-                return Content("No se encontro el archivo de poliza, favor de contactar a recursos humanos.",ex.Message);
+                return Content("No se encontro el archivo de poliza, favor de contactar a recursos humanos."+ ex.Message);
             }
-            
-
         }
 
         

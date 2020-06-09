@@ -1,39 +1,22 @@
 ﻿<Properties StartupConfiguration="{7790088E-0614-4C17-803A-0678261CD006}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/AprobadorController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Startup.cs">
     <Files>
-      <File FileName="Controllers/SolicitanteController.cs" Line="213" Column="1" />
-      <File FileName="Views/Aprobador/Index.cshtml" Line="150" Column="63" />
-      <File FileName="Views/Shared/_LayoutSessionA.cshtml" Line="1" Column="1" />
-      <File FileName="wwwroot/lib/bootstrap/dist/css/bootstrap.min.css" Line="6" Column="98715" />
-      <File FileName="Controllers/AprobadorController.cs" Line="1" Column="1" />
+      <File FileName="Controllers/SolicitanteController.cs" Line="213" Column="58" />
+      <File FileName="Controllers/HomeController.cs" Line="10" Column="15" />
+      <File FileName="Properties/launchSettings.json" Line="1" Column="1" />
+      <File FileName="appsettings.json" Line="1" Column="1" />
+      <File FileName="Program.cs" Line="1" Column="1" />
+      <File FileName="Startup.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="mvc_dotnet" expanded="True">
             <Node name="Desconectate" expanded="True">
-              <Node name="Controllers" expanded="True">
-                <Node name="AprobadorController.cs" selected="True" />
-              </Node>
+              <Node name="Controllers" expanded="True" />
               <Node name="Models" expanded="True" />
               <Node name="Properties" expanded="True" />
-              <Node name="Views" expanded="True">
-                <Node name="Aprobador" expanded="True" />
-                <Node name="Home" expanded="True" />
-                <Node name="Shared" expanded="True" />
-                <Node name="Solicitante" expanded="True" />
-              </Node>
-              <Node name="wwwroot" expanded="True">
-                <Node name="lib" expanded="True">
-                  <Node name="bootstrap" expanded="True">
-                    <Node name="dist" expanded="True">
-                      <Node name="css" expanded="True">
-                        <Node name="bootstrap.css" expanded="True" />
-                      </Node>
-                    </Node>
-                  </Node>
-                </Node>
-              </Node>
+              <Node name="Startup.cs" selected="True" />
             </Node>
           </Node>
         </State>
