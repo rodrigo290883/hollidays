@@ -1,14 +1,12 @@
 ﻿<Properties StartupConfiguration="{7790088E-0614-4C17-803A-0678261CD006}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/HomeController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/SolicitanteController.cs">
     <Files>
-      <File FileName="Controllers/SolicitanteController.cs" Line="156" Column="88" />
-      <File FileName="Controllers/HomeController.cs" Line="72" Column="57" />
-      <File FileName="Properties/launchSettings.json" Line="1" Column="1" />
-      <File FileName="appsettings.json" Line="1" Column="1" />
-      <File FileName="Program.cs" Line="1" Column="1" />
-      <File FileName="Startup.cs" Line="5" Column="1" />
-      <File FileName="Controllers/AprobadorController.cs" Line="153" Column="22" />
-      <File FileName="base.sql" Line="1" Column="1" />
+      <File FileName="Controllers/SolicitanteController.cs" Line="35" Column="34" />
+      <File FileName="Views/Solicitante/Index.cshtml" Line="9" Column="58" />
+      <File FileName="Controllers/CargaEmpleadosController.cs" Line="30" Column="1" />
+      <File FileName="Views/CargaEmpleados/Index.cshtml" Line="11" Column="20" />
+      <File FileName="Views/Shared/_LayoutSessionR.cshtml" Line="36" Column="119" />
+      <File FileName="Controllers/HomeController.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -19,16 +17,18 @@
                 <Node name="PackageDependencies" expanded="True" />
               </Node>
               <Node name="Controllers" expanded="True">
-                <Node name="HomeController.cs" selected="True" />
+                <Node name="SolicitanteController.cs" selected="True" />
               </Node>
               <Node name="Models" expanded="True" />
               <Node name="Properties" expanded="True" />
+              <Node name="Views" expanded="True">
+                <Node name="CargaEmpleados" expanded="True" />
+                <Node name="Shared" expanded="True" />
+                <Node name="Solicitante" expanded="True" />
+              </Node>
             </Node>
           </Node>
         </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

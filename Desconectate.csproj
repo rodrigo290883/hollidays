@@ -9,6 +9,7 @@
     <Folder Include="Views\Solicitante\" />
     <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="Views\Avatares\" />
+    <Folder Include="Views\CargaEmpleados\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />

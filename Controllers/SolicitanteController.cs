@@ -31,68 +31,74 @@ namespace desconectate.Controllers
         {
             string usuario = HttpContext.Session.GetString("usuario");
             ViewBag.tipo = HttpContext.Session.GetString("tipo");
-            if (usuario != null)
+
+            if (ViewBag.tipo != "R")
             {
-                Empleados empleado = new Empleados();
-
-                string connString = _configuration.GetConnectionString("MyConnection"); // Read the connection string from the web.config file
-                using (SqlConnection conn = new SqlConnection(connString))
+                if (usuario != null)
                 {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand("select e.idsap,e.nombre,e.email,e.estatus,e.fecha_ingreso_grupo,e.dias_disponibles,e.ultimo_desconecte,e.url_poliza,e.idsap_padre,e.esquema,e.sexo," +
-                        "DATEDIFF(month,e.fecha_ingreso_grupo,GETDATE()) as antiguedad, DATEDIFF(month,e.ultimo_desconecte,GETDATE()) as meses_ultimo_desconecte,iif(DATEDIFF(DAY,CONCAT(datepart(yyyy,getdate()),'-',(datepart(mm,e.fecha_ingreso_grupo)+1),'-',datepart(dd,e.fecha_ingreso_grupo)),getdate()) <=0,datepart(yyyy,getdate())-1,datepart(yyyy,getdate())) ,e.avatar " +
-                        "from dbo.empleados e  WHERE e.idsap = @idsap ", conn);
-                    cmd.Parameters.AddWithValue("@idsap", usuario);
+                    Empleados empleado = new Empleados();
 
-                    SqlDataReader sqlReader = cmd.ExecuteReader();
-
-                    sqlReader.Read();
-
-                    empleado.idsap = sqlReader.GetInt32(0);
-                    empleado.nombre = sqlReader[1].ToString();
-                    empleado.email = sqlReader[2].ToString();
-                    empleado.estatus = sqlReader.GetInt32(3);
-                    empleado.fecha_ingreso_grupo = Convert.ToDateTime(sqlReader.IsDBNull(4) ? null : sqlReader[4]);
-                    empleado.dias_disponibles = sqlReader.GetInt32(5);
-                    empleado.ultimo_desconecte = Convert.ToDateTime(sqlReader.IsDBNull(6) ? null : sqlReader[6]);
-                    empleado.url_poliza = sqlReader[7].ToString();
-                    empleado.idsap_padre = sqlReader.GetInt32(8);
-                    empleado.esquema = sqlReader[9].ToString();
-                    
-                    ViewBag.periodo = sqlReader.GetInt32(13);
-
-                    empleado.antiguedad = sqlReader.GetInt32(11);
-                    empleado.meses_ultimo_desconecte = sqlReader.IsDBNull(12)?0: sqlReader.GetInt32(12);
-                    empleado.caducidad = Convert.ToDateTime(sqlReader.IsDBNull(6) ? null : sqlReader[6]);
-                    empleado.avatar = sqlReader[14].ToString();
-
-
-
-
-                    ViewBag.Empleado = empleado;
-
-                    sqlReader.Close();
-
-                    List<TipoSolicitud> lst = new List<TipoSolicitud>();
-
-                    cmd = new SqlCommand("SELECT * FROM ctipos_solicitud WHERE seleccionable = 1", conn);
-
-                    sqlReader = cmd.ExecuteReader();
-
-                    while (sqlReader.Read())
+                    string connString = _configuration.GetConnectionString("MyConnection"); // Read the connection string from the web.config file
+                    using (SqlConnection conn = new SqlConnection(connString))
                     {
-                        lst.Add(new TipoSolicitud{  id_tipo_solicitud = sqlReader.GetInt32(0), solicitud = sqlReader[1].ToString(), maximo_dias = sqlReader.GetInt32(2), consume_vacaciones = sqlReader[4].ToString()[0] });
+                        conn.Open();
+                        SqlCommand cmd = new SqlCommand("select e.idsap,e.nombre,e.email,e.estatus,e.fecha_ingreso_grupo,e.dias_disponibles,e.ultimo_desconecte,e.url_poliza,e.idsap_padre,e.esquema,e.sexo," +
+                            "DATEDIFF(month,e.fecha_ingreso_grupo,GETDATE()) as antiguedad, DATEDIFF(month,e.ultimo_desconecte,GETDATE()) as meses_ultimo_desconecte,iif(DATEDIFF(DAY,CONCAT(datepart(yyyy,getdate()),'-',(datepart(mm,e.fecha_ingreso_grupo)+1),'-',datepart(dd,e.fecha_ingreso_grupo)),getdate()) <=0,datepart(yyyy,getdate())-1,datepart(yyyy,getdate())) ,e.avatar " +
+                            "from dbo.empleados e  WHERE e.idsap = @idsap ", conn);
+                        cmd.Parameters.AddWithValue("@idsap", usuario);
+
+                        SqlDataReader sqlReader = cmd.ExecuteReader();
+
+                        sqlReader.Read();
+
+                        empleado.idsap = sqlReader.GetInt32(0);
+                        empleado.nombre = sqlReader[1].ToString();
+                        empleado.email = sqlReader[2].ToString();
+                        empleado.estatus = sqlReader.GetInt32(3);
+                        empleado.fecha_ingreso_grupo = Convert.ToDateTime(sqlReader.IsDBNull(4) ? null : sqlReader[4]);
+                        empleado.dias_disponibles = sqlReader.GetInt32(5);
+                        empleado.ultimo_desconecte = Convert.ToDateTime(sqlReader.IsDBNull(6) ? null : sqlReader[6]);
+                        empleado.url_poliza = sqlReader[7].ToString();
+                        empleado.idsap_padre = sqlReader.GetInt32(8);
+                        empleado.esquema = sqlReader[9].ToString();
+
+                        ViewBag.periodo = sqlReader.GetInt32(13);
+
+                        empleado.antiguedad = sqlReader.GetInt32(11);
+                        empleado.meses_ultimo_desconecte = sqlReader.IsDBNull(12) ? 0 : sqlReader.GetInt32(12);
+                        empleado.caducidad = Convert.ToDateTime(sqlReader.IsDBNull(6) ? null : sqlReader[6]);
+                        empleado.avatar = sqlReader[14].ToString();
+
+
+
+
+                        ViewBag.Empleado = empleado;
+
+                        sqlReader.Close();
+
+                        List<TipoSolicitud> lst = new List<TipoSolicitud>();
+
+                        cmd = new SqlCommand("SELECT * FROM ctipos_solicitud WHERE seleccionable = 1", conn);
+
+                        sqlReader = cmd.ExecuteReader();
+
+                        while (sqlReader.Read())
+                        {
+                            lst.Add(new TipoSolicitud { id_tipo_solicitud = sqlReader.GetInt32(0), solicitud = sqlReader[1].ToString(), maximo_dias = sqlReader.GetInt32(2), consume_vacaciones = sqlReader[4].ToString()[0] });
+                        }
+
+                        ViewBag.Opciones = lst;
+
+                        conn.Close();
+                        return View();
                     }
-
-                    ViewBag.Opciones = lst;
-
-                    conn.Close();
-                    return View();
                 }
+                else
+                    return RedirectToAction("Index", "Home");
             }
             else
-                return RedirectToAction("Index", "Home");
-            
+                return RedirectToAction("Index", "CargaEmpleados");
+
         }
 
         public IActionResult CreaSolicitud(Solicitud solicitud)
