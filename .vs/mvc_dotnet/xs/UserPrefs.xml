@@ -1,25 +1,34 @@
 ﻿<Properties StartupConfiguration="{7790088E-0614-4C17-803A-0678261CD006}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Startup.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/HomeController.cs">
     <Files>
-      <File FileName="Controllers/SolicitanteController.cs" Line="213" Column="58" />
-      <File FileName="Controllers/HomeController.cs" Line="10" Column="15" />
+      <File FileName="Controllers/SolicitanteController.cs" Line="156" Column="88" />
+      <File FileName="Controllers/HomeController.cs" Line="72" Column="57" />
       <File FileName="Properties/launchSettings.json" Line="1" Column="1" />
       <File FileName="appsettings.json" Line="1" Column="1" />
       <File FileName="Program.cs" Line="1" Column="1" />
-      <File FileName="Startup.cs" Line="1" Column="1" />
+      <File FileName="Startup.cs" Line="5" Column="1" />
+      <File FileName="Controllers/AprobadorController.cs" Line="153" Column="22" />
+      <File FileName="base.sql" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="mvc_dotnet" expanded="True">
             <Node name="Desconectate" expanded="True">
-              <Node name="Controllers" expanded="True" />
+              <Node name="Dependencies" expanded="True">
+                <Node name="PackageDependencies" expanded="True" />
+              </Node>
+              <Node name="Controllers" expanded="True">
+                <Node name="HomeController.cs" selected="True" />
+              </Node>
               <Node name="Models" expanded="True" />
               <Node name="Properties" expanded="True" />
-              <Node name="Startup.cs" selected="True" />
             </Node>
           </Node>
         </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
