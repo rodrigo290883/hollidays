@@ -208,26 +208,22 @@ namespace desconectate.Controllers
 
         public ActionResult DescargaPoliza()
         {
-        /*
+        
         WebClient cliente = new WebClient();
-        cliente.BaseAddress = null;
-        cliente.BaseAddress = @"\\RODRIGO-VOSTRO-3550\compartida\";
 
         string idsap = HttpContext.Session.GetString("usuario");
         try
         {
 
-            byte[] archivo = cliente.DownloadData(idsap + ".pdf");
+            byte[] archivo = cliente.DownloadData("GMM/"+idsap + ".pdf");
             return File(archivo, "application/pdf", "PGMM_" + idsap + ".pdf");
         }
         catch (Exception ex)
         {
-            return Content("No se encontro el archivo de poliza, favor de contactar a recursos humanos."+ ex.Message);
+            return Content("No se encontro el archivo de poliza, favor de contactar a recursos humanos.");
         }
-        */
         
-            string idsap = HttpContext.Session.GetString("usuario");
-            return File(@"\\?\RODRIGO-VOSTRO-3550\compartida\" + idsap+".pdf", "application/pdf", "PGMM_" + idsap + ".pdf");
+        
         }
 
         
