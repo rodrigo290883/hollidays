@@ -1,0 +1,31 @@
+﻿<Properties StartupConfiguration="{554CF1D3-C5C5-49C4-AE74-6EA2600E8A62}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/AprobadorController.cs">
+    <Files>
+      <File FileName="Controllers/SolicitanteController.cs" Line="164" Column="1" />
+      <File FileName="Controllers/AprobadorController.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Desconectate" expanded="True">
+            <Node name="Desconectate" expanded="True">
+              <Node name="Dependencies" expanded="True">
+                <Node name="PackageDependencies" expanded="True" />
+              </Node>
+              <Node name="Controllers" expanded="True">
+                <Node name="AprobadorController.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.Desconectate PreferredExecutionTarget="/Applications/Google Chrome.app" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
