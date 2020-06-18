@@ -102,8 +102,8 @@ namespace desconectate.Controllers
             {
                 int folio = 0;
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("insert into dbo.solicitudes (idsap,tipo_solicitud,fecha_solicitud,fecha_inicio,fecha_fin,estatus,idsap_aprobador,observacion_solicitante) " +
-                    "VALUES (@idsap,@tipo_solicitud,GETDATE(),@fecha_inicio,@fecha_fin,0,@idsap_aprobador,@observaciones); " + "SELECT CAST(scope_identity() AS int)", conn);
+                SqlCommand cmd = new SqlCommand("insert into dbo.solicitudes (idsap,tipo_solicitud,fecha_solicitud,fecha_inicio,fecha_fin,estatus,idsap_aprobador,observacion_solicitante,fecha_asignacion,ultima_notificacion) " +
+                    "VALUES (@idsap,@tipo_solicitud,GETDATE(),@fecha_inicio,@fecha_fin,0,@idsap_aprobador,@observaciones,GETDATE(),GETDATE()); " + "SELECT CAST(scope_identity() AS int)", conn);
                 cmd.Parameters.AddWithValue("@idsap", solicitud.idsap);
                 cmd.Parameters.AddWithValue("@tipo_solicitud", solicitud.tipo_solicitud);
                 cmd.Parameters.AddWithValue("@fecha_inicio", solicitud.fecha_inicio);
