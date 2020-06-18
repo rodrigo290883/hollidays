@@ -1,31 +1,27 @@
 ﻿<Properties StartupConfiguration="{7790088E-0614-4C17-803A-0678261CD006}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/SolicitanteController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Views/CargaEmpleados/Index.cshtml">
     <Files>
-      <File FileName="Controllers/SolicitanteController.cs" Line="35" Column="34" />
-      <File FileName="Views/Solicitante/Index.cshtml" Line="9" Column="58" />
-      <File FileName="Controllers/CargaEmpleadosController.cs" Line="30" Column="1" />
-      <File FileName="Views/CargaEmpleados/Index.cshtml" Line="11" Column="20" />
-      <File FileName="Views/Shared/_LayoutSessionR.cshtml" Line="36" Column="119" />
-      <File FileName="Controllers/HomeController.cs" Line="1" Column="1" />
+      <File FileName="Controllers/CargaEmpleadosController.cs" Line="33" Column="17" />
+      <File FileName="Views/CargaEmpleados/Index.cshtml" Line="2" Column="10" />
+      <File FileName="Views/Shared/_LayoutSessionR.cshtml" />
+      <File FileName="Controllers/HomeController.cs" />
+      <File FileName="Models/CargaEmpleados.cs" Line="6" Column="29" />
+      <File FileName="Views/Solicitante/Index.cshtml" Line="2" Column="19" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="mvc_dotnet" expanded="True">
             <Node name="Desconectate" expanded="True">
-              <Node name="Dependencies" expanded="True">
-                <Node name="PackageDependencies" expanded="True" />
-              </Node>
-              <Node name="Controllers" expanded="True">
-                <Node name="SolicitanteController.cs" selected="True" />
-              </Node>
+              <Node name="Controllers" expanded="True" />
               <Node name="Models" expanded="True" />
-              <Node name="Properties" expanded="True" />
               <Node name="Views" expanded="True">
-                <Node name="CargaEmpleados" expanded="True" />
-                <Node name="Shared" expanded="True" />
+                <Node name="CargaEmpleados" expanded="True">
+                  <Node name="Index.cshtml" selected="True" />
+                </Node>
                 <Node name="Solicitante" expanded="True" />
               </Node>
+              <Node name="wwwroot" expanded="True" />
             </Node>
           </Node>
         </State>
@@ -37,7 +33,8 @@
   <MonoDevelop.Ide.ItemProperties.Desconectate PreferredExecutionTarget="/Applications/Google Chrome.app" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="/Users/rodrigolira/Proyectos/hollidays/Controllers/AprobadorController.cs" relfile="Controllers/AprobadorController.cs" line="152" column="1" />
+      <Breakpoint file="/Users/rodrigolira/Proyectos/Vacaciones/hollidays/Controllers/AprobadorController.cs" relfile="Controllers/AprobadorController.cs" line="152" column="1" />
+      <Breakpoint file="/Users/rodrigolira/Proyectos/Vacaciones/hollidays/Controllers/CargaEmpleadosController.cs" relfile="Controllers/CargaEmpleadosController.cs" line="39" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />

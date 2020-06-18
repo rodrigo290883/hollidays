@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using System;
 
-namespace desconetate.Models
+namespace desconectate.Models
 {
 	public class CargaEmpleados {
 		
