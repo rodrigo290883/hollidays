@@ -39,7 +39,7 @@ namespace desconectate.Controllers
                 using (SqlConnection conn = new SqlConnection(connString))
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("select e.idsap,e.nombre,e.email,e.estatus,e.fecha_ingreso_grupo,e.dias_disponibles,e.ultimo_desconecte,e.url_poliza,e.idsap_padre,e.esquema,e.sexo," +
+                    SqlCommand cmd = new SqlCommand("select e.idsap,e.nombre,e.email,e.estatus,e.fecha_ingreso_grupo,(select SUM(disponibles) from registros_dias where idsap = @idsap and registro_padre = 0 and caducidad >= GETDATE()) as disponibles,e.ultimo_desconecte,e.url_poliza,e.idsap_padre,e.esquema,e.sexo," +
                         "DATEDIFF(month,e.fecha_ingreso_grupo,GETDATE()) as antiguedad, DATEDIFF(month,e.ultimo_desconecte,GETDATE()) as meses_ultimo_desconecte,iif(DATEDIFF(DAY,CONCAT(datepart(yyyy,getdate()),'-',(datepart(mm,e.fecha_ingreso_grupo)+1),'-',datepart(dd,e.fecha_ingreso_grupo)),getdate()) <=0,datepart(yyyy,getdate())-1,datepart(yyyy,getdate())) ,e.avatar " +
                         "from dbo.empleados e  WHERE e.idsap = @idsap ", conn);
                     cmd.Parameters.AddWithValue("@idsap", usuario);
@@ -53,7 +53,7 @@ namespace desconectate.Controllers
                     empleado.email = sqlReader[2].ToString();
                     empleado.estatus = sqlReader.GetInt32(3);
                     empleado.fecha_ingreso_grupo = Convert.ToDateTime(sqlReader.IsDBNull(4) ? null : sqlReader[4]);
-                    empleado.dias_disponibles = sqlReader.GetInt32(5);
+                    empleado.dias_disponibles = sqlReader.IsDBNull(5)?0:sqlReader.GetInt32(5);
                     empleado.ultimo_desconecte = Convert.ToDateTime(sqlReader.IsDBNull(6) ? null : sqlReader[6]);
                     empleado.url_poliza = sqlReader[7].ToString();
                     empleado.idsap_padre = sqlReader.GetInt32(8);

@@ -235,7 +235,7 @@
 
     $(function() {
         var vacaciones = new Array();
-        var disfrutar = 11;
+        var disfrutar = @empleado.dias_disponibles;
         var bandera = 0;
         var maximo_dias = 30;
         var consume_vacaciones = 'S';
@@ -249,33 +249,38 @@
 
 
         $("#b_solicitud").bind('click', function () {
+            if (bandera == 0) {
 
-            if ($("#i_fecha_inicio").val() == "" || $("#ta_observacion").val() == "") {
-                swal("Ocurrio un Error", "Debes seleccionar una fecha e ingresar una observacion", "warning");
+                if ($("#i_fecha_inicio").val() == "" || $("#ta_observacion").val() == "") {
+                    swal("Ocurrio un Error", "Debes seleccionar una fecha e ingresar una observacion", "warning");
+                }
+                else {
+                    url = "@Url.Content("~/Solicitante/CreaSolicitud")";
+                    parametros = {
+                        "idsap":@empleado.idsap,
+                        "idsap_aprobador":@empleado.idsap_padre,
+                        "fecha_inicio": $("#i_fecha_inicio").val(),
+                        "fecha_fin": $("#i_fecha_fin").val(),
+                        "tipo_solicitud": $("#s_tipo_solicitud").val(),
+                        "observacion_solicitante": $("#ta_observacion").val()
+                    };
+
+                    $.post(url, parametros, function (data) {
+                        if (!isNaN(data)) {
+                            $('#solicitudModal').modal('hide');
+                            actualizaLista();
+                            limpiaForma();
+                            swal("Felicidades", "Tu solicitud se registro Correctamente", "success");
+                            EnviaCorreo(data);
+
+                        } else {
+                            swal("Ocurrio un Error", data, "error");
+                        }
+                    });
+                }
             }
             else {
-                url = "@Url.Content("~/Solicitante/CreaSolicitud")";
-                parametros = {
-                    "idsap":@empleado.idsap,
-                    "idsap_aprobador":@empleado.idsap_padre,
-                    "fecha_inicio": $("#i_fecha_inicio").val(),
-                    "fecha_fin": $("#i_fecha_fin").val(),
-                    "tipo_solicitud": $("#s_tipo_solicitud").val(),
-                    "observacion_solicitante": $("#ta_observacion").val()
-                };
-
-                $.post(url, parametros, function (data) {
-                    if (!isNaN(data)) {
-                        $('#solicitudModal').modal('hide');
-                        actualizaLista();
-                        limpiaForma();
-                        swal("Felicidades", "Tu solicitud se registro Correctamente", "success");
-                        EnviaCorreo(data);
-
-                    } else {
-                        swal("Ocurrio un Error", data, "error");
-                    }
-                });
+                swal("Ocurrio un Error", "Tu seleccion sobrepasa tus dias disponibles", "error");
             }
         });
 
@@ -320,13 +325,19 @@
                     vacaciones.sort(function (a, b) { return a - b });
                     // se cuentan los dias habiles
                     var cont = 0;
-                    for (var i = 0; i < vacaciones.length; i++) {
-                        var aux = vacaciones[i];
-                        var dia = new Date(aux);
+                    var aux = 1000 * 60 * 60 * 24;
+
+                    var inicio = new Date(vacaciones[0]).getTime();
+
+                    var fin = new Date(vacaciones[(vacaciones.length-1)]).getTime();
+
+                    for (var i = inicio; i <= fin; i = i + aux) {
+                        var dia = new Date(i);
                         var dia_sem = dia.getDay();
                         if (dia_sem > 0 && dia_sem < 6)
                             cont++;
                     }
+                    
 
                     if (cont > disfrutar) {
                         swal("Cuidado", "Tu seleccion sobrepasa los dias permitidos", "warning");
