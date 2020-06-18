@@ -35,4 +35,37 @@
         <img id="i_doodle" src="images/imagen.png">
     </div>
 
-    <h1>Hola Mundo</h1>
+    <div class="container">
+        <div class="col-md-4 offset-md-4 my-5">
+            <div class="card">
+                <div class="card-body">
+                    <form id="FormExcel" method="post" enctype="multipart/form-data">
+                        <label>Subir Archivo</label>
+                        <input type="file" id="archivo" name="archivo"/>
+                        <input type="submit" name="subir" value="Subir" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        $("#FormExcel").submit(function (e) {
+            e.preventDefault();
+            
+            url = "@Url.Content("~/CargaEmpleados/SubirArchivo")"
+            parametros = $(this).serialize();
+
+            $.post(url, parametros, function (data) {
+                alert(data);
+                //if (data == "1") {
+                  //  swal("Se actualizo la solicitud Correctamente", "OK", "Success");
+                //} else {
+                  //  swal("Ocurrio un error", data, "error");
+                //}
+            });
+            
+        });
+        
+    </script>
