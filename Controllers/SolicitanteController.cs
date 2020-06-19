@@ -39,9 +39,9 @@ namespace desconectate.Controllers
                 using (SqlConnection conn = new SqlConnection(connString))
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("select e.idsap,e.nombre,e.email,e.estatus,e.fecha_ingreso_grupo,(select SUM(disponibles) from registros_dias where idsap = @idsap and registro_padre = 0 and caducidad >= GETDATE()) as disponibles,e.ultimo_desconecte,e.url_poliza,e.idsap_padre,e.esquema,e.sexo," +
-                        "DATEDIFF(month,e.fecha_ingreso_grupo,GETDATE()) as antiguedad, DATEDIFF(month,e.ultimo_desconecte,GETDATE()) as meses_ultimo_desconecte,iif(DATEDIFF(DAY,CONCAT(datepart(yyyy,getdate()),'-',(datepart(mm,e.fecha_ingreso_grupo)+1),'-',datepart(dd,e.fecha_ingreso_grupo)),getdate()) <=0,datepart(yyyy,getdate())-1,datepart(yyyy,getdate())) ,e.avatar " +
-                        "from dbo.empleados e  WHERE e.idsap = @idsap ", conn);
+                    SqlCommand cmd = new SqlCommand("select e.idsap,e.nombre,e.email,e.estatus,e.fecha_ingreso_grupo,(select SUM(disponibles) from registros_dias where idsap = @idsap and registro_padre = 0 and caducidad >= GETDATE()) as disponibles,e.ultimo_desconecte,'' as url_poliza,e.idsap_padre,e.esquema,e.sexo," +
+                        "DATEDIFF(month,e.fecha_ingreso_grupo,GETDATE()) as antiguedad, DATEDIFF(month,e.ultimo_desconecte,GETDATE()) as meses_ultimo_desconecte,iif(DATEDIFF(DAY,CONCAT(datepart(yyyy,getdate()),'-',(datepart(mm,e.fecha_ingreso_grupo)+1),'-',datepart(dd,e.fecha_ingreso_grupo)),getdate()) <=0,datepart(yyyy,getdate())-1,datepart(yyyy,getdate())) ,e.avatar, " +
+                        "email_line,nombre_line from dbo.empleados e  WHERE e.idsap = @idsap ", conn);
                     cmd.Parameters.AddWithValue("@idsap", usuario);
 
                     SqlDataReader sqlReader = cmd.ExecuteReader();
@@ -57,6 +57,8 @@ namespace desconectate.Controllers
                     empleado.ultimo_desconecte = Convert.ToDateTime(sqlReader.IsDBNull(6) ? null : sqlReader[6]);
                     empleado.url_poliza = sqlReader[7].ToString();
                     empleado.idsap_padre = sqlReader.GetInt32(8);
+                    empleado.nombre_line = sqlReader[16].ToString();//
+                    empleado.email_line = sqlReader[15].ToString();//
                     empleado.esquema = sqlReader[9].ToString();
                     
                     ViewBag.periodo = sqlReader.GetInt32(13);
@@ -102,13 +104,15 @@ namespace desconectate.Controllers
             {
                 int folio = 0;
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("insert into dbo.solicitudes (idsap,tipo_solicitud,fecha_solicitud,fecha_inicio,fecha_fin,estatus,idsap_aprobador,observacion_solicitante,fecha_asignacion,ultima_notificacion) " +
-                    "VALUES (@idsap,@tipo_solicitud,GETDATE(),@fecha_inicio,@fecha_fin,0,@idsap_aprobador,@observaciones,GETDATE(),GETDATE()); " + "SELECT CAST(scope_identity() AS int)", conn);
+                SqlCommand cmd = new SqlCommand("insert into dbo.solicitudes (idsap,tipo_solicitud,fecha_solicitud,fecha_inicio,fecha_fin,estatus,idsap_aprobador,nombre_aprobador,correo_aprobador,observacion_solicitante,fecha_asignacion,ultima_notificacion) " +
+                    "VALUES (@idsap,@tipo_solicitud,GETDATE(),@fecha_inicio,@fecha_fin,0,@idsap_aprobador,@nombre_aprobador,@correo_aprobador,@observaciones,GETDATE(),GETDATE()); " + "SELECT CAST(scope_identity() AS int)", conn);
                 cmd.Parameters.AddWithValue("@idsap", solicitud.idsap);
                 cmd.Parameters.AddWithValue("@tipo_solicitud", solicitud.tipo_solicitud);
                 cmd.Parameters.AddWithValue("@fecha_inicio", solicitud.fecha_inicio);
                 cmd.Parameters.AddWithValue("@fecha_fin", solicitud.fecha_fin);
                 cmd.Parameters.AddWithValue("@idsap_aprobador", solicitud.idsap_aprobador);
+                cmd.Parameters.AddWithValue("@nombre_aprobador", solicitud.nombre_aprobador);
+                cmd.Parameters.AddWithValue("@correo_aprobador", solicitud.email_aprobador);
                 cmd.Parameters.AddWithValue("@observaciones", solicitud.observacion_solicitante);
 
                 try
@@ -197,7 +201,7 @@ namespace desconectate.Controllers
 
                 while (sqlReader.Read())
                 {
-                    lst.Add(new Solicitud { folio = sqlReader.GetInt32(0), solicitudName = sqlReader[1].ToString(), fecha_inicio = Convert.ToDateTime(sqlReader.IsDBNull(2) ? null : sqlReader[2]), fecha_fin = Convert.ToDateTime(sqlReader.IsDBNull(3) ? null : sqlReader[3]), estatus = sqlReader.GetInt32(4), aprobador = sqlReader[5].ToString(),observacion_solicitante = sqlReader[6].ToString() });
+                    lst.Add(new Solicitud { folio = sqlReader.GetInt32(0), solicitudName = sqlReader[1].ToString(), fecha_inicio = Convert.ToDateTime(sqlReader.IsDBNull(2) ? null : sqlReader[2]), fecha_fin = Convert.ToDateTime(sqlReader.IsDBNull(3) ? null : sqlReader[3]), estatus = sqlReader.GetInt32(4), nombre_aprobador = sqlReader[5].ToString(),observacion_solicitante = sqlReader[6].ToString() });
                 }
 
                 conn.Close();

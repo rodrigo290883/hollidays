@@ -133,8 +133,10 @@
                 </div>
                 <div class="row mt-2">
                     <div class="col-6 text-center">
-                        <input style="display:none" name="id_sap" value="@empleado.idsap" />
-                        <input style="display:none" name="id_sap_aprobador" value="@empleado.idsap_padre" />
+                        <input style="display:none" name="idsap" value="@empleado.idsap" />
+                        <input style="display:none" name="idsap_aprobador" value="@empleado.idsap_padre" />
+                        <input style="display:none" id="nombre_aprobador" value="@empleado.nombre_line" />
+                        <input style="display:none" id="email_aprobador" value="@empleado.email_line" />
                         <input data-toggle="modal" data-target="#solicitudModal" class="btn btn-desconectate" value="SOLICITAR" />
                     </div>
                 </div>
@@ -259,6 +261,8 @@
                     parametros = {
                         "idsap":@empleado.idsap,
                         "idsap_aprobador":@empleado.idsap_padre,
+                        "nombre_aprobador": $("#nombre_aprobador").val(),
+                        "email_aprobador": $("#email_aprobador").val(),
                         "fecha_inicio": $("#i_fecha_inicio").val(),
                         "fecha_fin": $("#i_fecha_fin").val(),
                         "tipo_solicitud": $("#s_tipo_solicitud").val(),
@@ -337,7 +341,7 @@
                         if (dia_sem > 0 && dia_sem < 6)
                             cont++;
                     }
-                    
+
 
                     if (cont > disfrutar) {
                         swal("Cuidado", "Tu seleccion sobrepasa los dias permitidos", "warning");
@@ -400,7 +404,7 @@
                             break;
                     }
 
-                    html = "<tr data-toggle='tooltip' title='" + dato.observacion_solicitante + "'><td>" + dato.folio + "</td><td>" + dato.solicitudName + "</td><td>" + dato.fecha_inicio.substring(0, 10) + "</td><td>" + dato.fecha_fin.substring(0, 10) + "</td><td>" + dato.aprobador + "</td><td>" + estatus + "</td></tr>";
+                    html = "<tr data-toggle='tooltip' title='" + dato.observacion_solicitante + "'><td>" + dato.folio + "</td><td>" + dato.solicitudName + "</td><td>" + dato.fecha_inicio.substring(0, 10) + "</td><td>" + dato.fecha_fin.substring(0, 10) + "</td><td>" + dato.nombre_aprobador + "</td><td>" + estatus + "</td></tr>";
                     $("#t_solicitudes tbody").append(html);
                 }
                 $('[data-toggle="tooltip"]').tooltip();

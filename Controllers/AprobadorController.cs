@@ -153,7 +153,7 @@ namespace desconectate.Controllers
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("update solicitudes SET estatus = @status, observacion_aprobador = @coments, con_goce = @con_goce, fecha_aprobacion = GETDATE() where folio = @folios", conn);
+                SqlCommand cmd = new SqlCommand("update solicitudes SET estatus = @status, observacion_aprobador = @coments, con_goce = @con_goce, fecha_aprobacion = GETDATE(),ultima_notificacion=GETDATE() where folio = @folios", conn);
                 cmd.Parameters.AddWithValue("@folios", id_folio);
                 cmd.Parameters.AddWithValue("@status", s_estatus);
                 cmd.Parameters.AddWithValue("@coments",comentarios);
@@ -163,7 +163,7 @@ namespace desconectate.Controllers
 
                 conn.Close();
 
-                if (aux == 1 && s_estatus == 1)
+                if (aux == 1 && s_estatus == 1)//Si se modifico el estatus y el estatus es aprobado
                 {
                     conn.Open();
                     SqlCommand cmd2 = new SqlCommand("select e.idsap,e.dias_disponibles,DATEDIFF(day,sol.fecha_inicio,sol.fecha_fin) as dias,tsol.consume_vacaciones from empleados e,solicitudes sol left join ctipos_solicitud tsol on sol.tipo_solicitud = tsol.id_tipo_solicitud where e.idsap in (select s.idsap from solicitudes s where s.folio = @folio) and sol.folio = @folio", conn);
@@ -207,7 +207,7 @@ namespace desconectate.Controllers
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("select sol.idsap, emp.nombre as solicitante,sol.idsap_aprobador,ap.nombre as aprobador, emp.email as email_solicitante,tip.solicitud ,sol.fecha_inicio ," +
+                SqlCommand cmd = new SqlCommand("select sol.idsap, emp.nombre as solicitante,sol.idsap_aprobador,sol.nombre_aprobador as aprobador, emp.email as email_solicitante,tip.solicitud ,sol.fecha_inicio ," +
                     "sol.fecha_fin ,sol.fecha_solicitud,sol.observacion_solicitante,sol.observacion_aprobador,est.descripcion from solicitudes sol left join empleados ap on sol.idsap_aprobador = ap.idsap left join empleados emp on sol.idsap = emp.idsap" +
                     " left join ctipos_solicitud tip on sol.tipo_solicitud = tip.id_tipo_solicitud left join cestatus est on sol.estatus = est.estatus where sol.folio = @folio ", conn);
 
