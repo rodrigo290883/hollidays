@@ -41,7 +41,7 @@ namespace desconectate.Controllers
                     conn.Open();
                     SqlCommand cmd = new SqlCommand("select e.idsap,e.nombre,e.email,e.estatus,e.fecha_ingreso_grupo,(select SUM(disponibles) from registros_dias where idsap = @idsap and registro_padre = 0 and caducidad >= GETDATE()) as disponibles,e.ultimo_desconecte,'' as url_poliza,e.idsap_padre,e.esquema,e.sexo," +
                         "DATEDIFF(month,e.fecha_ingreso_grupo,GETDATE()) as antiguedad, DATEDIFF(month,e.ultimo_desconecte,GETDATE()) as meses_ultimo_desconecte,iif(DATEDIFF(DAY,CONCAT(datepart(yyyy,getdate()),'-',(datepart(mm,e.fecha_ingreso_grupo)+1),'-',datepart(dd,e.fecha_ingreso_grupo)),getdate()) <=0,datepart(yyyy,getdate())-1,datepart(yyyy,getdate())) ,e.avatar, " +
-                        "email_line,nombre_line from dbo.empleados e  WHERE e.idsap = @idsap ", conn);
+                        "email_line,nombre_line,r.semana from dbo.empleados e left join croles r on e.rol = r.rol WHERE e.idsap = @idsap ", conn);
                     cmd.Parameters.AddWithValue("@idsap", usuario);
 
                     SqlDataReader sqlReader = cmd.ExecuteReader();
@@ -67,9 +67,7 @@ namespace desconectate.Controllers
                     empleado.meses_ultimo_desconecte = sqlReader.IsDBNull(12)?0: sqlReader.GetInt32(12);
                     empleado.caducidad = Convert.ToDateTime(sqlReader.IsDBNull(6) ? null : sqlReader[6]);
                     empleado.avatar = sqlReader[14].ToString();
-
-
-
+                    empleado.rol = sqlReader[17].ToString();
 
                     ViewBag.Empleado = empleado;
 
@@ -88,6 +86,21 @@ namespace desconectate.Controllers
 
                     ViewBag.Opciones = lst;
 
+                    sqlReader.Close();
+
+                    List<String> feriados = new List<String>();
+
+                    cmd = new SqlCommand("SELECT fecha FROM cdias_festivos WHERE fecha >= GETDATE() and pais = 'MX'", conn);
+
+                    sqlReader = cmd.ExecuteReader();
+
+                    while (sqlReader.Read())
+                    {
+                        feriados.Add(sqlReader[0].ToString());
+                    }
+
+                    ViewBag.Feriados = feriados;
+
                     conn.Close();
                     return View();
                 }
@@ -104,7 +117,7 @@ namespace desconectate.Controllers
             {
                 int folio = 0;
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("insert into dbo.solicitudes (idsap,tipo_solicitud,fecha_solicitud,fecha_inicio,fecha_fin,estatus,idsap_aprobador,nombre_aprobador,correo_aprobador,observacion_solicitante,fecha_asignacion,ultima_notificacion) " +
+                SqlCommand cmd = new SqlCommand("insert into dbo.solicitudes (idsap,tipo_solicitud,fecha_solicitud,fecha_inicio,fecha_fin,estatus,idsap_aprobador,nombre_aprobador,email_aprobador,observacion_solicitante,fecha_asignacion,ultima_notificacion) " +
                     "VALUES (@idsap,@tipo_solicitud,GETDATE(),@fecha_inicio,@fecha_fin,0,@idsap_aprobador,@nombre_aprobador,@correo_aprobador,@observaciones,GETDATE(),GETDATE()); " + "SELECT CAST(scope_identity() AS int)", conn);
                 cmd.Parameters.AddWithValue("@idsap", solicitud.idsap);
                 cmd.Parameters.AddWithValue("@tipo_solicitud", solicitud.tipo_solicitud);
@@ -230,7 +243,6 @@ namespace desconectate.Controllers
         
         }
 
-        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

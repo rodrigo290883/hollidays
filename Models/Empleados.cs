@@ -24,6 +24,7 @@ namespace desconectate.Models
         public string email_line { get; set; }
         public Nullable<int> meses_ultimo_desconecte { get; set; }
         public string esquema { get; set; }
+        public string rol { get; set; }
         public string avatar { get; set; }
     }
 }

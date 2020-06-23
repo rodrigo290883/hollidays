@@ -1,24 +1,35 @@
 ﻿<Properties StartupConfiguration="{7790088E-0614-4C17-803A-0678261CD006}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Views/Solicitante/Index.cshtml">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Models/Empleados.cs">
     <Files>
-      <File FileName="Controllers/AprobadorController.cs" Line="230" Column="59" />
-      <File FileName="Views/Aprobador/Index.cshtml" Line="1" Column="1" />
-      <File FileName="Controllers/SolicitanteController.cs" Line="61" Column="70" />
-      <File FileName="Models/Solicitud.cs" Line="20" Column="30" />
-      <File FileName="Models/Empleados.cs" Line="23" Column="29" />
-      <File FileName="Views/Solicitante/Index.cshtml" Line="137" Column="109" />
+      <File FileName="Views/Solicitante/Index.cshtml" Line="342" Column="25" />
+      <File FileName="Controllers/SolicitanteController.cs" Line="71" Column="29" />
+      <File FileName="Models/Solicitud.cs" Line="1" Column="1" />
+      <File FileName="Models/Empleados.cs" Line="27" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="mvc_dotnet" expanded="True">
             <Node name="Desconectate" expanded="True">
+              <Node name="Dependencies" expanded="True">
+                <Node name="FrameworkReferences" expanded="True" />
+                <Node name="PackageDependencies" expanded="True" />
+              </Node>
               <Node name="Controllers" expanded="True" />
-              <Node name="Models" expanded="True" />
+              <Node name="Models" expanded="True">
+                <Node name="Empleados.cs" selected="True" />
+              </Node>
               <Node name="Views" expanded="True">
                 <Node name="Aprobador" expanded="True" />
-                <Node name="Solicitante" expanded="True">
-                  <Node name="Index.cshtml" selected="True" />
+                <Node name="Solicitante" expanded="True" />
+              </Node>
+              <Node name="wwwroot" expanded="True">
+                <Node name="lib" expanded="True">
+                  <Node name="moment" expanded="True">
+                    <Node name="dist" expanded="True">
+                      <Node name="js" expanded="True" />
+                    </Node>
+                  </Node>
                 </Node>
               </Node>
             </Node>
