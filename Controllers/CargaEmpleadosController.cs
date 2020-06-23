@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Mvc;
 using desconectate.Models;
 using System.Runtime.InteropServices.ComTypes;
 using Microsoft.AspNetCore.Hosting;
+using System.Data;
+using System.Data.OleDb;
+using ExcelDataReader;
 
 
 
@@ -36,8 +39,35 @@ namespace desconectate.Controllers
             }
         }
 
+        public IEnumerable Method1(string fileSrc, string worksheet)
+          {   
+             //Reading excel data using ExcelDataReader
+              var excelData = new ExcelData(fileSrc);
+              //Get data from specified worksheet
+              var query = excelData.getData(worksheet);
+              int cp = 0;
+              //intialize the result list
+              var list = new List();
+              foreach (var line in query)
+              {
+                      try
+                      {
+                          var surname = line[0].ToString();//surname
+                          var name = line[1].ToString();//name    
+                          var date = line[2].ToString();//custom date format
+                          list.Add(new Person(surname, name, date));
+                      }
+                      catch (Exception exception)
+                      {
+                          ;
+                      }
+              }
+              return list.AsEnumerable();
+          }
+
+        [HttpGet]
         public IActionResult SubirArchivo(){
-            return View(new CargaEmpleados());
+            return View(new CargaEmpleados(Nombre,Edad));
         }
         
         [HttpPost]
@@ -45,11 +75,51 @@ namespace desconectate.Controllers
 
             var datos = model.archivo;
 
-            var Nombre = Path.GetFileName(model.archivo.FileName);
+            var Nombre = model.archivo.FileName;
 
-            var contenido = model.archivo.ContentType;
+            var extencion = Path.GetExtension(model.archivo.FileName);
 
-            return Content(Convert.ToString(Nombre));
+            if (Convert.ToString(extencion) == ".csv"){
+
+                string saveFile = Path.Combine(Directory.GetCurrentDirectory(),"wwwroot/Temp",Nombre);
+
+                using(var stream = new FileStream(saveFile,FileMode.Create)){
+                    
+                    model.archivo.CopyTo(stream);
+                }
+
+                IEnumerable list = new List();
+
+                list = Method1(saveFile,"1");
+
+                return View(list);
+
+               /* string saveFile = Path.Combine(Directory.GetCurrentDirectory(),"wwwroot/Temp",Nombre);
+
+                using(var stream = new FileStream(saveFile,FileMode.Create)){
+                    
+                    model.archivo.CopyTo(stream);
+                }
+
+
+                using(var stream = File.Open(saveFile,FileMode.Open,FileAccess.Read)){
+                    using (var reader = ExcelReaderFactory.CreateReader(stream)){
+                        do{
+                            while(reader.Read()){
+                                reader.GetDouble(0);
+                            }
+                        }while(reader.NextResult());
+
+                    }
+
+                }*/
+
+
+            }else{
+                return Content("0");
+            }
+
+            //return Content(Convert.ToString(extencion));
         }
     }
 }

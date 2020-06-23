@@ -59,11 +59,11 @@
 
             $.post(url, parametros, function (data) {
                 alert(data);
-                //if (data == "1") {
-                  //  swal("Se actualizo la solicitud Correctamente", "OK", "Success");
-                //} else {
-                  //  swal("Ocurrio un error", data, "error");
-                //}
+                if (data == "1") {
+                    swal("Se guardo el archivo corretamente", "OK", "Success");
+                } else {
+                    swal("Ocurrio un error", data, "error");
+                }
             });
             
         });
