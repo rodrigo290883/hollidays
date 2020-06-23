@@ -1,0 +1,19 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_LayoutSessionR.cshtml";
+}
+
+<h1>Pantalla de Carga de Empleados</h1>
+
+
+<script>
+    $(function () {
+
+        url = "@Url.Content("~/CargaEmpleados/LeeArchivo")";
+
+        $.post(url, {}, function (data) {
+            console.log(JSON.stringify(data));
+        });
+
+    });
+</script>

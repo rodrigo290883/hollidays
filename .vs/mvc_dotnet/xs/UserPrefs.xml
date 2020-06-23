@@ -1,36 +1,27 @@
 ﻿<Properties StartupConfiguration="{7790088E-0614-4C17-803A-0678261CD006}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Models/Empleados.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Views/Shared/_LayoutSessionS.cshtml">
     <Files>
-      <File FileName="Views/Solicitante/Index.cshtml" Line="342" Column="25" />
-      <File FileName="Controllers/SolicitanteController.cs" Line="71" Column="29" />
+      <File FileName="Views/Solicitante/Index.cshtml" Line="9" Column="9" />
+      <File FileName="Controllers/SolicitanteController.cs" Line="89" Column="39" />
       <File FileName="Models/Solicitud.cs" Line="1" Column="1" />
-      <File FileName="Models/Empleados.cs" Line="27" Column="1" />
+      <File FileName="Models/Empleados.cs" Line="29" Column="6" />
+      <File FileName="Controllers/CargaEmpleadosController.cs" Line="1" Column="1" />
+      <File FileName="Views/CargaEmpleados/Index.cshtml" Line="3" Column="45" />
+      <File FileName="Views/Shared/_LayoutSessionR.cshtml" Line="1" Column="1" />
+      <File FileName="Views/Shared/_LayoutSessionS.cshtml" Line="32" Column="35" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="mvc_dotnet" expanded="True">
             <Node name="Desconectate" expanded="True">
-              <Node name="Dependencies" expanded="True">
-                <Node name="FrameworkReferences" expanded="True" />
-                <Node name="PackageDependencies" expanded="True" />
-              </Node>
               <Node name="Controllers" expanded="True" />
-              <Node name="Models" expanded="True">
-                <Node name="Empleados.cs" selected="True" />
-              </Node>
               <Node name="Views" expanded="True">
-                <Node name="Aprobador" expanded="True" />
-                <Node name="Solicitante" expanded="True" />
-              </Node>
-              <Node name="wwwroot" expanded="True">
-                <Node name="lib" expanded="True">
-                  <Node name="moment" expanded="True">
-                    <Node name="dist" expanded="True">
-                      <Node name="js" expanded="True" />
-                    </Node>
-                  </Node>
+                <Node name="CargaEmpleados" expanded="True" />
+                <Node name="Shared" expanded="True">
+                  <Node name="_LayoutSessionR.cshtml" selected="True" />
                 </Node>
+                <Node name="Solicitante" expanded="True" />
               </Node>
             </Node>
           </Node>
@@ -45,6 +36,7 @@
     <BreakpointStore>
       <Breakpoint file="/Users/rodrigolira/Proyectos/Vacaciones/hollidays/Controllers/AprobadorController.cs" relfile="Controllers/AprobadorController.cs" line="152" column="1" />
       <Breakpoint file="/Users/rodrigolira/Proyectos/Vacaciones/hollidays/Controllers/CargaEmpleadosController.cs" relfile="Controllers/CargaEmpleadosController.cs" line="47" column="1" />
+      <Breakpoint file="/Users/rodrigolira/Proyectos/Vacaciones/hollidays/Views/Solicitante/Index.cshtml" relfile="Views/Solicitante/Index.cshtml" line="14" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />
