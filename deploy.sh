@@ -2,13 +2,15 @@
 
 date
 
-cd ~/Proyectos/hollidays
+chmod -R 777 /home/grupomodelo/Proyectos/hollidays
 
-dotnet claen Desconectate.csproj --nologo
+cd /home/grupomodelo/Proyectos/hollidays
+
+dotnet clean Desconectate.csproj --nologo
 
 dotnet publish Desconectate.csproj --configuration release
 
-cp -a ~/Proyectos/hollidays/bin/release/netcoreapp3.1/publish/. /var/desconectate
+cp -a /home/grupomodelo/Proyectos/hollidays/bin/release/netcoreapp3.1/publish/. /var/desconectate
 
 sudo chmod -R 777 /var/desconectate
 
