@@ -3,17 +3,98 @@
     Layout = "~/Views/Shared/_LayoutSessionR.cshtml";
 }
 
-<h1>Pantalla de Carga de Empleados</h1>
+<style>
+    #t_preview{
+        font-size:10px;
+    }
+</style>
 
+<div class="row">
+    <div class="col-12">
+        <h2>Pantalla de Carga de Empleados</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <form  id="form_archivo" method="post" enctype="multipart/form-data" asp-controller="CargaEmpleados" asp-action="SubeArchivo">
+            <div class="form-group">
+                    Selecciona Archivo:<input type="file" name="files" multiple /> 
+            </div>
+        </form>
+        <button id="b_subir">Subir</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <table id="t_preview" class="table table-striped table-responsive">
+            <thead>
+                <tr>
+                    <th>IDSAP</th>
+                    <th>NOMBRE</th>
+                    <th>EMAIL</th>
+                    <th>AREA</th>
+                    <th>PUESTO</th>
+                    <th>FECHA_GRUPO</th>
+                    <th>FECHA_UEN</th>
+                    <th>DIAS_DISPONIBLES</th>
+                    <th>PERIODO</th>
+                    <th>IDSAP_LINE</th>
+                    <th>LINE</th>
+                    <th>EMAIL_LINE</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+            
+        </table>
+    </div>
+</div>
 
 <script>
     $(function () {
 
-        url = "@Url.Content("~/CargaEmpleados/LeeArchivo")";
-
-        $.post(url, {}, function (data) {
-            console.log(JSON.stringify(data));
+        $("#b_subir").click(function () {
+            $('#form_archivo').submit();
         });
+
+        $('#form_archivo').on("submit", function (e) {
+            e.preventDefault();
+            var f = $(this);
+            var formData = new FormData(document.getElementById("form_archivo"));
+
+            url = "@Url.Content("~/CargaEmpleados/SubeArchivo")";
+
+            $.ajax({
+                url: url,
+                type: "post",
+                dataType: "html",
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false
+            }).done(function (res) {
+                    if (res) {
+                     
+                        url = "@Url.Content("~/CargaEmpleados/LeeArchivo")";
+
+                        $.post(url, {}, function (data) {
+                            var num = data.length;
+                            
+                            $("#t_preview tbody").html('');
+                            for (var i = 0; i < num; i++) {
+                                var dato = data[i];
+                                var html = "<tr style='padding:1px'><td style='padding:1px'>" + dato.idsap + "</td><td style='padding:1px'>" + dato.nombre + "</td><td style='padding:1px'>" + dato.email + "</td><td style='padding:1px'>" + dato.area + "</td><td style='padding:1px'>" + dato.banda + "</td><td style='padding:1px'>" + dato.fecha_ingreso_grupo + "</td><td style='padding:1px'>" + dato.fecha_ingreso_uen + "</td><td>" + dato.dias_disponibles + "</td><td></td><td style='padding:1px'>" + dato.idsap_padre + "</td><td style='padding:1px'>" + dato.nombre_line + "</td><td style='padding:1px'>" + dato.email_line + "</td></tr>";
+                                $("#t_preview tbody").append(html);
+                            }
+                        });
+                    }
+                });
+        });
+       
+
+
+
 
     });
 </script>
