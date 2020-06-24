@@ -8,47 +8,45 @@
         font-size:10px;
     }
 </style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            <h2>Pantalla de Carga de Empleados</h2>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <form id="form_archivo" method="post" enctype="multipart/form-data" asp-controller="CargaEmpleados" asp-action="SubeArchivo">
+                <div class="form-group">
+                    <label>Selecciona un Archivo:&nbsp;&nbsp;</label><input type="file" name="files"/>&nbsp;&nbsp; <input type="submit" value="Subir" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <table id="t_preview" class="table table-striped table-responsive">
+                <thead>
+                    <tr>
+                        <th>IDSAP</th>
+                        <th>NOMBRE</th>
+                        <th>EMAIL</th>
+                        <th>AREA</th>
+                        <th>PUESTO</th>
+                        <th>FECHA_GRUPO</th>
+                        <th>FECHA_UEN</th>
+                        <th>DIAS_DISPONIBLES</th>
+                        <th>PERIODO</th>
+                        <th>IDSAP_LINE</th>
+                        <th>LINE</th>
+                        <th>EMAIL_LINE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
 
-<div class="row">
-    <div class="col-12">
-        <h2>Pantalla de Carga de Empleados</h2>
+            </table>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-12">
-        <form  id="form_archivo" method="post" enctype="multipart/form-data" asp-controller="CargaEmpleados" asp-action="SubeArchivo">
-            <div class="form-group">
-                    Selecciona Archivo:<input type="file" name="files" multiple /> 
-            </div>
-        </form>
-        <button id="b_subir">Subir</button>
-    </div>
-</div>
-<div class="row">
-    <div class="col-12">
-        <table id="t_preview" class="table table-striped table-responsive">
-            <thead>
-                <tr>
-                    <th>IDSAP</th>
-                    <th>NOMBRE</th>
-                    <th>EMAIL</th>
-                    <th>AREA</th>
-                    <th>PUESTO</th>
-                    <th>FECHA_GRUPO</th>
-                    <th>FECHA_UEN</th>
-                    <th>DIAS_DISPONIBLES</th>
-                    <th>PERIODO</th>
-                    <th>IDSAP_LINE</th>
-                    <th>LINE</th>
-                    <th>EMAIL_LINE</th>
-                </tr>
-            </thead>
-            <tbody>
 
-            </tbody>
-            
-        </table>
-    </div>
 </div>
 
 <script>

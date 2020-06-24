@@ -1,14 +1,16 @@
-#! /bin/bash
+#! /bin/sh
+
+date
 
 cd ~/Proyectos/hollidays
 
-git pull
-
-rm -R ~/Proyectos/hollidays/bin/release
+dotnet claen Desconectate.csproj --nologo
 
 dotnet publish Desconectate.csproj --configuration release
 
-sudo cp -a ~/Proyectos/hollidays/bin/release/netcoreapp3.1/publish/. /var/desconectate
+cp -a ~/Proyectos/hollidays/bin/release/netcoreapp3.1/publish/. /var/desconectate
 
-sudo systemctl restart apache2
+sudo chmod -R 777 /var/desconectate
+
+sudo systemctl restart kestrel-aspdotnetcore.service
 
