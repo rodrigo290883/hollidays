@@ -26,5 +26,6 @@ namespace desconectate.Models
         public string esquema { get; set; }
         public string rol { get; set; }
         public string avatar { get; set; }
+        public int procesado { get; set; }
     }
 }

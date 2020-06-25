@@ -9,6 +9,8 @@ using System.IO;
 using System.Globalization;
 using desconectate.Models;
 using Microsoft.AspNetCore.Http;
+using System.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,10 +18,102 @@ namespace desconectate.Controllers
 {
     public class CargaEmpleadosController : Controller
     {
+
+        private readonly IConfiguration _configuration;
+
+        public CargaEmpleadosController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
         // GET: /<controller>/
         public IActionResult Index()
         {
+            if (System.IO.File.Exists("conv.csv"))
+            {
+                System.IO.File.Delete("conv.csv");
+            }
             return View();
+        }
+
+        public string ProcesaRegistros(int numero_registros)
+        {
+            List<Empleados> registros = LeeArchivo();
+            int num = registros.Count;
+
+            if (num == numero_registros)
+            {
+                List<String> log = new List<String>();
+                int insertados = 0;
+                int actualizados = 0;
+                int fallo = 0;
+
+                string connString = _configuration.GetConnectionString("MyConnection"); // Read the connection string from the web.config file
+                using (SqlConnection conn = new SqlConnection(connString))
+                {
+                    conn.Open();
+                    foreach(Empleados registro in registros)
+                    {
+                        SqlCommand cmd = new SqlCommand("SELECT idsap FROM empleados WHERE idsap = @idsap ", conn);
+                        cmd.Parameters.AddWithValue("@idsap", registro.idsap);
+
+                        if (cmd.ExecuteScalar() == null)
+                        {
+                            //Se inserta el empleado
+                            cmd = new SqlCommand("INSERT INTO empleados(idsap,nombre,email,area,banda,fecha_ingreso_grupo,fecha_ingreso_uen,dias_disponibles,idsap_padre,nombre_line,email_line,contrasena,tipo,esquema,rol,estatus) "+
+                                "VALUES (@idsap,@nombre,@email,@area,@banda,@fecha_ingreso_grupo,@fecha_ingreso_uen,@dias_disponibles,@idsap_padre,@nombre_line,@email_line,'12345','S',0,0,0)", conn);
+                            cmd.Parameters.AddWithValue("@idsap", registro.idsap);
+                            cmd.Parameters.AddWithValue("@nombre", registro.nombre);
+                            cmd.Parameters.AddWithValue("@email", registro.email);
+                            cmd.Parameters.AddWithValue("@area", registro.area);
+                            cmd.Parameters.AddWithValue("@banda", registro.banda);
+                            cmd.Parameters.AddWithValue("@fecha_ingreso_grupo", registro.fecha_ingreso_grupo);
+                            cmd.Parameters.AddWithValue("@fecha_ingreso_uen", registro.fecha_ingreso_uen);
+                            cmd.Parameters.AddWithValue("@dias_disponibles", registro.dias_disponibles);
+                            cmd.Parameters.AddWithValue("@idsap_padre", registro.idsap_padre);
+                            cmd.Parameters.AddWithValue("@nombre_line", registro.nombre_line);
+                            cmd.Parameters.AddWithValue("@email_line", registro.email_line);
+
+                            int n = cmd.ExecuteNonQuery();
+                            if (n != 0)
+                                insertados++;
+                            else
+                                fallo++;
+                        }
+
+                        else
+                        {
+                            //Se actualiza el empleado
+                            cmd = new SqlCommand("UPDATE empleados SET email=@email,area=@area,banda=@banda,fecha_ingreso_grupo=@fecha_ingreso_grupo,fecha_ingreso_uen=fecha_ingreso_uen, "+
+                                "dias_disponibles=@dias_disponibles,idsap_padre=@idsap_padre,nombre_line=@nombre_line,email_line=@email_line " +
+                                "WHERE idsap = @idsap", conn);
+                            cmd.Parameters.AddWithValue("@idsap", registro.idsap);
+                            cmd.Parameters.AddWithValue("@email", registro.email);
+                            cmd.Parameters.AddWithValue("@area", registro.area);
+                            cmd.Parameters.AddWithValue("@banda", registro.banda);
+                            cmd.Parameters.AddWithValue("@fecha_ingreso_grupo", registro.fecha_ingreso_grupo);
+                            cmd.Parameters.AddWithValue("@fecha_ingreso_uen", registro.fecha_ingreso_uen);
+                            cmd.Parameters.AddWithValue("@dias_disponibles", registro.dias_disponibles);
+                            cmd.Parameters.AddWithValue("@idsap_padre", registro.idsap_padre);
+                            cmd.Parameters.AddWithValue("@nombre_line", registro.nombre_line);
+                            cmd.Parameters.AddWithValue("@email_line", registro.email_line);
+
+                            int n = cmd.ExecuteNonQuery();
+                            if (n != 0)
+                                actualizados++;
+                            else
+                                fallo++;
+                        }
+                    }
+                    
+                }
+
+                return "-Total: "+num+" -Insertados: "+insertados+" -Actualizados: "+actualizados+" -Falló: "+fallo;
+            }
+            else
+            {
+                return "No corresponde el numero de registros";
+            }
+            
         }
 
         public List<Empleados> LeeArchivo()

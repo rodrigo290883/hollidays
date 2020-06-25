@@ -1,15 +1,11 @@
 ﻿<Properties StartupConfiguration="{7790088E-0614-4C17-803A-0678261CD006}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="deploy.sh">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/CargaEmpleadosController.cs">
     <Files>
-      <File FileName="Views/Solicitante/Index.cshtml" Line="223" Column="74" />
-      <File FileName="Controllers/SolicitanteController.cs" />
-      <File FileName="Models/Solicitud.cs" />
-      <File FileName="Models/Empleados.cs" />
-      <File FileName="Controllers/CargaEmpleadosController.cs" />
-      <File FileName="Views/CargaEmpleados/Index.cshtml" Line="28" Column="25" />
-      <File FileName="Views/Shared/_LayoutSessionR.cshtml" />
-      <File FileName="Views/Shared/_LayoutSessionS.cshtml" />
-      <File FileName="deploy.sh" Line="1" Column="1" />
+      <File FileName="Views/Solicitante/Index.cshtml" Line="177" Column="72" />
+      <File FileName="Controllers/SolicitanteController.cs" Line="20" Column="9" />
+      <File FileName="Models/Empleados.cs" Line="29" Column="41" />
+      <File FileName="Controllers/CargaEmpleadosController.cs" Line="108" Column="18" />
+      <File FileName="Views/CargaEmpleados/Index.cshtml" Line="134" Column="27" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -19,14 +15,15 @@
               <Node name="Dependencies" expanded="True">
                 <Node name="PackageDependencies" expanded="True" />
               </Node>
-              <Node name="Controllers" expanded="True" />
+              <Node name="Controllers" expanded="True">
+                <Node name="CargaEmpleadosController.cs" selected="True" />
+              </Node>
               <Node name="Models" expanded="True" />
               <Node name="Views" expanded="True">
                 <Node name="CargaEmpleados" expanded="True" />
                 <Node name="Shared" expanded="True" />
                 <Node name="Solicitante" expanded="True" />
               </Node>
-              <Node name="deploy.sh" selected="True" />
             </Node>
           </Node>
         </State>
