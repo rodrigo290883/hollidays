@@ -35,14 +35,14 @@ namespace desconectate.Controllers
             return View();
         }
 
-        public string ProcesaRegistros(int numero_registros)
+        public List<int> ProcesaRegistros(int numero_registros)
         {
             List<Empleados> registros = LeeArchivo();
             int num = registros.Count;
 
             if (num == numero_registros)
             {
-                List<String> log = new List<String>();
+                
                 int insertados = 0;
                 int actualizados = 0;
                 int fallo = 0;
@@ -55,6 +55,8 @@ namespace desconectate.Controllers
                     {
                         SqlCommand cmd = new SqlCommand("SELECT idsap FROM empleados WHERE idsap = @idsap ", conn);
                         cmd.Parameters.AddWithValue("@idsap", registro.idsap);
+
+                        LogClass log = new LogClass(_configuration);
 
                         if (cmd.ExecuteScalar() == null)
                         {
@@ -75,9 +77,19 @@ namespace desconectate.Controllers
 
                             int n = cmd.ExecuteNonQuery();
                             if (n != 0)
+                            {
+                                DateTime now = DateTime.Now;
+                                log.idsap = registro.idsap;
+                                log.log = "Se creo el registro del empleado: " + registro.idsap + " mediante carga de empleados";
+                                log.fecha_creacion = now;
+                                log.idsap_creacion = 101010;
+                                log.createLog();
                                 insertados++;
+                            }
                             else
+                            {
                                 fallo++;
+                            }
                         }
 
                         else
@@ -99,19 +111,28 @@ namespace desconectate.Controllers
 
                             int n = cmd.ExecuteNonQuery();
                             if (n != 0)
+                            {
+                                DateTime now = DateTime.Now;
+                                log.idsap = registro.idsap;
+                                log.log = "Se actualizo el empleado: "+registro.idsap+" mediante carga de empleados";
+                                log.fecha_creacion = now;
+                                log.idsap_creacion = 101010;
+                                log.createLog();
                                 actualizados++;
+                            }
                             else
                                 fallo++;
                         }
                     }
                     
                 }
-
-                return "-Total: "+num+" -Insertados: "+insertados+" -Actualizados: "+actualizados+" -Falló: "+fallo;
+                var mensaje = new List<int> {num,insertados,actualizados,fallo };
+                return mensaje;
             }
             else
             {
-                return "No corresponde el numero de registros";
+                var mensaje = new List<int> { 0 };
+                return mensaje;
             }
             
         }
