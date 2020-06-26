@@ -166,7 +166,9 @@ namespace desconectate.Controllers
                 if (aux == 1 && s_estatus == 1)//Si se modifico el estatus y el estatus es aprobado
                 {
                     conn.Open();
-                    SqlCommand cmd2 = new SqlCommand("select e.idsap,e.dias_disponibles,DATEDIFF(day,sol.fecha_inicio,sol.fecha_fin) as dias,tsol.consume_vacaciones from empleados e,solicitudes sol left join ctipos_solicitud tsol on sol.tipo_solicitud = tsol.id_tipo_solicitud where e.idsap in (select s.idsap from solicitudes s where s.folio = @folio) and sol.folio = @folio", conn);
+                    SqlCommand cmd2 = new SqlCommand("SELECT sol.idsap,sol.dias as dias_solicitados,tsol.consume_vacaciones,reg.registro as registro_padre,reg.disponibles,reg.caducidad,reg.periodo,sol.tipo_solicitud "+
+                                                "from solicitudes sol left join empleados emp on sol.idsap = emp.idsap left join ctipos_solicitud tsol on sol.tipo_solicitud = tsol.id_tipo_solicitud "+
+                                                "left join registros_dias reg on sol.idsap = reg.idsap and caducidad >= GETDATE() and reg.registro_padre = 0 WHERE sol.folio = @folio", conn);
                     cmd2.Parameters.AddWithValue("@folio", id_folio);
 
                     SqlDataReader sqlReader = cmd2.ExecuteReader();
@@ -174,21 +176,36 @@ namespace desconectate.Controllers
                     sqlReader.Read();
 
                     int idsap = sqlReader.GetInt32(0);
-                    int dias_disponibles = sqlReader.GetInt32(1);
-                    int dias = sqlReader.GetInt32(2);
-                    dias = dias_disponibles - (dias + 1);
-
-                    string consume_vacaciones = sqlReader[3].ToString();
+                    int dias_disponibles = sqlReader.GetInt32(4);
+                    int dias = sqlReader.GetInt32(1);
+                    int registro_padre = sqlReader.GetInt32(3);
+                    int id_tipo_solicitud = sqlReader.GetInt32(7);
+                    string consume_vacaciones = sqlReader[2].ToString();
+                    DateTime caducidad = Convert.ToDateTime(sqlReader.IsDBNull(5) ? null : sqlReader[5]);
+                    string periodo = sqlReader[6].ToString();
 
                     conn.Close();
 
                     if (consume_vacaciones == "S")
                     {
-                        conn.Open();
-                        SqlCommand cmd3 = new SqlCommand("update empleados SET dias_disponibles = @dias where idsap = @idsap", conn);
-                        cmd3.Parameters.AddWithValue("@idsap", idsap);
-                        cmd3.Parameters.AddWithValue("@dias", dias);
+                        int disponibles = dias_disponibles - dias;
 
+                        conn.Open();
+                        SqlCommand cmd3 = new SqlCommand("INSERT INTO registros_dias(registro_padre,id_tipo_solicitud,dias, disponibles,fecha_creacion,caducidad,idsap,periodo) VALUES "+
+                            "(@registro_padre,@id_tipo_solicitud,@dias,@disponibles,GETDATE(),@caducidad,@idsap,@periodo)", conn);
+                        cmd3.Parameters.AddWithValue("@registro_padre", registro_padre);
+                        cmd3.Parameters.AddWithValue("@id_tipo_solicitud", id_tipo_solicitud);
+                        cmd3.Parameters.AddWithValue("@dias", dias);
+                        cmd3.Parameters.AddWithValue("@disponibles", disponibles);
+                        cmd3.Parameters.AddWithValue("@caducidad", caducidad);
+                        cmd3.Parameters.AddWithValue("@idsap", idsap);
+                        cmd3.Parameters.AddWithValue("@periodo", periodo);
+
+                        aux = cmd3.ExecuteNonQuery();
+
+                        cmd3 = new SqlCommand("UPDATE registros_dias SET disponibles = @disponibles WHERE registro = @registro_padre", conn);
+                        cmd3.Parameters.AddWithValue("@registro_padre", registro_padre);
+                        cmd3.Parameters.AddWithValue("@disponibles", disponibles);
 
                         aux = cmd3.ExecuteNonQuery();
 
@@ -250,7 +267,7 @@ namespace desconectate.Controllers
                     cliente.UseDefaultCredentials = false;
                     cliente.Credentials = new System.Net.NetworkCredential(origen, pass);
 
-                    cliente.Send(correo);
+                    //cliente.Send(correo);
                     cliente.Dispose();
                     return Content("1");
 
