@@ -11,7 +11,7 @@
     Empleados empleado = ViewBag.empleado;
     string rol = ViewBag.rol;
 
-    var feriados = ViewBag.Feriados;
+    
 
     string avatar = empleado.avatar;
     if (avatar == "") {
@@ -244,14 +244,29 @@
         var vacaciones = new Array();
         var disfrutar = @empleado.dias_disponibles;
         var bandera = 0;
-        var maximo_dias = 30;
+        var maximo_dias = @empleado.dias_disponibles;;
         var consume_vacaciones = 'S';
         var rol = [@empleado.rol];
-       
+        var dias_habiles = 0;
+
+        //-------Se obtienen los dias feriados
+
+        var feriados = [@Html.Raw(ViewBag.Feriados)];
+
+        feriados.shift();
+        for (var i = 0; i < feriados.length; i++) {
+
+            feriados[i] = moment(feriados[i]);
+        }
+        //-------Finaliza Feriados
 
         $("#s_tipo_solicitud").change(function () {
             maximo_dias = $("#s_tipo_solicitud option:selected").attr("aux");
             consume_vacaciones = $("#s_tipo_solicitud option:selected").attr("aux2");
+            if (consume_vacaciones == 'S') {
+                maximo_dias = disfrutar;
+            }
+            
         });
 
 
@@ -271,7 +286,8 @@
                         "fecha_inicio": $("#i_fecha_inicio").val(),
                         "fecha_fin": $("#i_fecha_fin").val(),
                         "tipo_solicitud": $("#s_tipo_solicitud").val(),
-                        "observacion_solicitante": $("#ta_observacion").val()
+                        "observacion_solicitante": $("#ta_observacion").val(),
+                        "dias": dias_habiles
                     };
 
                     $.post(url, parametros, function (data) {
@@ -333,27 +349,38 @@
                 if (vacaciones.length != 0) {
                     vacaciones.sort(function (a, b) { return a - b });
                     // se cuentan los dias habiles
-                    var cont = 0;
+                    var cont_habiles = 0;
+                    var cont_inhabiles = 0;
+                    var cont_feriados = 0;
 
                     var inicio = moment(vacaciones[0]);
 
                     var fin = moment(vacaciones[(vacaciones.length - 1)]);
                     var fin2 = fin.add(1, 'd');
 
-                    
+
 
                     for (var i = inicio; !i.isSame(fin2); i.add(1, 'd')) {
 
                                 var diasemana = i.isoWeekday();
                                 diasemana--;
 
-                                if (rol[diasemana] == "1")
-                                    cont++;
+                        if (rol[diasemana] == "1") {
+
+                            if (feriados.find(contieneMoment, i) != undefined)
+                                cont_feriados++;
+                            else
+                                cont_habiles++;
+                        }
+                        else {
+                            cont_inhabiles++;
+                        }
                     }
 
-                    alert(cont);
+                    dias_habiles = cont_habiles;
+                    //swal("Detalle Solicitud", "Dias habiles:" + cont_habiles + "\n Feriados:" + cont_feriados + "\n inhabiles:" + cont_inhabiles, "success");
 
-                    if (cont > disfrutar) {
+                    if (cont_habiles > maximo_dias) {
                         swal("Cuidado", "Tu seleccion sobrepasa los dias permitidos", "warning");
                         bandera = 1;
                     }
@@ -373,6 +400,10 @@
                 //console.log(vacaciones);
             }
         });
+
+        function contieneMoment(fecha) {
+            return this.isSame(fecha);
+        }
 
 
         function limpiaForma() {
