@@ -34,7 +34,7 @@ namespace desconectate.Controllers
                 return RedirectToAction("Index", "Home");
         }
 
-        public List<Empleados> BuscarSap(int valor){
+        public List<Empleados> BuscarSap(string valor){
 
             List<Empleados> lst = new List<Empleados>();
 
@@ -42,7 +42,7 @@ namespace desconectate.Controllers
             
             using(SqlConnection conn = new SqlConnection(connString)){
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT idsap,nombre,area FROM empleados WHERE idsap LIKE '%@valor%';");
+                SqlCommand cmd = new SqlCommand("SELECT idsap,nombre,area FROM empleados WHERE idsap LIKE '"+valor+"%';",conn);
                 cmd.Parameters.AddWithValue("@valor",valor);
 
                 SqlDataReader sqlReader = cmd.ExecuteReader();
@@ -65,7 +65,7 @@ namespace desconectate.Controllers
             using(SqlConnection conn = new SqlConnection(connString)){
 
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT idsap,nombre,area FROM empleados ");
+                SqlCommand cmd = new SqlCommand("SELECT idsap,nombre,area FROM empleados ",conn);
 
                 SqlDataReader sqlReader = cmd.ExecuteReader();
 
