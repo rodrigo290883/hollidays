@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\Controllers",
+    "\\Models",
+    "\\Views",
+    "\\Views\\Administracion",
+    "\\Views\\Aprobador",
+    "\\Views\\Solicitante",
+    "\\wwwroot",
+    "\\wwwroot\\css"
+  ],
+  "SelectedNode": "\\Models\\Empleados.cs",
+  "PreviewInSolutionExplorer": true
+}

@@ -190,6 +190,20 @@
 </div>
 
 
+<div id="NewPass" class="ModalWindow">
+    <div class="card">
+        <h2 style="color: rebeccapurple; text-align: center;">Nuevo Usuario!</h2>
+        <label style="color: rebeccapurple; text-align: center;">Ingresa tu nueva contraseña:</label>
+        <div class="row">
+            <input type="password" class="col-8 form-control" id="nuevoPass" name="nuevoPass" value="" placeholder="Nueva Contraseña" />
+            <button class="col-4 btn-desconectate btn-sm" onclick="ShowPass()" id="ShowPass" name="ShowPass" style="font-size:small;">Motrar Contraseña</button>
+        </div>
+        <br />
+        <br />
+        <button class="col-md-4 offset-md-4 btn-desconectate btn-sm" onclick="SavePass()" id="SaveBtnPass" >Ok</button>
+    </div>
+</div>
+
 
 <script src="lib/simple-calendar/dist/jquery.simple-calendar.js"></script>
 <script src="lib/bootstrap-select/dist/js/bootstrap-select.js"></script>
@@ -199,14 +213,17 @@
 
     window.onload = function () {
 
+
         var estatus = document.getElementById("statusEmpleado").value;
 
         if (estatus == 0) {
 
-            swal({
+            document.getElementById("NewPass").style.display = "block";
+
+            /*swal({
                 title: "Nuevo Usuario!",
                 text: "Ingresa tu nueva contraseña:",
-                type: "input",
+                type: "password",
                 showCancelButton: false,
                 closeOnConfirm: false,
                 animation: "slide-from-top",
@@ -220,10 +237,10 @@
                         return false
                     }
 
-                    url = "@Url.Content("~/Solicitante/UpdatePassword")";
+                    url = "Url.Content("~/Solicitante/UpdatePassword")";
 
                     parametros = {
-                        "id_sap":@empleado.idsap,
+                        "id_sap":empleado.idsap,
                         "NewPass": inputValue,
                     };
 
@@ -235,9 +252,44 @@
                         }
                     });
 
-                });
+                });*/
 
         }
+    }
+
+    function ShowPass() {
+
+        var tipo = document.getElementById("nuevoPass");
+
+        if (tipo.type == "password") {
+            tipo.type="text";
+        } else {
+            tipo.type="password";
+        }
+    }
+
+    function SavePass() {
+        document.getElementById("NewPass").style.display = "none";
+
+        var NewPass = document.getElementById("nuevoPass").value;
+
+            url = "@Url.Content("~/Solicitante/UpdatePassword")";
+
+                    parametros = {
+                        "id_sap":@empleado.idsap,
+                        "NewPass": NewPass,
+                    };
+
+        $.post(url, parametros, function (data) {
+            
+                        if (data == "1") {
+                            
+                            swal("Correcto!", "Tu contraseña: " + NewPass, "success");
+                        } else {
+                            swal("Error!", "No se actualizó tu información", "error");
+                        }
+                    });
+
     }
 
     $(function() {
@@ -247,7 +299,7 @@
         var maximo_dias = 30;
         var consume_vacaciones = 'S';
         var rol = [@empleado.rol];
-       
+
 
         $("#s_tipo_solicitud").change(function () {
             maximo_dias = $("#s_tipo_solicitud option:selected").attr("aux");
@@ -340,7 +392,7 @@
                     var fin = moment(vacaciones[(vacaciones.length - 1)]);
                     var fin2 = fin.add(1, 'd');
 
-                    
+
 
                     for (var i = inicio; !i.isSame(fin2); i.add(1, 'd')) {
 
