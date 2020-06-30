@@ -78,12 +78,12 @@ namespace desconectate.Controllers
             }
         }
 
-        public ActionResult DescargaPoliza()
+        public ActionResult DescargaPoliza(int idsap)
         {
         
             WebClient cliente = new WebClient();
 
-            string idsap = HttpContext.Session.GetString("usuario");
+            /*string idsap = HttpContext.Session.GetString("usuario");*/
             try
             {
 
@@ -92,7 +92,7 @@ namespace desconectate.Controllers
             }
             catch (Exception ex)
             {
-                return Content("No se encontro el archivo de poliza, favor de contactar a recursos humanos.");
+                return Content("No se encontro el archivo de poliza, favor de contactar a recursos humanos.   "+idsap);
             }
         
         }

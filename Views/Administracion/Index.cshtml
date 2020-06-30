@@ -64,7 +64,7 @@
                     for (var i = 0; i < num; i++) {
                         var dato = data[i];
 
-                        html = '<tr><td>' + dato.idsap + '</td><td>' + dato.nombre + '</td><td>' + dato.area + '</td><td>' + dato.banda + '</td><td>' + dato.idsap + '</td><td> <button type="button" id="b_descargar" class="btn btn-desconectate">DESCARGAR</button> </td></tr>';
+                        html = '<tr><td>' + dato.idsap + '</td><td>' + dato.nombre + '</td><td>' + dato.area + '</td><td>' + dato.banda + '</td><td>' + dato.idsap + '</td><td> <button type="button" id="b_descargar" class="btn btn-desconectate" onclick="DownPoliza(' + dato.idsap +')">DESCARGAR</button> </td></tr>';
                         $("#t_empleados tbody").append(html);
                     }
                 });
@@ -85,7 +85,7 @@
                     for (var i = 0; i < num; i++) {
                         var dato = data[i];
 
-                        html = '<tr><td>' + dato.idsap + '</td><td>' + dato.nombre + '</td><td>' + dato.area + '</td><td>' + dato.banda + '</td><td>' + dato.idsap + '</td><td> <button type="button" id="b_descargar" class="btn btn-desconectate">DESCARGAR</button> </td></tr>';
+                        html = '<tr><td>' + dato.idsap + '</td><td>' + dato.nombre + '</td><td>' + dato.area + '</td><td>' + dato.banda + '</td><td>' + dato.idsap + '</td><td> <button type="button" id="b_descargar" class="btn btn-desconectate" onclick="DownPoliza(' + dato.idsap +')">DESCARGAR</button> </td></tr>';
                         $("#t_empleados tbody").append(html);
                     }
                 });
