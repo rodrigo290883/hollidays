@@ -1,6 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Administración|Desconéctate";
-    Layout = "~/Views/Shared/_LayoutSession.cshtml";
+    Layout = "~/Views/Shared/_LayoutSessionA.cshtml";
 }
 
 <style>
@@ -46,68 +46,7 @@
                         <th scope="col">DESCARGA</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>3478</td>
-                        <td>ISABEL PEREZ LARA</td>
-                        <td>MERCADOTECNIA</td>
-                        <td>GERENCIA</td>
-                        <td>93427839-34</td>
-                        <td>
-                            <button type="submit" class="btn btn-desconectate">DESCARGA</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>3480</td>
-                        <td>SAMUEL MEDINA MONTEJO</td>
-                        <td>MERCADOTECNIA</td>
-                        <td>AUXILIAR</td>
-                        <td>24683297-54</td>
-                        <td>
-                            <button type="submit" class="btn btn-desconectate">DESCARGA</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>3484</td>
-                        <td>GRACIELA EZQUIVEL RODRIGUEZ</td>
-                        <td>PEOPLE</td>
-                        <td>AUXILIAR</td>
-                        <td>47389874-58</td>
-                        <td>
-                            <button type="submit" class="btn btn-desconectate">DESCARGA</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>3490</td>
-                        <td>RAMIRO RAMIREZ PEREZ</td>
-                        <td>PEOPLE</td>
-                        <td>GERENCIA</td>
-                        <td>32349987-99</td>
-                        <td>
-                            <button type="submit" class="btn btn-desconectate">DESCARGA</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>3492</td>
-                        <td>SANTIAGO GONZALEZ SUAREZ</td>
-                        <td>TI</td>
-                        <td>DESARROLLO</td>
-                        <td>23984787-12</td>
-                        <td>
-                            <button type="submit" class="btn btn-desconectate">DESCARGA</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>3500</td>
-                        <td>RAUL DOMINGUEZ MARTINEZ</td>
-                        <td>TI</td>
-                        <td>DESARROLLO</td>
-                        <td>82736227-35</td>
-                        <td>
-                            <button type="submit" class="btn btn-desconectate">DESCARGA</button>
-                        </td>
-                    </tr>
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
     </div>
@@ -115,52 +54,78 @@
 
 <script>
 
-    $(function () {
+    $(document).ready(function () {
+        
+        url = "@Url.Content("~/Administracion/BuscarAll")"
+        /*
+                $.post(url, {}, function (data) {
+                    var num = data.length;
+                    $("#t_empleados tbody").html("");
+                    for (var i = 0; i < num; i++) {
+                        var dato = data[i];
 
-        $.expr[':'].contains = $.expr.createPseudo(function (arg) {
-            return function (elem) {
-                return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
-            };
-        });
+                        html = '<tr><td>' + dato.idsap + '</td><td>' + dato.nombre + '</td><td>' + dato.area + '</td><td>' + dato.banda + '</td><td>' + dato.idsap + '</td><td> <button type="button" id="b_descargar" class="btn btn-desconectate" onclick="DownPoliza(' + dato.idsap +')">DESCARGAR</button> </td></tr>';
+                        $("#t_empleados tbody").append(html);
+                    }
+                });
+*/
 
-        $('.ifiltro').change(function () {
-            var aux = $(this).val();
-            var tabla = $(this).attr('tabla');
-            var tabla = '#' + tabla;
-            if (aux == '') {
-                $(tabla + ' tbody tr').show();
+
+
+        $("#filtro_idsap").change(function () {
+            var valor = $(this).val();
+
+            if (valor == "") {
+
+                url = "@Url.Content("~/Administracion/BuscarAll")"
+
+                $.post(url, {}, function (data) {
+                    var num = data.length;
+                    $("#t_empleados tbody").html("");
+                    for (var i = 0; i < num; i++) {
+                        var dato = data[i];
+
+                        html = '<tr><td>' + dato.idsap + '</td><td>' + dato.nombre + '</td><td>' + dato.area + '</td><td>' + dato.banda + '</td><td>' + dato.idsap + '</td><td> <button type="button" id="b_descargar" class="btn btn-desconectate" onclick="DownPoliza(' + dato.idsap +')">DESCARGAR</button> </td></tr>';
+                        $("#t_empleados tbody").append(html);
+                    }
+                });
+
             } else {
-                var arreglo = aux.split(',');
-                var cadenas = arreglo.length;
 
-                if (cadenas == 1) {
-                    var arreglo2 = aux.split('|');
+                url = "@Url.Content("~/Administracion/BuscarSap")"
 
-                    if (arreglo2.length == 1)//Consulta normal, un solo texto
-                    {
-                        $(tabla + ' tbody tr').show();
-                        aux = aux.toUpperCase();
-                        $(tabla + ' tbody tr:visible').not(':contains(' + aux + ')').hide();
+                $.post(url, {"valor":valor}, function (data) {
+                    var num = data.length;
+                    $("#t_empleados tbody").html("");
+                    for (var i = 0; i < num; i++){
+                        var dato = data[i];
+
+                        html = '<tr><td>' + dato.idsap + '</td><td>' + dato.nombre + '</td><td>' + dato.area + '</td><td>' + dato.banda + '</td><td>' + dato.idsap + '</td><td> <button type="button" id="b_descargar" class="btn btn-desconectate" onclick="DownPoliza('+dato.idsap+')">DESCARGAR</button> </td></tr>';
+                        $("#t_empleados tbody").append(html);
                     }
-                    else  //Consulta con | que combinan textos
-                    {
-                        $(tabla + ' tbody tr').hide();
-                        for (var i = 0; i < arreglo2.length; i++) {
-                            var aux2 = arreglo2[i];
-                            $(tabla + ' tbody tr:contains(' + aux2 + ')').show();
-                        }
-                    }
-                } else { //Consulta encadenada
-                    $(tabla + ' tbody tr').show();
-                    for (var i = 0; i < cadenas; i++) {
-
-                        var aux2 = arreglo[i];
-
-                        aux2 = aux2.toUpperCase();
-                        $(tabla + ' tbody tr:visible').not(':contains(' + aux2 + ')').hide();
-                    }
-                }
+                });
             }
         });
     });
+
+
+    /*$("#b_descargar").click(function () {
+
+
+
+        alert("boton 1");
+        url = "Url.Content("~/Administracion/DescargaPoliza")";
+
+        window.open(url)
+    });*/
+
+
+    function DownPoliza(value) {
+
+        url = "@Url.Content("~/Administracion/DescargaPoliza")";
+
+        window.open(url)
+    }
+
+
 </script>

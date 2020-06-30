@@ -1,39 +1,24 @@
-﻿<Properties StartupConfiguration="{7790088E-0614-4C17-803A-0678261CD006}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/AprobadorController.cs">
+﻿<Properties>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Desconectate.csproj">
     <Files>
-      <File FileName="Controllers/AprobadorController.cs" Line="153" Column="1" />
-      <File FileName="Views/Aprobador/Index.cshtml" />
-      <File FileName="Models/Solicitud.cs" />
-      <File FileName="Controllers/SolicitanteController.cs" />
+      <File FileName="Controllers/AdministracionController.cs" Line="1" Column="1" />
+      <File FileName="Views/Administracion/Index.cshtml" Line="70" Column="20" />
+      <File FileName="Desconectate.csproj" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
-          <Node name="mvc_dotnet" expanded="True">
-            <Node name="Desconectate" expanded="True">
-              <Node name="Dependencies" expanded="True">
-                <Node name="PackageDependencies" expanded="True" />
-              </Node>
-              <Node name="Controllers" expanded="True">
-                <Node name="AprobadorController.cs" selected="True" />
-              </Node>
-              <Node name="Models" expanded="True" />
-              <Node name="Views" expanded="True">
-                <Node name="Administracion" expanded="True" />
-                <Node name="Aprobador" expanded="True" />
-              </Node>
-            </Node>
-          </Node>
+          <Node name="mvc_dotnet" expanded="True" />
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.Desconectate PreferredExecutionTarget="/Applications/Google Chrome.app" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/Users/rodrigolira/Proyectos/Vacaciones/hollidays/Controllers/AprobadorController.cs" relfile="Controllers/AprobadorController.cs" line="152" column="1" />
+      <Breakpoint file="/Users/rodrigolira/Proyectos/Vacaciones/hollidays/Controllers/CargaEmpleadosController.cs" relfile="Controllers/CargaEmpleadosController.cs" line="47" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />
