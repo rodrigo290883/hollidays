@@ -5,11 +5,8 @@
     "\\Models",
     "\\Views",
     "\\Views\\Administracion",
-    "\\Views\\Aprobador",
-    "\\Views\\Solicitante",
-    "\\wwwroot",
-    "\\wwwroot\\css"
+    "\\Views\\Solicitante"
   ],
-  "SelectedNode": "\\Models\\Empleados.cs",
+  "SelectedNode": "\\Controllers\\SolicitanteController.cs",
   "PreviewInSolutionExplorer": true
 }

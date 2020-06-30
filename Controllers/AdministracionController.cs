@@ -42,13 +42,13 @@ namespace desconectate.Controllers
             
             using(SqlConnection conn = new SqlConnection(connString)){
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT idsap,nombre,area FROM empleados WHERE idsap LIKE '"+valor+"%';",conn);
+                SqlCommand cmd = new SqlCommand("SELECT idsap,nombre,area,banda FROM empleados WHERE idsap LIKE '"+valor+"%';",conn);
                 cmd.Parameters.AddWithValue("@valor",valor);
 
                 SqlDataReader sqlReader = cmd.ExecuteReader();
 
                 while(sqlReader.Read()){
-                    lst.Add(new Empleados { idsap =sqlReader.GetInt32(0), nombre = sqlReader[1].ToString(), area = sqlReader[2].ToString()});
+                    lst.Add(new Empleados { idsap =sqlReader.GetInt32(0), nombre = sqlReader[1].ToString(), area = sqlReader[2].ToString(), banda = sqlReader[3].ToString()});
                 }
 
                 conn.Close();
@@ -65,17 +65,36 @@ namespace desconectate.Controllers
             using(SqlConnection conn = new SqlConnection(connString)){
 
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT idsap,nombre,area FROM empleados ",conn);
+                SqlCommand cmd = new SqlCommand("SELECT idsap,nombre,area,banda FROM empleados ",conn);
 
                 SqlDataReader sqlReader = cmd.ExecuteReader();
 
                 while(sqlReader.Read()){
-                    lst.Add(new Empleados { idsap = sqlReader.GetInt32(0), nombre = sqlReader[1].ToString(), area = sqlReader[2].ToString()});
+                    lst.Add(new Empleados { idsap = sqlReader.GetInt32(0), nombre = sqlReader[1].ToString(), area = sqlReader[2].ToString(), banda = sqlReader[3].ToString()});
                 }
 
                 conn.Close();
                 return lst;
             }
+        }
+
+        public ActionResult DescargaPoliza()
+        {
+        
+            WebClient cliente = new WebClient();
+
+            string idsap = HttpContext.Session.GetString("usuario");
+            try
+            {
+
+                byte[] archivo = cliente.DownloadData("GMM/"+idsap + ".pdf");
+                return File(archivo, "application/pdf", "PGMM_" + idsap + ".pdf");
+            }
+            catch (Exception ex)
+            {
+                return Content("No se encontro el archivo de poliza, favor de contactar a recursos humanos.");
+            }
+        
         }
     }
 }

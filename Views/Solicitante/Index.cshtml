@@ -200,7 +200,7 @@
         </div>
         <br />
         <br />
-        <button class="col-md-4 offset-md-4 btn-desconectate btn-sm" onclick="SavePass()" id="SaveBtnPass" >Ok</button>
+        <button class="col-md-4 offset-md-4 btn-desconectate btn-sm" onclick="validaPass()" id="SaveBtnPass" >Ok</button>
     </div>
 </div>
 
@@ -266,6 +266,30 @@
         } else {
             tipo.type="password";
         }
+    }
+
+    function validaPass() {
+        var passnew = document.getElementById("nuevoPass").value;
+
+        if (passnew != '') {
+            SavePass();
+        } else {
+            document.getElementById("NewPass").style.display = "none";
+            swal({
+                title: 'Error!',
+                text: "El campo nueva contraseña esta vacío ",
+                icon: 'error',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+                },
+                    function () {
+                        document.getElementById("NewPass").style.display = "block";
+                    
+                });
+        }
+        
     }
 
     function SavePass() {
