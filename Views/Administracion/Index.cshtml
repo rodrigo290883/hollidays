@@ -55,9 +55,9 @@
 <script>
 
     $(document).ready(function () {
-
+        
         url = "@Url.Content("~/Administracion/BuscarAll")"
-
+        /*
                 $.post(url, {}, function (data) {
                     var num = data.length;
                     $("#t_empleados tbody").html("");
@@ -68,11 +68,11 @@
                         $("#t_empleados tbody").append(html);
                     }
                 });
+*/
 
 
 
-
-        $("#filtro_idsap").keyup(function () {
+        $("#filtro_idsap").change(function () {
             var valor = $(this).val();
 
             if (valor == "") {
