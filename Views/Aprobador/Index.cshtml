@@ -296,7 +296,7 @@
                         //alert(JSON.stringify(parametros));
 
                         $.post(url, parametros, function (data) {
-                            if (data = "1") {
+                            if (data == "1") {
                                 
                                 url2 = "@Url.Content("~/Aprobador/EnviaCorreo")"
                                 $.post(url2, { "folio": $("#id_folio").val() }, function (data2) {

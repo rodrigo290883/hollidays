@@ -1,10 +1,10 @@
 ﻿<Properties StartupConfiguration="{7790088E-0614-4C17-803A-0678261CD006}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Models/Solicitud.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/AprobadorController.cs">
     <Files>
-      <File FileName="Views/Solicitante/Index.cshtml" Line="376" Column="23" />
-      <File FileName="Controllers/SolicitanteController.cs" Line="104" Column="47" />
-      <File FileName="Views/CargaEmpleados/Index.cshtml" Line="141" Column="165" />
-      <File FileName="Models/Solicitud.cs" Line="1" Column="1" />
+      <File FileName="Controllers/AprobadorController.cs" Line="153" Column="1" />
+      <File FileName="Views/Aprobador/Index.cshtml" />
+      <File FileName="Models/Solicitud.cs" />
+      <File FileName="Controllers/SolicitanteController.cs" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -14,18 +14,13 @@
               <Node name="Dependencies" expanded="True">
                 <Node name="PackageDependencies" expanded="True" />
               </Node>
-              <Node name="Controllers" expanded="True" />
-              <Node name="Models" expanded="True">
-                <Node name="Solicitud.cs" selected="True" />
+              <Node name="Controllers" expanded="True">
+                <Node name="AprobadorController.cs" selected="True" />
               </Node>
+              <Node name="Models" expanded="True" />
               <Node name="Views" expanded="True">
-                <Node name="CargaEmpleados" expanded="True" />
-                <Node name="Shared" expanded="True" />
-                <Node name="Solicitante" expanded="True" />
-              </Node>
-              <Node name="wwwroot" expanded="True">
-                <Node name="css" expanded="True" />
-                <Node name="images" expanded="True" />
+                <Node name="Administracion" expanded="True" />
+                <Node name="Aprobador" expanded="True" />
               </Node>
             </Node>
           </Node>
