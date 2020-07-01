@@ -55,23 +55,7 @@
 <script>
 
     $(document).ready(function () {
-        
-        url = "@Url.Content("~/Administracion/BuscarAll")"
-        /*
-                $.post(url, {}, function (data) {
-                    var num = data.length;
-                    $("#t_empleados tbody").html("");
-                    for (var i = 0; i < num; i++) {
-                        var dato = data[i];
-
-                        html = '<tr><td>' + dato.idsap + '</td><td>' + dato.nombre + '</td><td>' + dato.area + '</td><td>' + dato.banda + '</td><td>' + dato.idsap + '</td><td> <button type="button" id="b_descargar" class="btn btn-desconectate" onclick="DownPoliza(' + dato.idsap +')">DESCARGAR</button> </td></tr>';
-                        $("#t_empleados tbody").append(html);
-                    }
-                });
-*/
-
-
-
+    
         $("#filtro_idsap").change(function () {
             var valor = $(this).val();
 
@@ -107,17 +91,6 @@
             }
         });
     });
-
-
-    /*$("#b_descargar").click(function () {
-
-
-
-        alert("boton 1");
-        url = "Url.Content("~/Administracion/DescargaPoliza")";
-
-        window.open(url)
-    });*/
 
 
     function DownPoliza(value) {
