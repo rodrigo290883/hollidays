@@ -3,7 +3,7 @@
 
 @{
     ViewData["Title"] = "Solicitante|Desconéctate";
-    if(ViewBag.tipo == "S")
+    if (ViewBag.tipo == "S")
         Layout = "~/Views/Shared/_LayoutSessionS.cshtml";
     else
         Layout = "~/Views/Shared/_LayoutSessionA.cshtml";
@@ -11,10 +11,11 @@
     Empleados empleado = ViewBag.empleado;
     string rol = ViewBag.rol;
 
-    
+
 
     string avatar = empleado.avatar;
-    if (avatar == "") {
+    if (avatar == "")
+    {
         avatar = "sin_avatar.png";
     }
     else
@@ -27,10 +28,11 @@
             avatar = avatar + ".png";
     }
 
-    string antiguedad = (@empleado.antiguedad/12)+" años y "+(@empleado.antiguedad%12)+ " meses";
+    string antiguedad = (@empleado.antiguedad / 12) + " años y " + (@empleado.antiguedad % 12) + " meses";
 }
 
 <style>
+
     body {
         background-image: url("images/doodle-background.png");
         background-repeat: no-repeat;
@@ -55,10 +57,21 @@
         top: 0px;
         left: 0%;
     }
+
+    #nuevoPass {
+        padding-right: 25px;
+    }
+
+    #ShowPass {
+        margin-left: -25px;
+        z-index: 100;
+        padding-top: 10px;
+    }
 </style>
 
 <link rel="stylesheet" href="lib/simple-calendar/dist/simple-calendar.css" />
 <link rel="stylesheet" href="lib/bootstrap-select/dist/css/bootstrap-select.css" />
+<link rel="stylesheet" href="lib/fontawesome/css/all.min.css" />
 
 
 <div>
@@ -119,7 +132,7 @@
                             <select id="s_tipo_solicitud" class="selectpicker" name="tipo_solicitud">
                                 @foreach (var opt in ViewBag.Opciones)
                                 {
-                                <option value="@opt.id_tipo_solicitud" aux="@opt.maximo_dias" aux="@opt.consume_vacaciones">@opt.solicitud</option>
+                                    <option value="@opt.id_tipo_solicitud" aux="@opt.maximo_dias" aux="@opt.consume_vacaciones">@opt.solicitud</option>
                                 }
                             </select>
                         </div>
@@ -190,131 +203,34 @@
 </div>
 
 
-<div id="NewPass" class="ModalWindow">
-    <div class="card">
-        <h2 style="color: rebeccapurple; text-align: center;">Nuevo Usuario!</h2>
-        <label style="color: rebeccapurple; text-align: center;">Ingresa tu nueva contraseña:</label>
-        <div class="row">
-            <input type="password" class="col-8 form-control" id="nuevoPass" name="nuevoPass" value="" placeholder="Nueva Contraseña" />
-            <button class="col-4 btn-desconectate btn-sm" onclick="ShowPass()" id="ShowPass" name="ShowPass" style="font-size:small;">Motrar Contraseña</button>
+<div class="modal" id="passModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-center">¡Bienvenido a Desconectate!</h3>
+            </div>
+            <div class="modal-body">
+                <p>Como medida de seguridad, es necesario que cambies tu contraseña.</p>
+                <p>Ingresa tu nueva Contraseña:</p>
+                <div class="col-12 text-center align-self-center input-group">
+                    <input type="password" class="form-control" id="nuevoPass" name="nuevoPass" value="" placeholder="Nueva Contraseña" />
+                    <div class="input-group-append">
+                        <i class="far fa-eye" id="ShowPass" name="ShowPass"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="SavePass" type="button" class="btn btn-primary">Guardar Contraseña</button>
+            </div>
         </div>
-        <br />
-        <br />
-        <button class="col-md-4 offset-md-4 btn-desconectate btn-sm" onclick="validaPass()" id="SaveBtnPass" >Ok</button>
     </div>
 </div>
-
 
 <script src="lib/simple-calendar/dist/jquery.simple-calendar.js"></script>
 <script src="lib/bootstrap-select/dist/js/bootstrap-select.js"></script>
 <script src="lib/moment/dist/js/moment.js"></script>
 
 <script>
-
-    window.onload = function () {
-
-
-        var estatus = document.getElementById("statusEmpleado").value;
-
-        if (estatus == 0) {
-
-            document.getElementById("NewPass").style.display = "block";
-
-            /*swal({
-                title: "Nuevo Usuario!",
-                text: "Ingresa tu nueva contraseña:",
-                type: "password",
-                showCancelButton: false,
-                closeOnConfirm: false,
-                animation: "slide-from-top",
-                inputPlaceholder: "Nueva Contraseña"
-            },
-                function (inputValue) {
-                    if (inputValue === false) return false;
-
-                    if (inputValue === "") {
-                        swal.showInputError("Escribe tu nueva contraseña!");
-                        return false
-                    }
-
-                    url = "Url.Content("~/Solicitante/UpdatePassword")";
-
-                    parametros = {
-                        "id_sap":empleado.idsap,
-                        "NewPass": inputValue,
-                    };
-
-                    $.post(url, parametros, function (data) {
-                        if (data == "1") {
-                            swal("Correcto!", "Tu contraseña: " + inputValue, "success");
-                        } else {
-                            swal("Error!", "No se actualizó tu información", "error");
-                        }
-                    });
-
-                });*/
-
-        }
-    }
-
-    function ShowPass() {
-
-        var tipo = document.getElementById("nuevoPass");
-
-        if (tipo.type == "password") {
-            tipo.type="text";
-        } else {
-            tipo.type="password";
-        }
-    }
-
-    function validaPass() {
-        var passnew = document.getElementById("nuevoPass").value;
-
-        if (passnew != '') {
-            SavePass();
-        } else {
-            document.getElementById("NewPass").style.display = "none";
-            swal({
-                title: 'Error!',
-                text: "El campo nueva contraseña esta vacío ",
-                icon: 'error',
-                showCancelButton: false,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-                },
-                    function () {
-                        document.getElementById("NewPass").style.display = "block";
-                    
-                });
-        }
-        
-    }
-
-    function SavePass() {
-        document.getElementById("NewPass").style.display = "none";
-
-        var NewPass = document.getElementById("nuevoPass").value;
-
-            url = "@Url.Content("~/Solicitante/UpdatePassword")";
-
-                    parametros = {
-                        "id_sap":@empleado.idsap,
-                        "NewPass": NewPass,
-                    };
-
-        $.post(url, parametros, function (data) {
-            
-                        if (data == "1") {
-                            
-                            swal("Correcto!", "Tu contraseña se actualizo correctamente ", "success");
-                        } else {
-                            swal("Error!", "No se actualizó tu información", "error");
-                        }
-                    });
-
-    }
 
     $(function() {
         var vacaciones = new Array();
@@ -336,13 +252,90 @@
         }
         //-------Finaliza Feriados
 
+        //-- Proceso y Funciones de Cambio de contraseña
+
+        var estatus = document.getElementById("statusEmpleado").value;
+
+        if (estatus == 0) {
+
+            $("#passModal").modal({
+                show: true,
+                keyboard: false,
+                backdrop: 'static'
+            });
+
+        }
+
+        $("#ShowPass").click(function () {
+            var tipo = document.getElementById("nuevoPass");
+            var icon = $("#ShowPass");
+
+            if (tipo.type == "password") {
+                icon.removeClass("fa-eye");
+                icon.addClass("fa-eye-slash");
+                tipo.type = "text";
+            } else {
+                icon.removeClass("fa-eye-slash");
+                icon.addClass("fa-eye");
+                tipo.type = "password";
+            }
+        });
+
+        $("#SavePass").click(function () {
+
+            var passnew = $("#nuevoPass").val();
+
+            if(passnew != '') {
+                SavePass();
+            } else {
+                
+                swal({
+                    title: 'Error!',
+                    text: "El campo nueva contraseña esta vacío ",
+                    icon: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ok'
+                });
+            }
+        });
+
+
+
+        function SavePass() {
+            
+
+            var NewPass = $("#nuevoPass").val();
+
+            url = "@Url.Content("~/Solicitante/UpdatePassword")";
+
+            parametros = {
+                "id_sap":@empleado.idsap,
+                "NewPass": NewPass,
+            };
+
+            $.post(url, parametros, function (data) {
+
+                if (data == "1") {
+                    $("#passModal").modal("hide");
+                    swal("Correcto!", "Tu contraseña se actualizo correctamente ", "success");
+
+                } else {
+                    swal("Error!", "No se actualizó tu información", "error");
+                }
+            });
+        }
+
+        //---- Finaliza Contraseña
+
         $("#s_tipo_solicitud").change(function () {
             maximo_dias = $("#s_tipo_solicitud option:selected").attr("aux");
             consume_vacaciones = $("#s_tipo_solicitud option:selected").attr("aux2");
             if (consume_vacaciones == 'S') {
                 maximo_dias = disfrutar;
             }
-            
+
         });
 
 

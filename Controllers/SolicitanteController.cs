@@ -186,7 +186,7 @@ namespace desconectate.Controllers
                     cliente.UseDefaultCredentials = false;
                     cliente.Credentials = new System.Net.NetworkCredential(origen, pass);
 
-                    cliente.Send(correo);
+                    //cliente.Send(correo);
                     cliente.Dispose();
                     return Content("1");
 
