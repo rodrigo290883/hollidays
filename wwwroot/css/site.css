@@ -138,34 +138,3 @@ body {
     }
 }
 
-.ModalWindow {
-    position: fixed;
-    font-family: Arial, Helvetica, sans-serif;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: rgba(0,0,0,0.4);
-    z-index: 99999;
-    display: none;
-    -webkit-transition: opacity 400ms ease-in;
-    -moz-transition: opacity 400ms ease-in;
-    transition: opacity 400ms ease-in;
-    pointer-events: auto;
-}
-
-.ModalWindow > div {
-    width: 500px;
-    position: relative;
-    margin: 10% auto;
-    padding: 20px;
-    border-radius: 10px;
-    background: #fff;
-    background: -moz-linear-gradient(#fff, #fff);
-    background: -webkit-linear-gradient(#fff, #fff);
-    background: -o-linear-gradient(#fff, #fff);
-    -webkit-transition: opacity 400ms ease-in;
-    -moz-transition: opacity 400ms ease-in;
-    transition: opacity 400ms ease-in;
-}
-	
