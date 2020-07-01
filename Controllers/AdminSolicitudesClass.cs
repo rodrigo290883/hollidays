@@ -61,7 +61,7 @@ namespace desconectate.Controllers
             {
                 conn.Open();
 
-                SqlCommand cmd = new SqlCommand("SELECT sol.dias,(SELECT SUM(reg.disponibles) FROM registros_dias reg WHERE reg.idsap = sol.idsap  AND reg.registro_padre =0 and reg.caducidad >= GETDATE()) as disponibles,tip.consume_vacaciones FROM solicitudes sol left join ctipos_solicitud tip on sol.tipo_solicitud = tip.id_tipo_solicitud  WHERE sol.folio = @folio", conn);
+                SqlCommand cmd = new SqlCommand("SELECT sol.dias,(SELECT ISNULL(SUM(reg.disponibles),0) FROM registros_dias reg WHERE reg.idsap = sol.idsap  AND reg.registro_padre =0 and reg.caducidad >= GETDATE()) as disponibles,tip.consume_vacaciones FROM solicitudes sol left join ctipos_solicitud tip on sol.tipo_solicitud = tip.id_tipo_solicitud  WHERE sol.folio = @folio", conn);
                 cmd.Parameters.AddWithValue("@folio", id_folio);
                 SqlDataReader sqlReader = cmd.ExecuteReader();
 

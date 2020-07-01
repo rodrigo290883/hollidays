@@ -198,6 +198,46 @@
                 $("#d_con_goce").hide();
         }
 
+
+            $("#frmAprobadorSolicitud").submit(function (e) {
+                e.preventDefault();
+
+                url = "@Url.Content("~/AdminSolicitudes/ActualizarSolicitud")"
+                parametros = $(this).serialize();
+
+                //alert(JSON.stringify(parametros));
+
+                if ($("#id_folio").val() == '') {
+                    swal("Ocurrio un Error", "Debes seleccionar un registro de solicitud", "warning");
+                }
+                else {
+                    if ($("#ta_comentarios").val() == '' || $("#s_estatus").val() == 0) {
+                        swal("Ocurrio un Error", "Debes ingresar una observacion y cambiar el estatus de la solicitud", "warning");
+                    }
+                    else {
+
+                        //alert(JSON.stringify(parametros));
+
+                        $.post(url, parametros, function (data) {
+                            if (data == "1") {
+
+                                url2 = "@Url.Content("~/AdminSolicitudes/EnviaCorreo")"
+                                $.post(url2, { "folio": $("#id_folio").val() }, function (data2) {
+                                    if (data2 != 1) {
+                                        swal("Ocurrio un Error en el envio de correo", data, "error");
+                                    }
+                                });
+                                limpiarForma();
+                                actualizaLista();
+                                swal("Se actualizo la solicitud correctamente", "Ok", "success");
+                            } else {
+                                swal("Ocurrio un Error", data, "error");
+                            }
+                        });
+                    }
+                }
+            });
+
     });
 
 </script>
