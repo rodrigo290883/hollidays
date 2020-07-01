@@ -1,15 +1,23 @@
 ﻿<Properties StartupConfiguration="{A8C880F9-C7FA-4DEE-BD21-54F35B73CE39}|Default">
-  <MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/AprobadorController.cs">
+    <Files>
+      <File FileName="Controllers/AdminSolicitudesClass.cs" Line="32" Column="2" />
+      <File FileName="Views/AdminSolicitudes/Index.cshtml" Line="24" Column="1" />
+      <File FileName="Views/Aprobador/Index.cshtml" Line="44" Column="1" />
+      <File FileName="Controllers/AprobadorController.cs" Line="13" Column="1" />
+      <File FileName="Controllers/CargaEmpleadosController.cs" Line="1" Column="1" />
+    </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="mvc_dotnet" expanded="True">
             <Node name="Desconectate" expanded="True">
               <Node name="Controllers" expanded="True">
-                <Node name="AdminPolizasController.cs" selected="True" />
+                <Node name="AprobadorController.cs" selected="True" />
               </Node>
               <Node name="Views" expanded="True">
-                <Node name="AdminPolizas" expanded="True" />
+                <Node name="AdminSolicitudes" expanded="True" />
+                <Node name="Aprobador" expanded="True" />
               </Node>
             </Node>
           </Node>
