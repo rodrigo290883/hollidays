@@ -14,12 +14,12 @@ using System.Net;
 
 namespace desconectate.Controllers
 {
-    public class AdministracionController : Controller
+    public class AdminPolizasController : Controller
     {
 
          private  readonly IConfiguration _configuration;
 
-        public AdministracionController(IConfiguration configuration)
+        public AdminPolizasController(IConfiguration configuration)
         {
             _configuration = configuration;
         }

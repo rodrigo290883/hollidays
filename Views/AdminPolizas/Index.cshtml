@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Administración|Desconéctate";
+    ViewData["Title"] = "AdminPolizas|Desconéctate";
     Layout = "~/Views/Shared/_LayoutSessionA.cshtml";
 }
 
@@ -61,7 +61,7 @@
 
             if (valor == "") {
 
-                url = "@Url.Content("~/Administracion/BuscarAll")"
+                url = "@Url.Content("~/AdminPolizas/BuscarAll")"
 
                 $.post(url, {}, function (data) {
                     var num = data.length;
@@ -76,7 +76,7 @@
 
             } else {
 
-                url = "@Url.Content("~/Administracion/BuscarSap")"
+                url = "@Url.Content("~/AdminPolizas/BuscarSap")"
 
                 $.post(url, {"valor":valor}, function (data) {
                     var num = data.length;
@@ -95,7 +95,7 @@
 
     function DownPoliza(value) {
 
-        url = "@Url.Content("~/Administracion/DescargaPoliza")";
+        url = "@Url.Content("~/AdminPolizas/DescargaPoliza")";
 
         window.open(url)
     }
