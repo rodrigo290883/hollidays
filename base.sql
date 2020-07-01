@@ -15,12 +15,12 @@ CREATE TABLE hollidays.dbo.empleados (
 	idsap_padre int NULL,
 	nombre_line varchar(255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 	email_line varchar(200) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-	estatus int NULL,
+	estatus int NULL DEFAULT 0,
 	esquema varchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 	sexo varchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 	avatar varchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 	tipo varchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-	rol int NULL,
+	rol int NULL DEFAULT 0,
 	CONSTRAINT PK__Empleado__2B031D43DCFA702E PRIMARY KEY (id)
 ) ;
 
@@ -2026,7 +2026,7 @@ CREATE TABLE hollidays.dbo.solicitudes (
 	folio int IDENTITY(1,1) NOT NULL,
 	idsap int NULL,
 	tipo_solicitud int NULL,
-	fecha_solicitud date NULL,
+	fecha_solicitud date NULL DEFAULT GETDATE(),
 	fecha_inicio date NULL,
 	fecha_fin date NULL,
 	dias int NULL,
@@ -2049,10 +2049,11 @@ CREATE TABLE hollidays.dbo.registros_dias (
 	id_tipo_solicitud int NULL,
 	dias int NULL,
 	disponibles int NULL,
-	fecha_creacion date NULL,
+	fecha_creacion date NULL DEFAULT GETDATE(),
 	caducidad date NULL,
 	idsap int NULL,
 	periodo varchar(4) COLLATE SQL_Latin1_General_CP1_CI_AS NULL
+	folio_solicitud int NULL
 );
 
 CREATE TABLE hollidays.dbo.regla_genera_dias (
@@ -2110,7 +2111,7 @@ CREATE TABLE hollidays.dbo.log_vacaciones (
 	registro int IDENTITY(0,1) NOT NULL,
 	idsap int NULL,
 	log text COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-	fecha_creacion datetime NULL,
+	fecha_creacion datetime NULL DEFAULT GETDATE(),
 	idsap_creacion int NULL
 );
 
