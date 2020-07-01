@@ -69,8 +69,9 @@ namespace desconectate.Controllers
                         catch (Exception ex)
                         {
                             conn.Close();
-                            return Content("No se encontro el usuario o contraseña incorrecta");
                             string nota = ex.ToString();
+                            return Content("No se encontro el usuario o contraseña incorrecta");
+                            
                         }
 
                     }

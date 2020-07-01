@@ -20,9 +20,13 @@ namespace desconectate.Models
         public Nullable<System.DateTime> caducidad { get; set; }
         public string url_poliza { get; set; }
         public Nullable<int> idsap_padre { get; set; }
+        public string nombre_line { get; set; }
         public string email_line { get; set; }
         public Nullable<int> meses_ultimo_desconecte { get; set; }
         public string esquema { get; set; }
+        public string rol { get; set; }
         public string avatar { get; set; }
+        public int procesado { get; set; }
+        public string puesto { get; set; }
     }
 }

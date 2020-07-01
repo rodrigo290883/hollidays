@@ -9,11 +9,18 @@
     <Folder Include="Views\Solicitante\" />
     <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="Views\Avatares\" />
+    <Folder Include="Views\CargaEmpleados\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
-    <PackageReference Include="ExcelDataReader" Version="3.6.0" />
+
+    <PackageReference Include="CsvHelper" Version="15.0.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="concentrado.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

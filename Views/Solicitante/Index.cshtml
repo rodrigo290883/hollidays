@@ -3,15 +3,19 @@
 
 @{
     ViewData["Title"] = "Solicitante|Desconéctate";
-    if(ViewBag.tipo == "S")
+    if (ViewBag.tipo == "S")
         Layout = "~/Views/Shared/_LayoutSessionS.cshtml";
     else
         Layout = "~/Views/Shared/_LayoutSessionA.cshtml";
 
     Empleados empleado = ViewBag.empleado;
+    string rol = ViewBag.rol;
+
+
 
     string avatar = empleado.avatar;
-    if (avatar == "") {
+    if (avatar == "")
+    {
         avatar = "sin_avatar.png";
     }
     else
@@ -24,10 +28,11 @@
             avatar = avatar + ".png";
     }
 
-    string antiguedad = (@empleado.antiguedad/12)+" años y "+(@empleado.antiguedad%12)+ " meses";
+    string antiguedad = (@empleado.antiguedad / 12) + " años y " + (@empleado.antiguedad % 12) + " meses";
 }
 
 <style>
+
     body {
         background-image: url("images/doodle-background.png");
         background-repeat: no-repeat;
@@ -52,10 +57,22 @@
         top: 0px;
         left: 0%;
     }
+
+    #nuevoPass {
+        padding-right: 25px;
+    }
+
+    #ShowPass {
+        margin-left: -25px;
+        z-index: 100;
+        padding-top: 10px;
+    }
 </style>
 
 <link rel="stylesheet" href="lib/simple-calendar/dist/simple-calendar.css" />
 <link rel="stylesheet" href="lib/bootstrap-select/dist/css/bootstrap-select.css" />
+<link rel="stylesheet" href="lib/fontawesome/css/all.min.css" />
+
 
 <div>
     <img id="i_doodle" src="images/imagen.png">
@@ -115,7 +132,7 @@
                             <select id="s_tipo_solicitud" class="selectpicker" name="tipo_solicitud">
                                 @foreach (var opt in ViewBag.Opciones)
                                 {
-                                <option value="@opt.id_tipo_solicitud" aux="@opt.maximo_dias" aux="@opt.consume_vacaciones">@opt.solicitud</option>
+                                    <option value="@opt.id_tipo_solicitud" aux="@opt.maximo_dias" aux="@opt.consume_vacaciones">@opt.solicitud</option>
                                 }
                             </select>
                         </div>
@@ -133,8 +150,10 @@
                 </div>
                 <div class="row mt-2">
                     <div class="col-6 text-center">
-                        <input style="display:none" name="id_sap" value="@empleado.idsap" />
-                        <input style="display:none" name="id_sap_aprobador" value="@empleado.idsap_padre" />
+                        <input style="display:none" name="idsap" value="@empleado.idsap" />
+                        <input style="display:none" name="idsap_aprobador" value="@empleado.idsap_padre" />
+                        <input style="display:none" id="nombre_aprobador" value="@empleado.nombre_line" />
+                        <input style="display:none" id="email_aprobador" value="@empleado.email_line" />
                         <input data-toggle="modal" data-target="#solicitudModal" class="btn btn-desconectate" value="SOLICITAR" />
                     </div>
                 </div>
@@ -184,98 +203,178 @@
 </div>
 
 
+<div class="modal" id="passModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">¡Bienvenido a Desconectate!</h3>
+            </div>
+            <div class="modal-body">
+                <p>Como medida de seguridad, es necesario que cambies tu contraseña.</p>
+                <p>Ingresa tu nueva Contraseña:</p>
+                <div class="col-12 text-center align-self-center input-group">
+                    <input type="password" class="form-control" id="nuevoPass" name="nuevoPass" value="" placeholder="Nueva Contraseña" />
+                    <div class="input-group-append">
+                        <i class="far fa-eye" id="ShowPass" name="ShowPass"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="SavePass" type="button" class="btn btn-primary">Guardar Contraseña</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="lib/simple-calendar/dist/jquery.simple-calendar.js"></script>
 <script src="lib/bootstrap-select/dist/js/bootstrap-select.js"></script>
+<script src="lib/moment/dist/js/moment.js"></script>
 
 <script>
 
-    window.onload = function () {
+    $(function() {
+        var vacaciones = new Array();
+        var disfrutar = @empleado.dias_disponibles;
+        var bandera = 0;
+        var maximo_dias = @empleado.dias_disponibles;;
+        var consume_vacaciones = 'S';
+        var rol = [@empleado.rol];
+        var dias_habiles = 0;
+
+        //-------Se obtienen los dias feriados
+
+        var feriados = [@Html.Raw(ViewBag.Feriados)];
+
+        feriados.shift();
+        for (var i = 0; i < feriados.length; i++) {
+
+            feriados[i] = moment(feriados[i]);
+        }
+        //-------Finaliza Feriados
+
+        //-- Proceso y Funciones de Cambio de contraseña
 
         var estatus = document.getElementById("statusEmpleado").value;
 
         if (estatus == 0) {
 
-            swal({
-                title: "Nuevo Usuario!",
-                text: "Ingresa tu nueva contraseña:",
-                type: "input",
-                showCancelButton: false,
-                closeOnConfirm: false,
-                animation: "slide-from-top",
-                inputPlaceholder: "Nueva Contraseña"
-            },
-                function (inputValue) {
-                    if (inputValue === false) return false;
-
-                    if (inputValue === "") {
-                        swal.showInputError("Escribe tu nueva contraseña!");
-                        return false
-                    }
-
-                    url = "@Url.Content("~/Solicitante/UpdatePassword")";
-
-                    parametros = {
-                        "id_sap":@empleado.idsap,
-                        "NewPass": inputValue,
-                    };
-
-                    $.post(url, parametros, function (data) {
-                        if (data == "1") {
-                            swal("Correcto!", "Tu contraseña: " + inputValue, "success");
-                        } else {
-                            swal("Error!", "No se actualizó tu información", "error");
-                        }
-                    });
-
-                });
+            $("#passModal").modal({
+                show: true,
+                keyboard: false,
+                backdrop: 'static'
+            });
 
         }
-    }
 
-    $(function() {
-        var vacaciones = new Array();
-        var disfrutar = 11;
-        var bandera = 0;
-        var maximo_dias = 30;
-        var consume_vacaciones = 'S';
+        $("#ShowPass").click(function () {
+            var tipo = document.getElementById("nuevoPass");
+            var icon = $("#ShowPass");
+
+            if (tipo.type == "password") {
+                icon.removeClass("fa-eye");
+                icon.addClass("fa-eye-slash");
+                tipo.type = "text";
+            } else {
+                icon.removeClass("fa-eye-slash");
+                icon.addClass("fa-eye");
+                tipo.type = "password";
+            }
+        });
+
+        $("#SavePass").click(function () {
+
+            var passnew = $("#nuevoPass").val();
+
+            if(passnew != '') {
+                SavePass();
+            } else {
+                
+                swal({
+                    title: 'Error!',
+                    text: "El campo nueva contraseña esta vacío ",
+                    icon: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ok'
+                });
+            }
+        });
 
 
+
+        function SavePass() {
+            
+
+            var NewPass = $("#nuevoPass").val();
+
+            url = "@Url.Content("~/Solicitante/UpdatePassword")";
+
+            parametros = {
+                "id_sap":@empleado.idsap,
+                "NewPass": NewPass,
+            };
+
+            $.post(url, parametros, function (data) {
+
+                if (data == "1") {
+                    $("#passModal").modal("hide");
+                    swal("Correcto!", "Tu contraseña se actualizo correctamente ", "success");
+
+                } else {
+                    swal("Error!", "No se actualizó tu información", "error");
+                }
+            });
+        }
+
+        //---- Finaliza Contraseña
 
         $("#s_tipo_solicitud").change(function () {
             maximo_dias = $("#s_tipo_solicitud option:selected").attr("aux");
             consume_vacaciones = $("#s_tipo_solicitud option:selected").attr("aux2");
+            if (consume_vacaciones == 'S') {
+                maximo_dias = disfrutar;
+            }
+
         });
 
 
         $("#b_solicitud").bind('click', function () {
+            if (bandera == 0) {
 
-            if ($("#i_fecha_inicio").val() == "" || $("#ta_observacion").val() == "") {
-                swal("Ocurrio un Error", "Debes seleccionar una fecha e ingresar una observacion", "warning");
+                if ($("#i_fecha_inicio").val() == "" || $("#ta_observacion").val() == "") {
+                    swal("Ocurrio un Error", "Debes seleccionar una fecha e ingresar una observacion", "warning");
+                }
+                else {
+                    url = "@Url.Content("~/Solicitante/CreaSolicitud")";
+                    parametros = {
+                        "idsap":@empleado.idsap,
+                        "idsap_aprobador":@empleado.idsap_padre,
+                        "nombre_aprobador": $("#nombre_aprobador").val(),
+                        "email_aprobador": $("#email_aprobador").val(),
+                        "fecha_inicio": $("#i_fecha_inicio").val(),
+                        "fecha_fin": $("#i_fecha_fin").val(),
+                        "tipo_solicitud": $("#s_tipo_solicitud").val(),
+                        "observacion_solicitante": $("#ta_observacion").val(),
+                        "dias": dias_habiles
+                    };
+
+                    $.post(url, parametros, function (data) {
+                        if (!isNaN(data)) {
+                            $('#solicitudModal').modal('hide');
+                            actualizaLista();
+                            limpiaForma();
+                            swal("Felicidades", "Tu solicitud se registro Correctamente", "success");
+                            EnviaCorreo(data);
+
+                        } else {
+                            swal("Ocurrio un Error", data, "error");
+                        }
+                    });
+                }
             }
             else {
-                url = "@Url.Content("~/Solicitante/CreaSolicitud")";
-                parametros = {
-                    "idsap":@empleado.idsap,
-                    "idsap_aprobador":@empleado.idsap_padre,
-                    "fecha_inicio": $("#i_fecha_inicio").val(),
-                    "fecha_fin": $("#i_fecha_fin").val(),
-                    "tipo_solicitud": $("#s_tipo_solicitud").val(),
-                    "observacion_solicitante": $("#ta_observacion").val()
-                };
-
-                $.post(url, parametros, function (data) {
-                    if (!isNaN(data)) {
-                        $('#solicitudModal').modal('hide');
-                        actualizaLista();
-                        limpiaForma();
-                        swal("Felicidades", "Tu solicitud se registro Correctamente", "success");
-                        EnviaCorreo(data);
-
-                    } else {
-                        swal("Ocurrio un Error", data, "error");
-                    }
-                });
+                swal("Ocurrio un Error", "Tu seleccion sobrepasa tus dias disponibles", "error");
             }
         });
 
@@ -319,16 +418,38 @@
                 if (vacaciones.length != 0) {
                     vacaciones.sort(function (a, b) { return a - b });
                     // se cuentan los dias habiles
-                    var cont = 0;
-                    for (var i = 0; i < vacaciones.length; i++) {
-                        var aux = vacaciones[i];
-                        var dia = new Date(aux);
-                        var dia_sem = dia.getDay();
-                        if (dia_sem > 0 && dia_sem < 6)
-                            cont++;
+                    var cont_habiles = 0;
+                    var cont_inhabiles = 0;
+                    var cont_feriados = 0;
+
+                    var inicio = moment(vacaciones[0]);
+
+                    var fin = moment(vacaciones[(vacaciones.length - 1)]);
+                    var fin2 = fin.add(1, 'd');
+
+
+
+                    for (var i = inicio; !i.isSame(fin2); i.add(1, 'd')) {
+
+                                var diasemana = i.isoWeekday();
+                                diasemana--;
+
+                        if (rol[diasemana] == "1") {
+
+                            if (feriados.find(contieneMoment, i) != undefined)
+                                cont_feriados++;
+                            else
+                                cont_habiles++;
+                        }
+                        else {
+                            cont_inhabiles++;
+                        }
                     }
 
-                    if (cont > disfrutar) {
+                    dias_habiles = cont_habiles;
+                    //swal("Detalle Solicitud", "Dias habiles:" + cont_habiles + "\n Feriados:" + cont_feriados + "\n inhabiles:" + cont_inhabiles, "success");
+
+                    if (cont_habiles > maximo_dias) {
                         swal("Cuidado", "Tu seleccion sobrepasa los dias permitidos", "warning");
                         bandera = 1;
                     }
@@ -349,6 +470,10 @@
             }
         });
 
+        function contieneMoment(fecha) {
+            return this.isSame(fecha);
+        }
+
 
         function limpiaForma() {
             $("#i_fecha_inicio").val('');
@@ -356,6 +481,7 @@
             maximo_dias = 30;
             consume_vacaciones = 'S';
             vacaciones = new Array();
+
             $("#s_tipo_solicitud").selectpicker('val', '0');
             $("#d_calendar .day").removeClass("has-event");
             $("#ta_observacion").val('')
@@ -389,7 +515,7 @@
                             break;
                     }
 
-                    html = "<tr data-toggle='tooltip' title='" + dato.observacion_solicitante + "'><td>" + dato.folio + "</td><td>" + dato.solicitudName + "</td><td>" + dato.fecha_inicio.substring(0, 10) + "</td><td>" + dato.fecha_fin.substring(0, 10) + "</td><td>" + dato.aprobador + "</td><td>" + estatus + "</td></tr>";
+                    html = "<tr data-toggle='tooltip' title='" + dato.observacion_solicitante + "'><td>" + dato.folio + "</td><td>" + dato.solicitudName + "</td><td>" + dato.fecha_inicio.substring(0, 10) + "</td><td>" + dato.fecha_fin.substring(0, 10) + "</td><td>" + dato.nombre_aprobador + "</td><td>" + estatus + "</td></tr>";
                     $("#t_solicitudes tbody").append(html);
                 }
                 $('[data-toggle="tooltip"]').tooltip();

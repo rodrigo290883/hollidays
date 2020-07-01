@@ -39,9 +39,9 @@ namespace desconectate.Controllers
                 using (SqlConnection conn = new SqlConnection(connString))
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("select e.idsap,e.nombre,e.email,e.estatus,e.fecha_ingreso_grupo,e.dias_disponibles,e.ultimo_desconecte,e.url_poliza,e.idsap_padre,e.esquema,e.sexo," +
-                        "DATEDIFF(month,e.fecha_ingreso_grupo,GETDATE()) as antiguedad, DATEDIFF(month,e.ultimo_desconecte,GETDATE()) as meses_ultimo_desconecte,iif(DATEDIFF(DAY,CONCAT(datepart(yyyy,getdate()),'-',(datepart(mm,e.fecha_ingreso_grupo)+1),'-',datepart(dd,e.fecha_ingreso_grupo)),getdate()) <=0,datepart(yyyy,getdate())-1,datepart(yyyy,getdate())) ,e.avatar " +
-                        "from dbo.empleados e  WHERE e.idsap = @idsap ", conn);
+                    SqlCommand cmd = new SqlCommand("select e.idsap,e.nombre,e.email,e.estatus,e.fecha_ingreso_grupo,(select SUM(disponibles) from registros_dias where idsap = @idsap and registro_padre = 0 and caducidad >= GETDATE()) as disponibles,e.ultimo_desconecte,'' as url_poliza,e.idsap_padre,e.esquema,e.sexo," +
+                        "DATEDIFF(month,e.fecha_ingreso_grupo,GETDATE()) as antiguedad, DATEDIFF(month,e.ultimo_desconecte,GETDATE()) as meses_ultimo_desconecte,iif(DATEDIFF(DAY,CONCAT(datepart(yyyy,getdate()),'-',(datepart(mm,e.fecha_ingreso_grupo)+1),'-',datepart(dd,e.fecha_ingreso_grupo)),getdate()) <=0,datepart(yyyy,getdate())-1,datepart(yyyy,getdate())) ,e.avatar, " +
+                        "email_line,nombre_line,r.semana from dbo.empleados e left join croles r on e.rol = r.rol WHERE e.idsap = @idsap ", conn);
                     cmd.Parameters.AddWithValue("@idsap", usuario);
 
                     SqlDataReader sqlReader = cmd.ExecuteReader();
@@ -53,10 +53,12 @@ namespace desconectate.Controllers
                     empleado.email = sqlReader[2].ToString();
                     empleado.estatus = sqlReader.GetInt32(3);
                     empleado.fecha_ingreso_grupo = Convert.ToDateTime(sqlReader.IsDBNull(4) ? null : sqlReader[4]);
-                    empleado.dias_disponibles = sqlReader.GetInt32(5);
+                    empleado.dias_disponibles = sqlReader.IsDBNull(5)?0:sqlReader.GetInt32(5);
                     empleado.ultimo_desconecte = Convert.ToDateTime(sqlReader.IsDBNull(6) ? null : sqlReader[6]);
                     empleado.url_poliza = sqlReader[7].ToString();
                     empleado.idsap_padre = sqlReader.GetInt32(8);
+                    empleado.nombre_line = sqlReader[16].ToString();//
+                    empleado.email_line = sqlReader[15].ToString();//
                     empleado.esquema = sqlReader[9].ToString();
                     
                     ViewBag.periodo = sqlReader.GetInt32(13);
@@ -65,9 +67,7 @@ namespace desconectate.Controllers
                     empleado.meses_ultimo_desconecte = sqlReader.IsDBNull(12)?0: sqlReader.GetInt32(12);
                     empleado.caducidad = Convert.ToDateTime(sqlReader.IsDBNull(6) ? null : sqlReader[6]);
                     empleado.avatar = sqlReader[14].ToString();
-
-
-
+                    empleado.rol = sqlReader[17].ToString();
 
                     ViewBag.Empleado = empleado;
 
@@ -86,6 +86,20 @@ namespace desconectate.Controllers
 
                     ViewBag.Opciones = lst;
 
+                    sqlReader.Close();
+
+                    cmd = new SqlCommand("SELECT fecha FROM cdias_festivos WHERE fecha >= GETDATE() and pais = 'MX'", conn);
+
+                    sqlReader = cmd.ExecuteReader();
+                    string cadena = "'0'";
+
+                    while (sqlReader.Read())
+                    {
+                        cadena = cadena + ",'" + sqlReader[0].ToString() + "'";
+                    }
+
+                    ViewBag.Feriados = cadena;
+
                     conn.Close();
                     return View();
                 }
@@ -102,14 +116,17 @@ namespace desconectate.Controllers
             {
                 int folio = 0;
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("insert into dbo.solicitudes (idsap,tipo_solicitud,fecha_solicitud,fecha_inicio,fecha_fin,estatus,idsap_aprobador,observacion_solicitante) " +
-                    "VALUES (@idsap,@tipo_solicitud,GETDATE(),@fecha_inicio,@fecha_fin,0,@idsap_aprobador,@observaciones); " + "SELECT CAST(scope_identity() AS int)", conn);
+                SqlCommand cmd = new SqlCommand("insert into dbo.solicitudes (idsap,tipo_solicitud,fecha_solicitud,fecha_inicio,fecha_fin,dias,estatus,idsap_aprobador,nombre_aprobador,email_aprobador,observacion_solicitante,fecha_asignacion,ultima_notificacion) " +
+                    "VALUES (@idsap,@tipo_solicitud,GETDATE(),@fecha_inicio,@fecha_fin,@dias,0,@idsap_aprobador,@nombre_aprobador,@correo_aprobador,@observaciones,GETDATE(),GETDATE()); " + "SELECT CAST(scope_identity() AS int)", conn);
                 cmd.Parameters.AddWithValue("@idsap", solicitud.idsap);
                 cmd.Parameters.AddWithValue("@tipo_solicitud", solicitud.tipo_solicitud);
                 cmd.Parameters.AddWithValue("@fecha_inicio", solicitud.fecha_inicio);
                 cmd.Parameters.AddWithValue("@fecha_fin", solicitud.fecha_fin);
                 cmd.Parameters.AddWithValue("@idsap_aprobador", solicitud.idsap_aprobador);
+                cmd.Parameters.AddWithValue("@nombre_aprobador", solicitud.nombre_aprobador);
+                cmd.Parameters.AddWithValue("@correo_aprobador", solicitud.email_aprobador);
                 cmd.Parameters.AddWithValue("@observaciones", solicitud.observacion_solicitante);
+                cmd.Parameters.AddWithValue("@dias", solicitud.dias);
 
                 try
                 { 
@@ -150,9 +167,9 @@ namespace desconectate.Controllers
 
                 try
                 {
-                    string origen = "rodrigo290883@gmail.com";
+                    string origen = "envio.correos.sistemas@gmail.com";
                     
-                    string pass = "AbrilSantiago";
+                    string pass = "244466666";
                     string asunto = "Solicitud pendiente de Aprobacion Folio:" + folio;
                     string mensage = "<head><style>img{width:100%;padding:0px;margin:0px;}tr{background-image:url('https://i.postimg.cc/FzTgvcWz/cuerpo-mail.png'); background-repeat: repeat-y;background-size:100% 100%; padding:0px; margin:0px;}td{padding:0px; margin:0px;}</style></head><table style='padding:0px;marging:0px;border:0px;border-collapse: collapse;border-spacing:0px;'><tr><td><img src='https://i.postimg.cc/1319y6Dv/encabezado-mail.png' /></td></tr><tr><td style='padding:5% 5%; color:#b41547; font-size: 18px; text-align: center;'>Se realizo una solicitud de vacaciones por parte de:<br>" + empleado+ "</td></tr><tr><td style='padding:0% 5%; color: #5c2a7e; font-size: 18px; text-align: left;'>Tipo Solicitud: " + solicitud+ "</td></tr><tr><td style='padding:0% 5%; color: #5c2a7e; font-size: 18px; text-align: left;'>Fecha Inicio: " + fecha_inicio+ "</td></tr><tr><td style=' padding:0% 5%; color: #5c2a7e; font-size: 18px; text-align: left;'>Fecha Fin: " + fecha_fin+ "</td></tr><tr><td style=' padding:0% 5%; color: #5c2a7e; font-size: 18px; text-align: left;'>Observacion Solicitante: " + observacion+ "</td></tr><tr><td style=' padding:5% 5%; color:#b41547; font-size: 18px; text-align: center; '>Favor de ingresar al sitio de <a href='#'>vacaciones</a> para su aprobacion.</td></tr><tr><td><img src='https://i.postimg.cc/hvSK9qPN/pie-mail.png' /></td></tr></table>";
 
@@ -169,7 +186,7 @@ namespace desconectate.Controllers
                     cliente.UseDefaultCredentials = false;
                     cliente.Credentials = new System.Net.NetworkCredential(origen, pass);
 
-                    cliente.Send(correo);
+                    //cliente.Send(correo);
                     cliente.Dispose();
                     return Content("1");
 
@@ -197,7 +214,7 @@ namespace desconectate.Controllers
 
                 while (sqlReader.Read())
                 {
-                    lst.Add(new Solicitud { folio = sqlReader.GetInt32(0), solicitudName = sqlReader[1].ToString(), fecha_inicio = Convert.ToDateTime(sqlReader.IsDBNull(2) ? null : sqlReader[2]), fecha_fin = Convert.ToDateTime(sqlReader.IsDBNull(3) ? null : sqlReader[3]), estatus = sqlReader.GetInt32(4), aprobador = sqlReader[5].ToString(),observacion_solicitante = sqlReader[6].ToString() });
+                    lst.Add(new Solicitud { folio = sqlReader.GetInt32(0), solicitudName = sqlReader[1].ToString(), fecha_inicio = Convert.ToDateTime(sqlReader.IsDBNull(2) ? null : sqlReader[2]), fecha_fin = Convert.ToDateTime(sqlReader.IsDBNull(3) ? null : sqlReader[3]), estatus = sqlReader.GetInt32(4), nombre_aprobador = sqlReader[5].ToString(),observacion_solicitante = sqlReader[6].ToString() });
                 }
 
                 conn.Close();
@@ -208,29 +225,23 @@ namespace desconectate.Controllers
 
         public ActionResult DescargaPoliza()
         {
-        /*
-        WebClient cliente = new WebClient();
-        cliente.BaseAddress = null;
-        cliente.BaseAddress = @"\\RODRIGO-VOSTRO-3550\compartida\";
-
-        string idsap = HttpContext.Session.GetString("usuario");
-        try
-        {
-
-            byte[] archivo = cliente.DownloadData(idsap + ".pdf");
-            return File(archivo, "application/pdf", "PGMM_" + idsap + ".pdf");
-        }
-        catch (Exception ex)
-        {
-            return Content("No se encontro el archivo de poliza, favor de contactar a recursos humanos."+ ex.Message);
-        }
-        */
         
+            WebClient cliente = new WebClient();
+
             string idsap = HttpContext.Session.GetString("usuario");
-            return File(@"\\?\RODRIGO-VOSTRO-3550\compartida\" + idsap+".pdf", "application/pdf", "PGMM_" + idsap + ".pdf");
+            try
+            {
+
+                byte[] archivo = cliente.DownloadData("GMM/"+idsap + ".pdf");
+                return File(archivo, "application/pdf", "PGMM_" + idsap + ".pdf");
+            }
+            catch (Exception ex)
+            {
+                return Content("No se encontro el archivo de poliza, favor de contactar a recursos humanos.");
+            }
+        
         }
 
-        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

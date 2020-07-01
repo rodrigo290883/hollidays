@@ -1,0 +1,157 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_LayoutSessionR.cshtml";
+}
+
+<style>
+
+    body {
+        background-image: url("images/doodle-background.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: bottom right;
+        color: #5c2a7e;
+    }
+    #t_preview{
+        font-size:11px;
+        width:100%;
+    }
+
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            <h2>Pantalla de Carga de Empleados</h2>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <form id="form_archivo" method="post" enctype="multipart/form-data" asp-controller="CargaEmpleados" asp-action="SubeArchivo">
+                <div class="form-group">
+                    <label>Selecciona un Archivo:&nbsp;&nbsp;</label><input id="i_file" type="file" name="files" />&nbsp;&nbsp;
+                </div>
+            </form>
+            <button id="b_subir">Cargar</button>
+        </div>
+    </div>
+    <div id="d_procesar" class="row mt-1">
+        <div class="col-12">
+            <b>Registros a procesar: </b>&nbsp;<b id="numero_registros"></b>&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-success" id="b_procesar">Procesar</button>
+        </div>
+    </div>
+    <div class="row mt-1">
+        <div class="col-12">
+            <table id="t_preview" class="table table-striped ">
+                <thead>
+                    <tr style="background-color: #821c61; color: white;">
+                        <th>IDSAP</th>
+                        <th>NOMBRE</th>
+                        <th>EMAIL</th>
+                        <th>AREA</th>
+                        <th>PUESTO</th>
+                        <th>FECHA_GRUPO</th>
+                        <th>FECHA_UEN</th>
+                        <th>DIAS_DISPONIBLES</th>
+                        <th>PERIODO</th>
+                        <th>IDSAP_LINE</th>
+                        <th>LINE</th>
+                        <th>EMAIL_LINE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+    
+</div>
+
+<script>
+    $(function () {
+        var numero_registros = 0;
+
+        $("#d_procesar").hide();
+        
+        $("#b_subir").click(function () {
+            var archivo = $("#i_file").val();
+          
+            if (archivo != "") {
+                var extension = archivo.substring(archivo.length - 3, archivo.length);
+
+                if (extension=="csv"||extension=="CSV")
+                    $('#form_archivo').submit();
+                else
+                    swal("Cuidado", "Solo se permiten archivos CSV", "warning");
+            }
+        });
+        
+        
+        
+        $('#form_archivo').on("submit", function (e) {
+            e.preventDefault();
+            var f = $(this);
+            var formData = new FormData(document.getElementById("form_archivo"));
+
+            url = "@Url.Content("~/CargaEmpleados/SubeArchivo")";
+
+            $.ajax({
+                url: url,
+                type: "post",
+                dataType: "html",
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false
+            }).done(function (res) {
+                    if (res) {
+
+                        url = "@Url.Content("~/CargaEmpleados/LeeArchivo")";
+                        numero_registros = 0;
+                        $.post(url, {}, function (data) {
+                            var num = data.length;
+
+                            $("#t_preview tbody").html('');
+                            for (var i = 0; i < num; i++) {
+                                var dato = data[i];
+                                var html = "<tr style='padding:1px'><td style='padding:1px'>" + dato.idsap + "</td><td style='padding:1px'>" + dato.nombre + "</td><td style='padding:1px'>" + dato.email + "</td><td style='padding:1px'>" + dato.area + "</td><td style='padding:1px'>" + dato.banda + "</td><td style='padding:1px'>" + dato.fecha_ingreso_grupo + "</td><td style='padding:1px'>" + dato.fecha_ingreso_uen + "</td><td style='padding:1px'>" + dato.dias_disponibles + "</td><td></td><td style='padding:1px'>" + dato.idsap_padre + "</td><td style='padding:1px'>" + dato.nombre_line + "</td><td style='padding:1px'>" + dato.email_line + "</td></tr>";
+                                $("#t_preview tbody").append(html);
+                                numero_registros++;
+                            }
+
+                            if (numero_registros > 0) {
+                                $("#numero_registros").html(numero_registros);
+                                $("#d_procesar").show();
+                            }
+                        });
+                    }
+                });
+        });
+
+
+        $("#b_procesar").click(function () {
+            $(this).prop("disabled", true);
+            url = "@Url.Content("~/CargaEmpleados/ProcesaRegistros")";
+            swal({
+                title: "Procesando...",
+                text: "En unos segundos terminara el proceso",
+                imageUrl: "images/procesando.gif"
+            });
+            $.post(url, { "numero_registros": numero_registros }, function (data) {
+                if (data[0] != 0) {
+
+                    swal("Detalle Procesamiento", "Total de registros:"+data[0]+"\n Insertados:"+data[1]+"\n Actualizados:"+data[2]+"\n Fallo:"+data[3], "success");
+                    $("#numero_registros").html(0);
+                    $("#d_procesar").hide();
+                    $("#t_preview tbody").html('');
+                    $("#i_file").val('');
+                    $("#b_procesar").prop("disabled", false);
+                }
+                else {
+                    alert("Error al procesar, no correpsonden los registros.");
+                    $("#b_procesar").prop("disabled", false);
+                }
+            });
+        });
+
+
+    });
+</script>

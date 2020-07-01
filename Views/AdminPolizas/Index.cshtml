@@ -1,0 +1,104 @@
+﻿@{
+    ViewData["Title"] = "AdminPolizas|Desconéctate";
+    Layout = "~/Views/Shared/_LayoutSessionA.cshtml";
+}
+
+<style>
+
+    body {
+        background-image: url("images/doodle-background.png");
+        background-repeat: repeat-y;
+        background-size: 100%;
+        background-position: top left;
+        color: #5c2a7e;
+    }
+
+    #i_doodle {
+        width: 30%;
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+    }
+
+</style>
+
+<div>
+    <img id="i_doodle" src="images/imagen.png">
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <label for="filtro_idsap">Buscar:</label>
+            <input class="form-control ifiltro" tabla="t_empleados" id="filtro_idsap" name="filtro_idsap" placeholder="Tu Busqueda..." />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-striped table-responsive" id="t_empleados">
+                <thead style="background-color: #821c61; color: white;">
+                    <tr>
+                        <th scope="col">IDSAP</th>
+                        <th>NOMBRE</th>
+                        <th scope="col">AREA</th>
+                        <th scope="col">PUESTO</th>
+                        <th scope="col">NO POLIZA</th>
+                        <th scope="col">DESCARGA</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+    
+        $("#filtro_idsap").change(function () {
+            var valor = $(this).val();
+
+            if (valor == "") {
+
+                url = "@Url.Content("~/AdminPolizas/BuscarAll")"
+
+                $.post(url, {}, function (data) {
+                    var num = data.length;
+                    $("#t_empleados tbody").html("");
+                    for (var i = 0; i < num; i++) {
+                        var dato = data[i];
+
+                        html = '<tr><td>' + dato.idsap + '</td><td>' + dato.nombre + '</td><td>' + dato.area + '</td><td>' + dato.banda + '</td><td>' + dato.idsap + '</td><td> <button type="button" id="b_descargar" class="btn btn-desconectate" onclick="DownPoliza(' + dato.idsap +')">DESCARGAR</button> </td></tr>';
+                        $("#t_empleados tbody").append(html);
+                    }
+                });
+
+            } else {
+
+                url = "@Url.Content("~/AdminPolizas/BuscarSap")"
+
+                $.post(url, {"valor":valor}, function (data) {
+                    var num = data.length;
+                    $("#t_empleados tbody").html("");
+                    for (var i = 0; i < num; i++){
+                        var dato = data[i];
+
+                        html = '<tr><td>' + dato.idsap + '</td><td>' + dato.nombre + '</td><td>' + dato.area + '</td><td>' + dato.banda + '</td><td>' + dato.idsap + '</td><td> <button type="button" id="b_descargar" class="btn btn-desconectate" onclick="DownPoliza('+dato.idsap+')">DESCARGAR</button> </td></tr>';
+                        $("#t_empleados tbody").append(html);
+                    }
+                });
+            }
+        });
+    });
+
+
+    function DownPoliza(value) {
+
+        url = "@Url.Content("~/AdminPolizas/DescargaPoliza")";
+
+        window.open(url)
+    }
+
+
+</script>
