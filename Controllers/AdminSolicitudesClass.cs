@@ -38,7 +38,7 @@ namespace desconectate.Controllers
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("select s.folio, e.nombre, ts.solicitud, s.fecha_inicio,s.fecha_fin,es.descripcion,s.nombre_aprobador,e.area from solicitudes s inner join empleados e on s.idsap = e.idsap inner join ctipos_solicitud ts on s.tipo_solicitud = ts.id_tipo_solicitud inner join cestatus es on es.estatus = s.estatus  where s.estatus = 0 and fecha_inicio >= GETDATE()", conn);
+                SqlCommand cmd = new SqlCommand("select s.folio, e.nombre, ts.solicitud, s.fecha_inicio,s.fecha_fin,es.descripcion,s.nombre_aprobador,e.area from solicitudes s inner join empleados e on s.idsap = e.idsap inner join ctipos_solicitud ts on s.tipo_solicitud = ts.id_tipo_solicitud inner join cestatus es on es.estatus = s.estatus  where s.estatus = 0 and fecha_inicio >= CONVERT(date,GETDATE())", conn);
 
                 SqlDataReader sqlReader = cmd.ExecuteReader();
 
@@ -56,6 +56,7 @@ namespace desconectate.Controllers
         {
             string connString = _configuration.GetConnectionString("MyConnection");
             var aux = 0;
+            string usuario = HttpContext.Session.GetString("usuario");
 
             using (SqlConnection conn = new SqlConnection(connString))
             {
@@ -120,11 +121,12 @@ namespace desconectate.Controllers
                     if (aux == 1)
                     {
                         //Se actualiza el registro de solicitud
-                        cmd = new SqlCommand("update solicitudes SET estatus = @status, observacion_aprobador = @coments, con_goce = @con_goce, fecha_aprobacion = GETDATE(),ultima_notificacion=GETDATE() where folio = @folio", conn);
+                        cmd = new SqlCommand("update solicitudes SET estatus = @status, observacion_aprobador = @coments, con_goce = @con_goce, fecha_aprobacion = GETDATE(),ultima_notificacion=GETDATE(),idsap_aprobo = @usuario where folio = @folio", conn);
                         cmd.Parameters.AddWithValue("@folio", id_folio);
                         cmd.Parameters.AddWithValue("@status", s_estatus);
                         cmd.Parameters.AddWithValue("@coments", comentarios);
                         cmd.Parameters.AddWithValue("@con_goce", con_goce);
+                        cmd.Parameters.AddWithValue("@usuario", usuario);
 
                         aux = cmd.ExecuteNonQuery();
                     }
@@ -148,11 +150,12 @@ namespace desconectate.Controllers
                         {
                             //Se rechazo la solicitud
                             //Se actualiza el registro de solicitud
-                            cmd = new SqlCommand("update solicitudes SET estatus = @status, observacion_aprobador = @coments, con_goce = @con_goce, fecha_aprobacion = GETDATE(),ultima_notificacion=GETDATE() where folio = @folio", conn);
+                            cmd = new SqlCommand("update solicitudes SET estatus = @status, observacion_aprobador = @coments, con_goce = @con_goce, fecha_aprobacion = GETDATE(),ultima_notificacion=GETDATE(), idsap_aprobo = @usuario where folio = @folio", conn);
                             cmd.Parameters.AddWithValue("@folio", id_folio);
                             cmd.Parameters.AddWithValue("@status", s_estatus);
                             cmd.Parameters.AddWithValue("@coments", comentarios);
                             cmd.Parameters.AddWithValue("@con_goce", con_goce);
+                            cmd.Parameters.AddWithValue("@usuario", usuario);
 
                             aux = cmd.ExecuteNonQuery();
 
@@ -248,11 +251,12 @@ namespace desconectate.Controllers
                             if (aux == 1) //Se logro Insertar Registros
                             {
                                 //Se actualiza la solicitud a aprobada
-                                cmd = new SqlCommand("update solicitudes SET estatus = @status, observacion_aprobador = @coments, con_goce = @con_goce, fecha_aprobacion = GETDATE(),ultima_notificacion=GETDATE() where folio = @folio", conn);
+                                cmd = new SqlCommand("update solicitudes SET estatus = @status, observacion_aprobador = @coments, con_goce = @con_goce, fecha_aprobacion = GETDATE(),ultima_notificacion=GETDATE(),idsap_aprobo = @usuario where folio = @folio", conn);
                                 cmd.Parameters.AddWithValue("@folio", id_folio);
                                 cmd.Parameters.AddWithValue("@status", s_estatus);
                                 cmd.Parameters.AddWithValue("@coments", comentarios);
                                 cmd.Parameters.AddWithValue("@con_goce", con_goce);
+                                cmd.Parameters.AddWithValue("@usuario", usuario);
 
                                 aux = cmd.ExecuteNonQuery();
 

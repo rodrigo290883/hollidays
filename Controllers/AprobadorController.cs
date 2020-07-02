@@ -152,6 +152,7 @@ namespace desconectate.Controllers
         {
             string connString = _configuration.GetConnectionString("MyConnection");
             var aux = 0;
+            string usuario = HttpContext.Session.GetString("usuario");
 
             using (SqlConnection conn = new SqlConnection(connString))
             {
@@ -216,11 +217,12 @@ namespace desconectate.Controllers
                     if(aux == 1)
                     {
                         //Se actualiza el registro de solicitud
-                        cmd = new SqlCommand("update solicitudes SET estatus = @status, observacion_aprobador = @coments, con_goce = @con_goce, fecha_aprobacion = GETDATE(),ultima_notificacion=GETDATE() where folio = @folio", conn);
+                        cmd = new SqlCommand("update solicitudes SET estatus = @status, observacion_aprobador = @coments, con_goce = @con_goce, fecha_aprobacion = GETDATE(),ultima_notificacion=GETDATE(),idsap_aprobo = @usuario where folio = @folio", conn);
                         cmd.Parameters.AddWithValue("@folio", id_folio);
                         cmd.Parameters.AddWithValue("@status", s_estatus);
                         cmd.Parameters.AddWithValue("@coments", comentarios);
                         cmd.Parameters.AddWithValue("@con_goce", con_goce);
+                        cmd.Parameters.AddWithValue("@usuario", usuario);
 
                         aux = cmd.ExecuteNonQuery();
                     }
@@ -244,11 +246,12 @@ namespace desconectate.Controllers
                         {
                             //Se rechazo la solicitud
                             //Se actualiza el registro de solicitud
-                            cmd = new SqlCommand("update solicitudes SET estatus = @status, observacion_aprobador = @coments, con_goce = @con_goce, fecha_aprobacion = GETDATE(),ultima_notificacion=GETDATE() where folio = @folio", conn);
+                            cmd = new SqlCommand("update solicitudes SET estatus = @status, observacion_aprobador = @coments, con_goce = @con_goce, fecha_aprobacion = GETDATE(),ultima_notificacion=GETDATE(),idsap_aprobo = @usuario where folio = @folio", conn);
                             cmd.Parameters.AddWithValue("@folio", id_folio);
                             cmd.Parameters.AddWithValue("@status", s_estatus);
                             cmd.Parameters.AddWithValue("@coments", comentarios);
                             cmd.Parameters.AddWithValue("@con_goce", con_goce);
+                            cmd.Parameters.AddWithValue("@usuario", usuario);
 
                             aux = cmd.ExecuteNonQuery();
 
@@ -344,11 +347,12 @@ namespace desconectate.Controllers
                             if (aux == 1) //Se logro Insertar Registros
                             {
                                 //Se actualiza la solicitud a aprobada
-                                cmd = new SqlCommand("update solicitudes SET estatus = @status, observacion_aprobador = @coments, con_goce = @con_goce, fecha_aprobacion = GETDATE(),ultima_notificacion=GETDATE() where folio = @folio", conn);
+                                cmd = new SqlCommand("update solicitudes SET estatus = @status, observacion_aprobador = @coments, con_goce = @con_goce, fecha_aprobacion = GETDATE(),ultima_notificacion=GETDATE(),idsap_aprobo = @usuario where folio = @folio", conn);
                                 cmd.Parameters.AddWithValue("@folio", id_folio);
                                 cmd.Parameters.AddWithValue("@status", s_estatus);
                                 cmd.Parameters.AddWithValue("@coments", comentarios);
                                 cmd.Parameters.AddWithValue("@con_goce", con_goce);
+                                cmd.Parameters.AddWithValue("@usuario", usuario);
 
                                 aux = cmd.ExecuteNonQuery();
 
