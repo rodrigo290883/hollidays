@@ -27,7 +27,15 @@ namespace desconectate.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            return View();
+            string usuario = HttpContext.Session.GetString("usuario");
+            if (usuario != null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         public List<Solicitud> SolicitudesPendientes()

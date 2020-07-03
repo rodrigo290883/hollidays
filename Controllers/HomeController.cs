@@ -25,8 +25,13 @@ namespace desconectate.Controllers
         public IActionResult Index()
         {
             string usuario = HttpContext.Session.GetString("usuario");
-            if(usuario == null)
+            string tipo = HttpContext.Session.GetString("tipo");
+            if (usuario == null)
                 return View();
+            else if(tipo=="A")
+                return RedirectToAction("Index", "AdminSolicitudes");
+            else if (tipo == "P")
+                return RedirectToAction("Index", "AdminPolizas");
             else
                 return RedirectToAction("Index", "Solicitante");
         }

@@ -28,11 +28,13 @@ namespace desconectate.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            if (System.IO.File.Exists("conv.csv"))
+            string usuario = HttpContext.Session.GetString("usuario");
+            if (usuario != null)
             {
-                System.IO.File.Delete("conv.csv");
+                return View();
             }
-            return View();
+            else
+                return RedirectToAction("Index", "Home");
         }
 
         public List<int> ProcesaRegistros(int numero_registros)

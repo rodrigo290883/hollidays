@@ -29,7 +29,10 @@ namespace desconectate.Controllers
         {
             string usuario = HttpContext.Session.GetString("usuario");
             if (usuario != null)
+            {
+                ViewBag.tipo = HttpContext.Session.GetString("tipo");
                 return View();
+            }
             else
                 return RedirectToAction("Index", "Home");
         }
