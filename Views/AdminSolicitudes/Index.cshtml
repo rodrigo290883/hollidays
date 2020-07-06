@@ -5,10 +5,6 @@
 }
 
 <style>
-
-
-
-
     body {
         background-image: url("images/doodle-background.png");
         background-repeat: no-repeat;
@@ -23,6 +19,10 @@
         bottom: 0px;
         right: 0px;
     }
+
+    #t_Slt_Pendiente{
+       height:400px;
+    }
 </style>
 
 <link rel="stylesheet" href="lib/bootstrap-select/dist/css/bootstrap-select.css" />
@@ -34,7 +34,8 @@
 <div class="container">
     <div class="row mt-2">
         <div class="col-12">
-            <Strong><span style="font-size:x-large;">Solicitudes Pendientes de Atención</span></Strong>
+            <Strong><span style="font-size: x-large;">Solicitudes Pendientes de Atención </span><b style="font-size: x-large;" id="num_solicitudes"></b></Strong><br />
+            Filtro:<input class="ifiltro" tabla="t_Slt_Pendiente" />
             <table class="table table-responsive table-striped" id="t_Slt_Pendiente">
                 <thead style="background-color: #821c61; color: white;">
                     <tr>
@@ -43,6 +44,7 @@
                         <th scope="col">SOLICITUD</th>
                         <th scope="col">FECHA INICIO</th>
                         <th scope="col">FECHA FINAL</th>
+                        <th scope="col">AREA</th>
                         <th scope="col">APROBADOR</th>
                         <th scope="col">ESTATUS</th>
                     </tr>
@@ -128,13 +130,59 @@
 
 <script>
     $(function () {
-
+        var solicitudes = 0;
         actualizaLista();
         limpiarForma();
 
+        $.expr[':'].contains = $.expr.createPseudo(function (arg) {
+            return function (elem) {
+                return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+            };
+        });
+
+        $('.ifiltro').change(function () {
+            var aux = $(this).val();
+            var tabla = $(this).attr('tabla');
+            var tabla = '#' + tabla;
+            if (aux == '') {
+                $(tabla + ' tbody tr').show();
+            } else {
+                var arreglo = aux.split('&');
+                var cadenas = arreglo.length;
+
+                if (cadenas == 1) {
+                    var arreglo2 = aux.split('|');
+
+                    if (arreglo2.length == 1)//Consulta normal, un solo texto
+                    {
+                        $(tabla + ' tbody tr').show();
+                        aux = aux.toUpperCase();
+                        $(tabla + ' tbody tr:visible').not(':contains(' + aux + ')').hide();
+                    }
+                    else  //Consulta con | que combinan textos
+                    {
+                        $(tabla + ' tbody tr').hide();
+                        for (var i = 0; i < arreglo2.length; i++) {
+                            var aux2 = arreglo2[i];
+                            $(tabla + ' tbody tr:contains(' + aux2 + ')').show();
+                        }
+                    }
+                } else { //Consulta encadenada
+                    $(tabla + ' tbody tr').show();
+                    for (var i = 0; i < cadenas; i++) {
+
+                        var aux2 = arreglo[i];
+
+                        aux2 = aux2.toUpperCase();
+                        $(tabla + ' tbody tr:visible').not(':contains(' + aux2 + ')').hide();
+                    }
+                }
+            }
+        });
+
         function actualizaLista() {
             url = "@Url.Content("~/AdminSolicitudes/SolicitudesPendientes")"
-
+            solicitudes = 0;
             $.post(url, {}, function (data) {
                 var num = data.length;
                 $("#t_Slt_Pendiente tbody").html("");
@@ -152,9 +200,11 @@
                             estatus = "DENEGADO";
                             break;
                     }
-                    html = '<tr class="renglon" alt="' + dato.folio + '" id="folio"><th scope="row">' + dato.folio + '</th><td>' + dato.nombre + '</td><td>' + dato.solicitudName + '</td><td>' + dato.fecha_inicio.substring(0, 10) + '</td><td>' + dato.fecha_fin.substring(0, 10) + '</td><td>' + dato.nombre_aprobador + '</td><td>' + dato.estatusDescripcion + '</td></tr>';
+                    html = '<tr class="renglon" alt="' + dato.folio + '" id="folio"><th scope="row">' + dato.folio + '</th><td>' + dato.nombre + '</td><td>' + dato.solicitudName + '</td><td>' + dato.fecha_inicio.substring(0, 10) + '</td><td>' + dato.fecha_fin.substring(0, 10) + '</td><td>' + dato.area + '</td><td>' + dato.nombre_aprobador + '</td><td>' + dato.estatusDescripcion + '</td></tr>';
                     $("#t_Slt_Pendiente tbody").append(html);
+                    solicitudes++;
                 }
+                $("#num_solicitudes").html(solicitudes);
             });
         }
 

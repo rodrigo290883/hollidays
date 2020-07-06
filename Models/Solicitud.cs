@@ -27,6 +27,7 @@ namespace desconectate.Models
         public int dias_disponibles { get; set; }
         public Nullable<System.DateTime> aniversario { get; set; }
         public string con_goce { get; set; }
+        public string area { get; set; }
 
     }
 }

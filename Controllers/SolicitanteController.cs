@@ -214,8 +214,8 @@ namespace desconectate.Controllers
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT sol.folio,ts.solicitud,sol.fecha_inicio,sol.fecha_fin,sol.estatus,em.nombre,sol.observacion_solicitante FROM solicitudes sol " +
-                    "LEFT JOIN ctipos_solicitud ts ON sol.tipo_solicitud = ts.id_tipo_solicitud LEFT JOIN empleados em ON sol.idsap_aprobador = em.idsap WHERE sol.idsap = @idsap and sol.fecha_inicio >= GETDATE()", conn);
+                SqlCommand cmd = new SqlCommand("SELECT sol.folio,ts.solicitud,sol.fecha_inicio,sol.fecha_fin,sol.estatus,sol.nombre_aprobador,sol.observacion_solicitante FROM solicitudes sol " +
+                    "LEFT JOIN ctipos_solicitud ts ON sol.tipo_solicitud = ts.id_tipo_solicitud WHERE sol.idsap = @idsap and sol.fecha_inicio >= GETDATE()", conn);
                 cmd.Parameters.AddWithValue("@idsap", id_sap);
 
                 SqlDataReader sqlReader = cmd.ExecuteReader();
