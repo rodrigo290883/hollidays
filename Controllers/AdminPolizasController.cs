@@ -45,7 +45,7 @@ namespace desconectate.Controllers
             
             using(SqlConnection conn = new SqlConnection(connString)){
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT idsap,nombre,area,banda FROM empleados WHERE idsap LIKE '%" + valor + "%' OR nombre LIKE '%" + valor + "%' OR area LIKE '%" + valor + "%' OR banda LIKE '%" + valor + "%';", conn);
+                SqlCommand cmd = new SqlCommand("SELECT idsap,nombre,area,banda FROM empleados WHERE tipo IN ('S','L') and idsap LIKE '%" + valor + "%' OR nombre LIKE '%" + valor + "%' OR area LIKE '%" + valor + "%' OR banda LIKE '%" + valor + "%';", conn);
                 cmd.Parameters.AddWithValue("@valor",valor);
 
                 SqlDataReader sqlReader = cmd.ExecuteReader();
@@ -68,7 +68,7 @@ namespace desconectate.Controllers
             using(SqlConnection conn = new SqlConnection(connString)){
 
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT idsap,nombre,area,banda FROM empleados ",conn);
+                SqlCommand cmd = new SqlCommand("SELECT idsap,nombre,area,banda FROM empleados WHERE tipo IN ('S','L');", conn);
 
                 SqlDataReader sqlReader = cmd.ExecuteReader();
 
