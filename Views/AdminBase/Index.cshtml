@@ -1,0 +1,110 @@
+﻿@page
+@{
+    Layout = "~/Views/Shared/_LayoutSessionA.cshtml";
+}
+
+<style>
+    body {
+        background-image: url("images/doodle-background.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: bottom right;
+        color: #5c2a7e;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            <h3>Administracion Base</h3>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <form id="form_archivo" method="post" enctype="multipart/form-data" asp-controller="CargaEmpleados" asp-action="SubeArchivo">
+                <div class="form-group">
+                    <label>Selecciona un Archivo:&nbsp;&nbsp;</label><input id="i_file" type="file" name="files" />&nbsp;&nbsp;
+                </div>
+            </form>
+            <button id="b_subir">Cargar</button>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-striped" id="t_consultas">
+                <thead>
+                    <tr>
+                        <th>NUM</th>
+                        <th>CONSULTA</th>
+                        <th>EJECUTAR</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+
+        $("#b_subir").click(function () {
+            var archivo = $("#i_file").val();
+
+            if (archivo != "") {
+                var extension = archivo.substring(archivo.length - 3, archivo.length);
+
+                if (extension == "sql" || extension == "SQL")
+                    $('#form_archivo').submit();
+                else
+                    swal("Cuidado", "Solo se permiten archivos sql", "warning");
+            }
+        });
+        $("#t_consultas").on('click','.b_ejecutar', function () {
+            var parametros = { "num": $(this).attr("alt")};
+            url = "@Url.Content("~/AdminBase/EjecutarConsulta")";
+            $.post(url, parametros, function (data) {
+                if (data == "1") {
+                    swal("Exito", "Se ejecuto correctamente la Consulta", "success");
+                }
+                else {
+                    swal("Error en la Consulta", data, "error");
+                }
+            });
+        });
+
+        $('#form_archivo').on("submit", function (e) {
+            e.preventDefault();
+            var f = $(this);
+            var formData = new FormData(document.getElementById("form_archivo"));
+
+            url = "@Url.Content("~/AdminBase/SubeArchivo")";
+
+            $.ajax({
+                url: url,
+                type: "post",
+                dataType: "html",
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false
+            }).done(function (res) {
+                    if (res) {
+
+                        url = "@Url.Content("~/AdminBase/LeeArchivo")";
+                        numero_registros = 0;
+                        $.post(url, {}, function (data) {
+                            var num = data.length;
+
+                            $("#t_consultas tbody").html('');
+                            for (var i = 0; i < num; i++) {
+                                var dato = data[i];
+                                var html = "<tr style='padding:1px'><td style='padding:1px'>" + i + "</td><td style='padding:1px'>" + dato + "</td><td style='padding:1px'><button class='b_ejecutar btn btn-primary' alt='"+i+"'>Ejecutar</button></td></tr>";
+                                $("#t_consultas tbody").append(html);
+
+                            }
+
+                        });
+                    }
+                });
+        });
+    });
+</script>

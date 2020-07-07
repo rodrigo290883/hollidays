@@ -11,6 +11,7 @@
     <Folder Include="Views\Avatares\" />
     <Folder Include="Views\CargaEmpleados\" />
     <Folder Include="Views\AdminSolicitudes\" />
+    <Folder Include="Views\AdminBase\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
