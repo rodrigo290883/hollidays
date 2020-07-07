@@ -1,6 +1,11 @@
 ﻿
 @{
-    Layout = "~/Views/Shared/_LayoutSessionA.cshtml";
+    var tipo = ViewBag.tipo;
+    if (tipo == "A")
+        Layout = "~/Views/Shared/_LayoutSessionA.cshtml";
+    else if(tipo == "R")
+        Layout = "~/Views/Shared/_LayoutSessionR.cshtml";
+    
 }
 
 <style>

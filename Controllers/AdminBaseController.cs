@@ -27,7 +27,15 @@ namespace desconectate.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            return View();
+            string usuario = HttpContext.Session.GetString("usuario");
+
+            if (usuario != null)
+            {
+                ViewBag.tipo = HttpContext.Session.GetString("tipo");
+                return View();
+            }
+            else
+                return RedirectToAction("Index", "Home");
         }
 
         public IActionResult EjecutarConsulta(int num)
