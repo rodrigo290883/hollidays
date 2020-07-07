@@ -34,7 +34,7 @@
                     <tr>
                         <th>NUM</th>
                         <th>CONSULTA</th>
-                        <th>EJECUTAR</th>
+                        <th><button class='btn btn-primary' id="b_ejecutar_todo">Ejecutar Todo</button></th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -58,6 +58,19 @@
                     swal("Cuidado", "Solo se permiten archivos sql", "warning");
             }
         });
+
+        $("#b_ejecutar_todo").click(function () {
+            url = "@Url.Content("~/AdminBase/EjecutarTodo")";
+            $.post(url, {}, function (data) {
+                if (data == "1") {
+                    swal("Exito", "Se ejecuto correctamente la Consulta", "success");
+                }
+                else {
+                    swal("Error en la Consulta", data, "error");
+                }
+            });
+        });
+
         $("#t_consultas").on('click','.b_ejecutar', function () {
             var parametros = { "num": $(this).attr("alt")};
             url = "@Url.Content("~/AdminBase/EjecutarConsulta")";

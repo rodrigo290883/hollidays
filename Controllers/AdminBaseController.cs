@@ -57,6 +57,57 @@ namespace desconectate.Controllers
             
         }
 
+        public IActionResult EjecutarTodo()
+        {
+            string connString = _configuration.GetConnectionString("MyConnection");
+            using (SqlConnection connection = new SqlConnection(connString))
+            {
+                connection.Open();
+
+                SqlCommand command = connection.CreateCommand();
+                SqlTransaction transaction;
+
+                
+                transaction = connection.BeginTransaction("SampleTransaction");
+
+                command.Connection = connection;
+                command.Transaction = transaction;
+
+                string fileName = @"temp.sql";
+
+                using (StreamReader streamReader = new StreamReader(fileName, Encoding.UTF8, true))
+                {
+                    string text = streamReader.ReadToEnd();
+                    string[] lista = text.Split(";", StringSplitOptions.RemoveEmptyEntries);
+
+                    try
+                    {
+                        foreach (string consulta in lista)
+                        {
+                            command.CommandText = consulta;
+                            command.ExecuteNonQuery();
+                        }
+
+                        // Attempt to commit the transaction.
+                        transaction.Commit();
+                        return Content("1");
+                    }
+                    catch (Exception ex)
+                    {
+                        try
+                        {
+                            transaction.Rollback();
+                            return Content("Error:" + ex.Message);
+                        }
+                        catch (Exception ex2)
+                        {
+                            return Content("Error:"+ex.Message+"  Rollback Error:"+ex2.Message);
+                        }
+                    }
+                }
+            }
+        }
+
         public string[] LeeArchivo()
         {
 
