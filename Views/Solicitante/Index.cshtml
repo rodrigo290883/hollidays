@@ -240,6 +240,7 @@
         var consume_vacaciones = 'S';
         var rol = [@empleado.rol];
         var dias_habiles = 0;
+        var dias_detalle = "";
 
         //-------Se obtienen los dias feriados
 
@@ -356,7 +357,8 @@
                         "fecha_fin": $("#i_fecha_fin").val(),
                         "tipo_solicitud": $("#s_tipo_solicitud").val(),
                         "observacion_solicitante": $("#ta_observacion").val(),
-                        "dias": dias_habiles
+                        "dias": dias_habiles,
+                        "dias_detalle": dias_detalle
                     };
 
                     $.post(url, parametros, function (data) {
@@ -427,7 +429,7 @@
                     var fin = moment(vacaciones[(vacaciones.length - 1)]);
                     var fin2 = fin.add(1, 'd');
 
-
+                    dias_detalle = "";
 
                     for (var i = inicio; !i.isSame(fin2); i.add(1, 'd')) {
 
@@ -438,16 +440,20 @@
 
                             if (feriados.find(contieneMoment, i) != undefined)
                                 cont_feriados++;
-                            else
+                            else {
+                                dias_detalle = dias_detalle + i.format("YYYY-MM-DD")+",";
                                 cont_habiles++;
+                            }
                         }
                         else {
                             cont_inhabiles++;
                         }
                     }
 
+                    dias_detalle = dias_detalle.substring(0, dias_detalle.length-1);
+
                     dias_habiles = cont_habiles;
-                    //swal("Detalle Solicitud", "Dias habiles:" + cont_habiles + "\n Feriados:" + cont_feriados + "\n inhabiles:" + cont_inhabiles, "success");
+                    //swal("Detalle Solicitud", "Dias habiles:" + cont_habiles + "\n Feriados:" + cont_feriados + "\n inhabiles:" + cont_inhabiles +"\n Detalle: "+dias_detalle, "success");
 
                     if (cont_habiles > maximo_dias) {
                         swal("Cuidado", "Tu seleccion sobrepasa los dias permitidos", "warning");

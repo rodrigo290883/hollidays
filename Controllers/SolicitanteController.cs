@@ -128,8 +128,8 @@ namespace desconectate.Controllers
             {
                 int folio = 0;
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("insert into dbo.solicitudes (idsap,tipo_solicitud,fecha_solicitud,fecha_inicio,fecha_fin,dias,estatus,idsap_aprobador,nombre_aprobador,email_aprobador,observacion_solicitante,fecha_asignacion,ultima_notificacion) " +
-                    "VALUES (@idsap,@tipo_solicitud,GETDATE(),@fecha_inicio,@fecha_fin,@dias,0,@idsap_aprobador,@nombre_aprobador,@correo_aprobador,@observaciones,GETDATE(),GETDATE()); " + "SELECT CAST(scope_identity() AS int)", conn);
+                SqlCommand cmd = new SqlCommand("insert into dbo.solicitudes (idsap,tipo_solicitud,fecha_solicitud,fecha_inicio,fecha_fin,dias,dias_detalle,estatus,idsap_aprobador,nombre_aprobador,email_aprobador,observacion_solicitante,fecha_asignacion,ultima_notificacion) " +
+                    "VALUES (@idsap,@tipo_solicitud,GETDATE(),@fecha_inicio,@fecha_fin,@dias,@dias_detalle,0,@idsap_aprobador,@nombre_aprobador,@correo_aprobador,@observaciones,GETDATE(),GETDATE()); " + "SELECT CAST(scope_identity() AS int)", conn);
                 cmd.Parameters.AddWithValue("@idsap", solicitud.idsap);
                 cmd.Parameters.AddWithValue("@tipo_solicitud", solicitud.tipo_solicitud);
                 cmd.Parameters.AddWithValue("@fecha_inicio", solicitud.fecha_inicio);
@@ -139,6 +139,7 @@ namespace desconectate.Controllers
                 cmd.Parameters.AddWithValue("@correo_aprobador", solicitud.email_aprobador);
                 cmd.Parameters.AddWithValue("@observaciones", solicitud.observacion_solicitante);
                 cmd.Parameters.AddWithValue("@dias", solicitud.dias);
+                cmd.Parameters.AddWithValue("@dias_detalle", solicitud.dias_detalle);
 
                 try
                 { 
