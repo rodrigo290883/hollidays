@@ -48,7 +48,7 @@ namespace desconectate.Controllers
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT rd.registro,sol.folio,tip.solicitud,sol.fecha_inicio,sol.fecha_fin,rd.dias,emp.idsap,CASE WHEN emp.esquema = 0 THEN 'DIPLO' WHEN emp.esquema = 1 THEN 'EDM' END as sociedad, sol.dias_detalle "+
+                SqlCommand cmd = new SqlCommand("SELECT rd.registro,sol.folio,tip.solicitud,sol.fecha_inicio,sol.fecha_fin,rd.dias,emp.idsap,CASE WHEN emp.esquema = 0 THEN 'DIBLO' WHEN emp.esquema = 1 THEN 'EDM' END as sociedad, sol.dias_detalle "+
                                                 "FROM registros_dias rd LEFT JOIN solicitudes sol ON rd.folio_solicitud = sol.folio LEFT JOIN ctipos_solicitud tip ON rd.id_tipo_solicitud = tip.id_tipo_solicitud "+
                                                 "LEFT JOIN empleados emp ON rd.idsap = emp.idsap WHERE rd.folio_solicitud != 0 and CONVERT(date,rd.fecha_creacion) between @inicio AND @fin;", conn);
                 cmd.Parameters.AddWithValue("@inicio", fecha_inicio);
