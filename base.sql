@@ -2125,16 +2125,17 @@ CREATE TABLE hollidays.dbo.ctipos_solicitud (
 	maximo_dias int NULL,
 	seleccionable char(1) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 	consume_vacaciones char(1) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-	con_goce int NULL
+	con_goce int NULL,
+	clave_AS400 varchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL
 );
 
 INSERT INTO hollidays.dbo.ctipos_solicitud (solicitud,maximo_dias,seleccionable,consume_vacaciones,con_goce) VALUES 
-('VACACIONES',30,'1','S',0)
-,('PERMISO',3,'1','N',1)
-,('PATERNIDAD',7,'1','N',0)
-,('MATERNIDAD',30,'1','N',0)
-,('MATRIMONIO',3,'1','N',0)
-,('DEFUNCION',3,'1','N',0)
+('VACACIONES',30,'1','S',0,'11')
+,('PERMISO',3,'1','N',1,'215,217')
+,('PATERNIDAD',7,'1','N',0,'247')
+,('MATERNIDAD',30,'1','N',0,'247')
+,('MATRIMONIO',3,'1','N',0,'215')
+,('DEFUNCION',3,'1','N',0,'215')
 ;
 
 CREATE TABLE hollidays.dbo.cestatus (

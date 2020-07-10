@@ -48,9 +48,9 @@ namespace desconectate.Controllers
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT rd.registro,sol.folio,tip.solicitud,sol.fecha_inicio,sol.fecha_fin,rd.dias,emp.idsap,CASE WHEN emp.esquema = 0 THEN 'DIBLO' WHEN emp.esquema = 1 THEN 'EDM' END as sociedad, sol.dias_detalle "+
-                                                "FROM registros_dias rd LEFT JOIN solicitudes sol ON rd.folio_solicitud = sol.folio LEFT JOIN ctipos_solicitud tip ON rd.id_tipo_solicitud = tip.id_tipo_solicitud "+
-                                                "LEFT JOIN empleados emp ON rd.idsap = emp.idsap WHERE rd.folio_solicitud != 0 and CONVERT(date,rd.fecha_creacion) between @inicio AND @fin;", conn);
+                SqlCommand cmd = new SqlCommand("SELECT rd.registro,tip.clave_as400,tip.solicitud,sol.fecha_inicio,sol.fecha_fin,rd.dias,emp.idsap,CASE WHEN emp.esquema = 0 THEN 'DIBLO' WHEN emp.esquema = 1 THEN 'EDM' END as sociedad, sol.dias_detalle,tip.con_goce,sol.con_goce "+
+                                        "FROM registros_dias rd LEFT JOIN solicitudes sol ON rd.folio_solicitud = sol.folio LEFT JOIN ctipos_solicitud tip ON rd.id_tipo_solicitud = tip.id_tipo_solicitud "+
+                                        "LEFT JOIN empleados emp ON rd.idsap = emp.idsap WHERE rd.folio_solicitud != 0 and CONVERT(date, rd.fecha_creacion) between @inicio AND @fin;", conn);
                 cmd.Parameters.AddWithValue("@inicio", fecha_inicio);
                 cmd.Parameters.AddWithValue("@fin", fecha_fin);
 
@@ -58,11 +58,28 @@ namespace desconectate.Controllers
 
                 while (sqlReader.Read())
                 {
+                    var tipo = sqlReader[1].ToString();
+                    var con_goce = sqlReader.GetInt32(9);
+                    if (con_goce == 1)
+                    {
+                        string[] tipos = tipo.Split(",");
+                        var goce = sqlReader[10].ToString();
+                        if (goce == "S")
+                        {
+                            tipo = tipos[0];
+                        }
+                        else
+                        {
+                            tipo = tipos[1];
+                        }
+
+                    }
+                    
                     lista.Add(new RegistroFormato
                     {
                         sociedad = sqlReader[7].ToString(),
                         sap = sqlReader.GetInt32(6),
-                        concepto = sqlReader[2].ToString(),
+                        concepto = tipo,
                         dias_detalle = sqlReader[8].ToString()
                     });
                 }
