@@ -2043,6 +2043,7 @@ CREATE TABLE hollidays.dbo.solicitudes (
 	ultima_notificacion datetime NULL,
 	fecha_asignacion datetime NULL,
 	idsap_aprobo int NULL,
+	dias_detalle text NULL,
 	CONSTRAINT PK_solicitudes PRIMARY KEY (folio)
 );
 
