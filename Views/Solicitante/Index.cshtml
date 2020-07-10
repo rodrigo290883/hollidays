@@ -132,7 +132,7 @@
                             <select id="s_tipo_solicitud" class="selectpicker" name="tipo_solicitud">
                                 @foreach (var opt in ViewBag.Opciones)
                                 {
-                                    <option value="@opt.id_tipo_solicitud" aux="@opt.maximo_dias" aux="@opt.consume_vacaciones">@opt.solicitud</option>
+                                    <option value="@opt.id_tipo_solicitud" aux="@opt.maximo_dias" aux2="@opt.consume_vacaciones">@opt.solicitud</option>
                                 }
                             </select>
                         </div>
@@ -226,7 +226,7 @@
     </div>
 </div>
 
-<script src="lib/simple-calendar/dist/jquery.simple-calendar.js"></script>
+<script src="lib/simple-calendar/dist/jquery.simple-calendar2.js"></script>
 <script src="lib/bootstrap-select/dist/js/bootstrap-select.js"></script>
 <script src="lib/moment/dist/js/moment.js"></script>
 
@@ -236,7 +236,7 @@
         var vacaciones = new Array();
         var disfrutar = @empleado.dias_disponibles;
         var bandera = 0;
-        var maximo_dias = @empleado.dias_disponibles;;
+        var maximo_dias = @empleado.dias_disponibles;
         var consume_vacaciones = 'S';
         var rol = [@empleado.rol];
         var dias_habiles = 0;
@@ -289,7 +289,7 @@
             if(passnew != '') {
                 SavePass();
             } else {
-                
+
                 swal({
                     title: 'Error!',
                     text: "El campo nueva contraseña esta vacío ",
@@ -305,7 +305,7 @@
 
 
         function SavePass() {
-            
+
 
             var NewPass = $("#nuevoPass").val();
 
@@ -331,12 +331,15 @@
         //---- Finaliza Contraseña
 
         $("#s_tipo_solicitud").change(function () {
-            maximo_dias = $("#s_tipo_solicitud option:selected").attr("aux");
+            
             consume_vacaciones = $("#s_tipo_solicitud option:selected").attr("aux2");
             if (consume_vacaciones == 'S') {
                 maximo_dias = disfrutar;
             }
-
+            else {
+                maximo_dias = $("#s_tipo_solicitud option:selected").attr("aux");
+            }
+            limpiaFechas();
         });
 
 
@@ -409,69 +412,74 @@
             onDateSelect: function (date, events) {
                 //Se agrega la fecha al array de vacaciones
                 //Falta agregar una validacion para remover y no repetir fechas.
-                var fecha = date.valueOf();
-                if (vacaciones.indexOf(fecha) == -1) {
-                    vacaciones.push(fecha);
-                }
-                else {
-                    vacaciones.splice(vacaciones.indexOf(fecha), 1);
-                }
+                if (events == 1) {
 
-                if (vacaciones.length != 0) {
-                    vacaciones.sort(function (a, b) { return a - b });
-                    // se cuentan los dias habiles
-                    var cont_habiles = 0;
-                    var cont_inhabiles = 0;
-                    var cont_feriados = 0;
-
-                    var inicio = moment(vacaciones[0]);
-
-                    var fin = moment(vacaciones[(vacaciones.length - 1)]);
-                    var fin2 = fin.add(1, 'd');
-
-                    dias_detalle = "";
-
-                    for (var i = inicio; !i.isSame(fin2); i.add(1, 'd')) {
-
-                                var diasemana = i.isoWeekday();
-                                diasemana--;
-
-                        if (rol[diasemana] == "1") {
-
-                            if (feriados.find(contieneMoment, i) != undefined)
-                                cont_feriados++;
-                            else {
-                                dias_detalle = dias_detalle + i.format("YYYY-MM-DD")+",";
-                                cont_habiles++;
-                            }
-                        }
-                        else {
-                            cont_inhabiles++;
-                        }
-                    }
-
-                    dias_detalle = dias_detalle.substring(0, dias_detalle.length-1);
-
-                    dias_habiles = cont_habiles;
-                    //swal("Detalle Solicitud", "Dias habiles:" + cont_habiles + "\n Feriados:" + cont_feriados + "\n inhabiles:" + cont_inhabiles +"\n Detalle: "+dias_detalle, "success");
-
-                    if (cont_habiles > maximo_dias) {
-                        swal("Cuidado", "Tu seleccion sobrepasa los dias permitidos", "warning");
-                        bandera = 1;
+                    var fecha = date.valueOf();
+                    if (vacaciones.indexOf(fecha) == -1) {
+                        vacaciones.push(fecha);
                     }
                     else {
-                        bandera = 0;
+                        vacaciones.splice(vacaciones.indexOf(fecha), 1);
                     }
-                    // se cuentan los dias habiles
-                    var fecha_inicio = new Date(vacaciones[0]);
-                    var fecha_fin = new Date(vacaciones[vacaciones.length - 1]);
-                    $("#i_fecha_inicio").val(fecha_inicio.toISOString().substr(0, 10));
-                    $("#i_fecha_fin").val(fecha_fin.toISOString().substr(0, 10));
-                } else {
-                    $("#i_fecha_inicio").val('');
-                    $("#i_fecha_fin").val('');
-                }
 
+                    if (vacaciones.length != 0) {
+                        vacaciones.sort(function (a, b) { return a - b });
+                        // se cuentan los dias habiles
+                        var cont_habiles = 0;
+                        var cont_inhabiles = 0;
+                        var cont_feriados = 0;
+
+                        var inicio = moment(vacaciones[0]);
+
+                        var fin = moment(vacaciones[(vacaciones.length - 1)]);
+                        var fin2 = fin.add(1, 'd');
+
+                        dias_detalle = "";
+
+                        for (var i = inicio; !i.isSame(fin2); i.add(1, 'd')) {
+
+                            var diasemana = i.isoWeekday();
+                            diasemana--;
+
+                            if (rol[diasemana] == "1") {
+
+                                if (feriados.find(contieneMoment, i) != undefined)
+                                    cont_feriados++;
+                                else {
+                                    dias_detalle = dias_detalle + i.format("YYYY-MM-DD") + ",";
+                                    cont_habiles++;
+                                }
+                            }
+                            else {
+                                cont_inhabiles++;
+                            }
+                        }
+
+                        dias_detalle = dias_detalle.substring(0, dias_detalle.length - 1);
+
+                        dias_habiles = cont_habiles;
+                        //swal("Detalle Solicitud", "Max_dias:" + maximo_dias + "\nDias habiles:" + cont_habiles + "\n Feriados:" + cont_feriados + "\n inhabiles:" + cont_inhabiles + "\n Detalle: " + dias_detalle, "success");
+
+                        if (cont_habiles > maximo_dias) {
+                            swal("Cuidado", "Tu seleccion sobrepasa los dias permitidos", "warning");
+                            bandera = 1;
+                        }
+                        else {
+                            bandera = 0;
+                        }
+                        // se cuentan los dias habiles
+                        var fecha_inicio = new Date(vacaciones[0]);
+                        var fecha_fin = new Date(vacaciones[vacaciones.length - 1]);
+                        $("#i_fecha_inicio").val(fecha_inicio.toISOString().substr(0, 10));
+                        $("#i_fecha_fin").val(fecha_fin.toISOString().substr(0, 10));
+                    } else {
+                        $("#i_fecha_inicio").val('');
+                        $("#i_fecha_fin").val('');
+                    }
+                }
+                else {
+                    swal("Cuidado", "No es posible seleccionar fechas pasadas", "warning");
+                }
                 //console.log(vacaciones);
             }
         });
@@ -480,17 +488,24 @@
             return this.isSame(fecha);
         }
 
+        function limpiaFechas() {
+            $("#i_fecha_inicio").val('');
+            $("#i_fecha_fin").val('');
+            vacaciones = new Array();
+            $("#d_calendar .day").removeClass("has-event");
+            $("#ta_observacion").val('');
+        }
 
         function limpiaForma() {
             $("#i_fecha_inicio").val('');
             $("#i_fecha_fin").val('');
-            maximo_dias = 30;
+            maximo_dias = disfrutar;
             consume_vacaciones = 'S';
             vacaciones = new Array();
 
             $("#s_tipo_solicitud").selectpicker('val', '0');
             $("#d_calendar .day").removeClass("has-event");
-            $("#ta_observacion").val('')
+            $("#ta_observacion").val('');
         }
 
         actualizaLista();

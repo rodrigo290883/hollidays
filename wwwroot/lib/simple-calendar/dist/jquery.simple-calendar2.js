@@ -91,7 +91,7 @@
         lastDay.setDate(lastDay.getDate() + 1);
       }
 
-       
+        var todayDate = this.currentDate;
 
       //For firstDay to lastDay
       for (var day = firstDay; day <= lastDay; day.setDate(day.getDate())) {
@@ -101,11 +101,13 @@
           var td = $('<td><div class="day" data-date="' + day.toISOString() + '">' + day.getDate() + '</div></td>');
 
 
-        
+        if (day < todayDate) {
+            td.find(".day").addClass("disabled");
+        }
           //if today is this day
           if (day.toDateString() === (new Date).toDateString()) {
               td.find(".day").addClass("today");
-             
+              td.find(".day").removeClass("disabled");
           }
 
 
