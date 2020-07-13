@@ -59,8 +59,8 @@ namespace desconectate.Controllers
                     empleado.idsap_padre = sqlReader.GetInt32(8);
                     empleado.nombre_line = sqlReader[16].ToString();//
                     empleado.email_line = sqlReader[15].ToString();//
-                    empleado.esquema = sqlReader[9].ToString();
-                    
+                    empleado.esquema = sqlReader.GetInt32(9);
+
                     ViewBag.periodo = sqlReader.GetInt32(13);
 
                     empleado.antiguedad = sqlReader.GetInt32(11);
