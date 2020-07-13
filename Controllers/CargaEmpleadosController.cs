@@ -50,6 +50,8 @@ namespace desconectate.Controllers
                 int insertados = 0;
                 int actualizados = 0;
                 int fallo = 0;
+                int existe;
+                int esquema = 0;
 
                 string connString = _configuration.GetConnectionString("MyConnection"); // Read the connection string from the web.config file
                 using (SqlConnection conn = new SqlConnection(connString))
@@ -57,16 +59,32 @@ namespace desconectate.Controllers
                     conn.Open();
                     foreach(Empleados registro in registros)
                     {
-                        SqlCommand cmd = new SqlCommand("SELECT idsap FROM empleados WHERE idsap = @idsap ", conn);
+                        SqlCommand cmd = new SqlCommand("SELECT esquema,idsap FROM empleados WHERE idsap = @idsap;", conn);
                         cmd.Parameters.AddWithValue("@idsap", registro.idsap);
+
+                        SqlDataReader sqlReader = cmd.ExecuteReader();
+
+                        if(sqlReader.Read()){
+                            existe = 1;
+                            esquema = sqlReader.GetInt32(0);
+                        }
+                        else
+                        {
+                            existe = 0;
+                        }
+                        
+                        
+
+                        sqlReader.Close();
 
                         LogClass log = new LogClass(_configuration);
 
-                        if (cmd.ExecuteScalar() == null)
-                        {
+
+                        if (existe == 0)
+                        { 
                             //Se inserta el empleado
                             cmd = new SqlCommand("INSERT INTO empleados(idsap,nombre,email,area,banda,fecha_ingreso_grupo,fecha_ingreso_uen,dias_disponibles,idsap_padre,nombre_line,email_line,contrasena,tipo,esquema,rol,estatus) "+
-                                "VALUES (@idsap,@nombre,@email,@area,@banda,@fecha_ingreso_grupo,@fecha_ingreso_uen,@dias_disponibles,@idsap_padre,@nombre_line,@email_line,'12345','S',0,0,0)", conn);
+                                "VALUES (@idsap,@nombre,@email,@area,@banda,@fecha_ingreso_grupo,@fecha_ingreso_uen,@dias_disponibles,@idsap_padre,@nombre_line,@email_line,'12345','S',@esquema,@rol,@estatus)", conn);
                             cmd.Parameters.AddWithValue("@idsap", registro.idsap);
                             cmd.Parameters.AddWithValue("@nombre", registro.nombre);
                             cmd.Parameters.AddWithValue("@email", registro.email);
@@ -78,6 +96,9 @@ namespace desconectate.Controllers
                             cmd.Parameters.AddWithValue("@idsap_padre", registro.idsap_padre);
                             cmd.Parameters.AddWithValue("@nombre_line", registro.nombre_line);
                             cmd.Parameters.AddWithValue("@email_line", registro.email_line);
+                            cmd.Parameters.AddWithValue("@esquema", registro.esquema);
+                            cmd.Parameters.AddWithValue("@rol", registro.rol);
+                            cmd.Parameters.AddWithValue("@estatus", registro.estatus);
 
                             int n = cmd.ExecuteNonQuery();
                             if (n != 0)
@@ -88,6 +109,16 @@ namespace desconectate.Controllers
                                 log.fecha_creacion = now;
                                 log.idsap_creacion = 101010;
                                 log.createLog();
+                                
+
+                                //Crear registro en registros_dias con los datos iniciales
+                                SqlCommand cmd2 = new SqlCommand("INSERT INTO registros_dias(idsap,periodo,registro_padre,dias,disponibles,caducidad) VALUES (@idsap,datepart(yyyy,getdate()),0,@dias,@dias,@caducidad);", conn);
+                                cmd2.Parameters.AddWithValue("@idsap", registro.idsap);
+                                cmd2.Parameters.AddWithValue("@dias", registro.dias_disponibles);
+                                cmd2.Parameters.AddWithValue("@caducidad", registro.fecha_ingreso_uen);
+
+                                cmd2.ExecuteNonQuery();
+
                                 insertados++;
                             }
                             else
@@ -98,9 +129,10 @@ namespace desconectate.Controllers
 
                         else
                         {
+                            var bandera = 0; 
                             //Se actualiza el empleado
                             cmd = new SqlCommand("UPDATE empleados SET email=@email,area=@area,banda=@banda,fecha_ingreso_grupo=@fecha_ingreso_grupo,fecha_ingreso_uen=fecha_ingreso_uen, "+
-                                "dias_disponibles=@dias_disponibles,idsap_padre=@idsap_padre,nombre_line=@nombre_line,email_line=@email_line " +
+                                "dias_disponibles=@dias_disponibles,idsap_padre=@idsap_padre,nombre_line=@nombre_line,email_line=@email_line,esquema=@esquema,rol=@rol " +
                                 "WHERE idsap = @idsap", conn);
                             cmd.Parameters.AddWithValue("@idsap", registro.idsap);
                             cmd.Parameters.AddWithValue("@email", registro.email);
@@ -112,16 +144,35 @@ namespace desconectate.Controllers
                             cmd.Parameters.AddWithValue("@idsap_padre", registro.idsap_padre);
                             cmd.Parameters.AddWithValue("@nombre_line", registro.nombre_line);
                             cmd.Parameters.AddWithValue("@email_line", registro.email_line);
+                            cmd.Parameters.AddWithValue("@esquema", registro.esquema);
+                            cmd.Parameters.AddWithValue("@rol", registro.rol);
+
+                            if (esquema != registro.esquema)//Hay un cambio de esquema
+                            {
+                                bandera = 1;
+                            }
+                            
 
                             int n = cmd.ExecuteNonQuery();
                             if (n != 0)
                             {
-                                DateTime now = DateTime.Now;
-                                log.idsap = registro.idsap;
-                                log.log = "Se actualizo el empleado: "+registro.idsap+" mediante carga de empleados";
-                                log.fecha_creacion = now;
-                                log.idsap_creacion = 101010;
-                                log.createLog();
+                                if (bandera == 0)
+                                {
+                                    log.idsap = registro.idsap;
+                                    log.log = "Se actualizo el empleado: " + registro.idsap + " mediante carga de empleados";
+                                    log.idsap_creacion = 101010;
+                                    log.createLog();
+                                }
+                                else
+                                {
+
+                                    log.idsap = registro.idsap;
+                                    log.log = "Se actualizo el empleado: " + registro.idsap + " y hay un cambio de esquema, mediante carga de empleados ";
+                                    log.idsap_creacion = 101010;
+                                    log.createLog();
+                                }
+                               
+
                                 actualizados++;
                             }
                             else
@@ -164,7 +215,10 @@ namespace desconectate.Controllers
                         email = csv.GetField("CORREO COLABORADOR"),
                         idsap_padre = csv.GetField<int>("SAP_LINE"),
                         nombre_line = csv.GetField("LINE MANAGER"),
-                        email_line = csv.GetField("CORREO LINE")
+                        email_line = csv.GetField("CORREO LINE"),
+                        esquema = csv.GetField<int>("ESQUEMA"),
+                        rol = csv.GetField("ROL"),
+                        estatus = csv.GetField<int>("ESTATUS")
                     };
                     records.Add(record);
                 }
