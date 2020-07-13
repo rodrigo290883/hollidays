@@ -26,9 +26,8 @@ namespace desconectate.Models
             {
                 using (SqlConnection con = new SqlConnection(_connectionString))
                 {
-                    SqlCommand cmd = new SqlCommand("INSERT INTO log_vacaciones(idsap,fecha_creacion,log,idsap_creacion) VALUES (@idsap,@fecha_creacion,@log,101010) " + "SELECT CAST(scope_identity() AS int) ", con);
+                    SqlCommand cmd = new SqlCommand("INSERT INTO log_vacaciones(idsap,log,idsap_creacion) VALUES (@idsap,@log,101010) " + "SELECT CAST(scope_identity() AS int) ", con);
                     cmd.Parameters.AddWithValue("@idsap", idsap);
-                    cmd.Parameters.AddWithValue("@fecha_creacion", fecha_creacion);
                     cmd.Parameters.AddWithValue("@log", log);
 
                     con.Open();
