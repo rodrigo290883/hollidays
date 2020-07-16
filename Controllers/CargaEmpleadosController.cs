@@ -109,13 +109,14 @@ namespace desconectate.Controllers
                                 log.fecha_creacion = now;
                                 log.idsap_creacion = 101010;
                                 log.createLog();
-                                
+
 
                                 //Crear registro en registros_dias con los datos iniciales
-                                SqlCommand cmd2 = new SqlCommand("INSERT INTO registros_dias(idsap,periodo,registro_padre,dias,disponibles,caducidad) VALUES (@idsap,datepart(yyyy,getdate()),0,@dias,@dias,@caducidad);", conn);
+                             
+                                SqlCommand cmd2 = new SqlCommand("INSERT INTO registros_dias(idsap,periodo,registro_padre,dias,disponibles,caducidad) VALUES (@idsap,datepart(yyyy,getdate()),0,@dias,@dias,DATEADD(month, 13, Convert(date, CONCAT(datepart(yyyy, getdate()), '-', (datepart(mm, @ingreso)), '-', datepart(dd, @ingreso)))));", conn);
                                 cmd2.Parameters.AddWithValue("@idsap", registro.idsap);
                                 cmd2.Parameters.AddWithValue("@dias", registro.dias_disponibles);
-                                cmd2.Parameters.AddWithValue("@caducidad", registro.fecha_ingreso_uen);
+                                cmd2.Parameters.AddWithValue("@ingreso", registro.fecha_ingreso_uen);
 
                                 cmd2.ExecuteNonQuery();
 

@@ -120,7 +120,12 @@ namespace desconectate.Controllers
             {
                 
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT s.idsap,e.nombre,DATEDIFF(month,e.fecha_ingreso_grupo,GETDATE()) as antiguedad ,e.dias_disponibles, cts.maximo_dias, cts.solicitud as solicitudName, e.fecha_ingreso_grupo as aniversario, s.fecha_inicio, s.fecha_fin, s.folio,s.tipo_solicitud,cts.con_goce as tipo_solicitud_goce,s.observacion_solicitante  FROM solicitudes s inner join empleados e on s.idsap = e.idsap inner join ctipos_solicitud cts on s.tipo_solicitud = cts.id_tipo_solicitud where s.folio = @folio ",conn);
+                SqlCommand cmd = new SqlCommand("SELECT TOP 1 s.idsap,e.nombre,DATEDIFF(month,e.fecha_ingreso_grupo,GETDATE()) as antiguedad ,(select SUM(disponibles) from registros_dias where idsap = s.idsap and registro_padre = 0 and caducidad >= GETDATE()) as disponibles, "+
+                "cts.maximo_dias, cts.solicitud as solicitudName, e.fecha_ingreso_grupo as aniversario, s.fecha_inicio, s.fecha_fin, s.folio, s.tipo_solicitud, cts.con_goce as tipo_solicitud_goce, s.observacion_solicitante,"+
+                "rd.periodo, rd.caducidad, (select SUM(dias) from registros_dias WHERE idsap = s.idsap and  registro_padre != 0 and id_tipo_solicitud = 0 and  caducidad >= getdate()) "+
+                "FROM solicitudes s inner join empleados e on s.idsap = e.idsap inner join ctipos_solicitud cts on s.tipo_solicitud = cts.id_tipo_solicitud "+
+                "LEFT JOIN registros_dias rd ON s.idsap = rd.idsap AND rd.registro_padre = 0 and rd.caducidad >= getdate()where s.folio = @folio ORDER BY rd.periodo DESC",conn);
+
                 cmd.Parameters.AddWithValue("@folio",id_folio);
 
                 SqlDataReader sqlReader = cmd.ExecuteReader();
@@ -140,6 +145,10 @@ namespace desconectate.Controllers
                 infosolicitud.tipo_solicitud = sqlReader.GetInt32(10); 
                 infosolicitud.tipo_solicitud_goce = sqlReader.GetInt32(11);
                 infosolicitud.observacion_solicitante = sqlReader[12].ToString();
+                infosolicitud.periodo = sqlReader[13].ToString();
+                infosolicitud.caducidad = Convert.ToDateTime(sqlReader.IsDBNull(14) ? null : sqlReader[14]);
+                infosolicitud.dias_tomados = sqlReader.GetInt32(15);
+
 
                 sqlReader.Close();
 
@@ -158,7 +167,7 @@ namespace desconectate.Controllers
             {
                 conn.Open();
 
-                SqlCommand cmd = new SqlCommand("SELECT sol.dias,(SELECT SUM(reg.disponibles) FROM registros_dias reg WHERE reg.idsap = sol.idsap  AND reg.registro_padre =0 and reg.caducidad >= GETDATE()) as disponibles,tip.consume_vacaciones FROM solicitudes sol left join ctipos_solicitud tip on sol.tipo_solicitud = tip.id_tipo_solicitud  WHERE sol.folio = @folio", conn);
+                SqlCommand cmd = new SqlCommand("SELECT sol.dias,(SELECT SUM(reg.disponibles) FROM registros_dias reg WHERE reg.idsap = sol.idsap  AND reg.registro_padre =0 and reg.caducidad >= GETDATE()) as disponibles,tip.consume_vacaciones,sol.fecha_inicio FROM solicitudes sol left join ctipos_solicitud tip on sol.tipo_solicitud = tip.id_tipo_solicitud  WHERE sol.folio = @folio", conn);
                 cmd.Parameters.AddWithValue("@folio", id_folio);
                 SqlDataReader sqlReader = cmd.ExecuteReader();
 
@@ -167,6 +176,7 @@ namespace desconectate.Controllers
                 var dias_sol = sqlReader.GetInt32(0);
                 var dias_disp = sqlReader.GetInt32(1);
                 var consume_vacaciones = sqlReader[2].ToString();
+                var fecha_inicio = Convert.ToDateTime(sqlReader.IsDBNull(3) ? null : sqlReader[3]);
 
                 sqlReader.Close();
 
@@ -223,6 +233,13 @@ namespace desconectate.Controllers
                         cmd.Parameters.AddWithValue("@coments", comentarios);
                         cmd.Parameters.AddWithValue("@con_goce", con_goce);
                         cmd.Parameters.AddWithValue("@usuario", usuario);
+
+                        aux = cmd.ExecuteNonQuery();
+
+                        //Se actualiza el registro de solicitud
+                        cmd = new SqlCommand("update empleados SET ultimo_desconecte = @inicio  where idsap = @idsap", conn);
+                        cmd.Parameters.AddWithValue("@inicio", fecha_inicio);
+                        cmd.Parameters.AddWithValue("@idsap", idsap);
 
                         aux = cmd.ExecuteNonQuery();
                     }
@@ -353,6 +370,12 @@ namespace desconectate.Controllers
                                 cmd.Parameters.AddWithValue("@coments", comentarios);
                                 cmd.Parameters.AddWithValue("@con_goce", con_goce);
                                 cmd.Parameters.AddWithValue("@usuario", usuario);
+
+                                aux = cmd.ExecuteNonQuery();
+
+                                cmd = new SqlCommand("update empleados SET ultimo_desconecte = @inicio  where idsap = @idsap", conn);
+                                cmd.Parameters.AddWithValue("@inicio", fecha_inicio);
+                                cmd.Parameters.AddWithValue("@idsap", idsap);
 
                                 aux = cmd.ExecuteNonQuery();
 

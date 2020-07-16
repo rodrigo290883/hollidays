@@ -39,9 +39,10 @@ namespace desconectate.Controllers
                 using (SqlConnection conn = new SqlConnection(connString))
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("select e.idsap,e.nombre,e.email,e.estatus,e.fecha_ingreso_grupo,(select SUM(disponibles) from registros_dias where idsap = @idsap and registro_padre = 0 and caducidad >= GETDATE()) as disponibles,e.ultimo_desconecte,'' as url_poliza,e.idsap_padre,e.esquema,e.sexo," +
-                        "DATEDIFF(month,e.fecha_ingreso_grupo,GETDATE()) as antiguedad, DATEDIFF(month,e.ultimo_desconecte,GETDATE()) as meses_ultimo_desconecte,iif(DATEDIFF(DAY,CONCAT(datepart(yyyy,getdate()),'-',(datepart(mm,e.fecha_ingreso_grupo)+1),'-',datepart(dd,e.fecha_ingreso_grupo)),getdate()) <=0,datepart(yyyy,getdate())-1,datepart(yyyy,getdate())) ,e.avatar, " +
-                        "email_line,nombre_line,r.semana from dbo.empleados e left join croles r on e.rol = r.rol WHERE e.idsap = @idsap ", conn);
+                    SqlCommand cmd = new SqlCommand("select top 1 e.idsap,e.nombre,e.email,e.estatus,e.fecha_ingreso_grupo,(select SUM(disponibles) from registros_dias where idsap = @idsap and registro_padre = 0 and caducidad >= GETDATE()) as disponibles,"+
+                    "e.ultimo_desconecte, '' as url_poliza, e.idsap_padre, e.esquema, e.sexo, DATEDIFF(month, e.fecha_ingreso_grupo, GETDATE()) as antiguedad, DATEDIFF(month, e.ultimo_desconecte, GETDATE()) as meses_ultimo_desconecte,"+
+                    "rd.periodo, e.avatar, e.email_line, e.nombre_line, r.semana,(select SUM(dias) from registros_dias WHERE idsap = @idsap and registro_padre != 0 and  caducidad >= getdate()) as tomados,rd.caducidad from dbo.empleados e "+
+                    "left join croles r on e.rol = r.rol LEFT JOIN registros_dias rd on e.idsap = rd.idsap WHERE e.idsap = @idsap and rd.registro_padre = 0 ORDER BY periodo DESC; ", conn);
                     cmd.Parameters.AddWithValue("@idsap", usuario);
 
                     SqlDataReader sqlReader = cmd.ExecuteReader();
@@ -61,11 +62,12 @@ namespace desconectate.Controllers
                     empleado.email_line = sqlReader[15].ToString();//
                     empleado.esquema = sqlReader.GetInt32(9);
 
-                    ViewBag.periodo = sqlReader.GetInt32(13);
+                    ViewBag.periodo = sqlReader[13].ToString();
+                    ViewBag.dias_tomados = sqlReader[18].ToString();
 
                     empleado.antiguedad = sqlReader.GetInt32(11);
                     empleado.meses_ultimo_desconecte = sqlReader.IsDBNull(12)?0: sqlReader.GetInt32(12);
-                    empleado.caducidad = Convert.ToDateTime(sqlReader.IsDBNull(6) ? null : sqlReader[6]);
+                    empleado.caducidad = Convert.ToDateTime(sqlReader.IsDBNull(19) ? null : sqlReader[19]);
                     empleado.avatar = sqlReader[14].ToString();
                     empleado.rol = sqlReader[17].ToString();
 
