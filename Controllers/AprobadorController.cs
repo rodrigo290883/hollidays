@@ -147,7 +147,7 @@ namespace desconectate.Controllers
                 infosolicitud.observacion_solicitante = sqlReader[12].ToString();
                 infosolicitud.periodo = sqlReader[13].ToString();
                 infosolicitud.caducidad = Convert.ToDateTime(sqlReader.IsDBNull(14) ? null : sqlReader[14]);
-                infosolicitud.dias_tomados = sqlReader.GetInt32(15);
+                infosolicitud.dias_tomados = sqlReader.IsDBNull(15)?0:sqlReader.GetInt32(15);
 
 
                 sqlReader.Close();
