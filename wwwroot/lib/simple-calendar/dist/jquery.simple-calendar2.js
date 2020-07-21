@@ -100,10 +100,10 @@
         for (var i = 0; i < 7; i++) {
           var td = $('<td><div class="day" data-date="' + day.toISOString() + '">' + day.getDate() + '</div></td>');
 
-
+          /*
         if (day < todayDate) {
             td.find(".day").addClass("disabled");
-        }
+        }*/
           //if today is this day
           if (day.toDateString() === (new Date).toDateString()) {
               td.find(".day").addClass("today");
