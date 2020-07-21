@@ -52,6 +52,7 @@ namespace desconectate.Controllers
                 int fallo = 0;
                 int existe;
                 int esquema = 0;
+                int estatus;
 
                 string connString = _configuration.GetConnectionString("MyConnection"); // Read the connection string from the web.config file
                 using (SqlConnection conn = new SqlConnection(connString))
@@ -81,24 +82,56 @@ namespace desconectate.Controllers
 
 
                         if (existe == 0)
-                        { 
+                        {
                             //Se inserta el empleado
-                            cmd = new SqlCommand("INSERT INTO empleados(idsap,nombre,email,area,banda,fecha_ingreso_grupo,fecha_ingreso_uen,dias_disponibles,idsap_padre,nombre_line,email_line,contrasena,tipo,esquema,rol,estatus) "+
-                                "VALUES (@idsap,@nombre,@email,@area,@banda,@fecha_ingreso_grupo,@fecha_ingreso_uen,@dias_disponibles,@idsap_padre,@nombre_line,@email_line,'12345','S',@esquema,@rol,@estatus)", conn);
-                            cmd.Parameters.AddWithValue("@idsap", registro.idsap);
-                            cmd.Parameters.AddWithValue("@nombre", registro.nombre);
-                            cmd.Parameters.AddWithValue("@email", registro.email);
-                            cmd.Parameters.AddWithValue("@area", registro.area);
-                            cmd.Parameters.AddWithValue("@banda", registro.banda);
-                            cmd.Parameters.AddWithValue("@fecha_ingreso_grupo", registro.fecha_ingreso_grupo);
-                            cmd.Parameters.AddWithValue("@fecha_ingreso_uen", registro.fecha_ingreso_uen);
-                            cmd.Parameters.AddWithValue("@dias_disponibles", registro.dias_disponibles);
-                            cmd.Parameters.AddWithValue("@idsap_padre", registro.idsap_padre);
-                            cmd.Parameters.AddWithValue("@nombre_line", registro.nombre_line);
-                            cmd.Parameters.AddWithValue("@email_line", registro.email_line);
-                            cmd.Parameters.AddWithValue("@esquema", registro.esquema);
-                            cmd.Parameters.AddWithValue("@rol", registro.rol);
-                            cmd.Parameters.AddWithValue("@estatus", registro.estatus);
+                            if (registro.estatus == 2)
+                            {
+                                estatus = 2;
+                            }
+                            else
+                            {
+                                estatus = 0;
+                            }
+
+                            if (registro.ultimo_desconecte != null)
+                            {
+                                cmd = new SqlCommand("INSERT INTO empleados(idsap,nombre,email,area,banda,fecha_ingreso_grupo,fecha_ingreso_uen,dias_disponibles,ultimo_desconecte,idsap_padre,nombre_line,email_line,contrasena,tipo,esquema,rol,estatus) " +
+                                    "VALUES (@idsap,@nombre,@email,@area,@banda,@fecha_ingreso_grupo,@fecha_ingreso_uen,@dias_disponibles,@ultimo_desconecte,@idsap_padre,@nombre_line,@email_line,'12345','S',@esquema,@rol,@estatus)", conn);
+                                cmd.Parameters.AddWithValue("@idsap", registro.idsap);
+                                cmd.Parameters.AddWithValue("@nombre", registro.nombre);
+                                cmd.Parameters.AddWithValue("@email", registro.email);
+                                cmd.Parameters.AddWithValue("@area", registro.area);
+                                cmd.Parameters.AddWithValue("@banda", registro.banda);
+                                cmd.Parameters.AddWithValue("@fecha_ingreso_grupo", registro.fecha_ingreso_grupo);
+                                cmd.Parameters.AddWithValue("@fecha_ingreso_uen", registro.fecha_ingreso_uen);
+                                cmd.Parameters.AddWithValue("@dias_disponibles", registro.dias_disponibles);
+                                cmd.Parameters.AddWithValue("@ultimo_desconecte", registro.ultimo_desconecte);
+                                cmd.Parameters.AddWithValue("@idsap_padre", registro.idsap_padre);
+                                cmd.Parameters.AddWithValue("@nombre_line", registro.nombre_line);
+                                cmd.Parameters.AddWithValue("@email_line", registro.email_line);
+                                cmd.Parameters.AddWithValue("@esquema", registro.esquema);
+                                cmd.Parameters.AddWithValue("@rol", registro.rol);
+                                cmd.Parameters.AddWithValue("@estatus", estatus);
+                            }
+                            else
+                            {
+                                cmd = new SqlCommand("INSERT INTO empleados(idsap,nombre,email,area,banda,fecha_ingreso_grupo,fecha_ingreso_uen,dias_disponibles,idsap_padre,nombre_line,email_line,contrasena,tipo,esquema,rol,estatus) " +
+                                    "VALUES (@idsap,@nombre,@email,@area,@banda,@fecha_ingreso_grupo,@fecha_ingreso_uen,@dias_disponibles,@idsap_padre,@nombre_line,@email_line,'12345','S',@esquema,@rol,@estatus)", conn);
+                                cmd.Parameters.AddWithValue("@idsap", registro.idsap);
+                                cmd.Parameters.AddWithValue("@nombre", registro.nombre);
+                                cmd.Parameters.AddWithValue("@email", registro.email);
+                                cmd.Parameters.AddWithValue("@area", registro.area);
+                                cmd.Parameters.AddWithValue("@banda", registro.banda);
+                                cmd.Parameters.AddWithValue("@fecha_ingreso_grupo", registro.fecha_ingreso_grupo);
+                                cmd.Parameters.AddWithValue("@fecha_ingreso_uen", registro.fecha_ingreso_uen);
+                                cmd.Parameters.AddWithValue("@dias_disponibles", registro.dias_disponibles);
+                                cmd.Parameters.AddWithValue("@idsap_padre", registro.idsap_padre);
+                                cmd.Parameters.AddWithValue("@nombre_line", registro.nombre_line);
+                                cmd.Parameters.AddWithValue("@email_line", registro.email_line);
+                                cmd.Parameters.AddWithValue("@esquema", registro.esquema);
+                                cmd.Parameters.AddWithValue("@rol", registro.rol);
+                                cmd.Parameters.AddWithValue("@estatus", estatus);
+                            }
 
                             int n = cmd.ExecuteNonQuery();
                             if (n != 0)
@@ -204,23 +237,52 @@ namespace desconectate.Controllers
                 csv.ReadHeader();
                 while (csv.Read())
                 {
-                    Empleados record = new Empleados
+                    Empleados record;
+                    var ultimo = csv.GetField("ULTIMO DESCONECTE");
+                    if (ultimo != "-")
                     {
-                        idsap = csv.GetField<int>("SAP"),
-                        nombre = csv.GetField("NOMBRE"),
-                        area = csv.GetField("AREA"),
-                        banda = csv.GetField("PUESTO"),
-                        fecha_ingreso_grupo = DateTime.ParseExact(csv.GetField("FECHA INGRESO GRUPO"), "dd/MM/yyyy", CultureInfo.InvariantCulture),
-                        fecha_ingreso_uen = DateTime.ParseExact(csv.GetField("INGRESO A LA UEN"), "dd/MM/yyyy", CultureInfo.InvariantCulture),
-                        dias_disponibles = csv.GetField<int>("PENDIENTES POR GOZAR"),
-                        email = csv.GetField("CORREO COLABORADOR"),
-                        idsap_padre = csv.GetField<int>("SAP_LINE"),
-                        nombre_line = csv.GetField("LINE MANAGER"),
-                        email_line = csv.GetField("CORREO LINE"),
-                        esquema = csv.GetField<int>("ESQUEMA"),
-                        rol = csv.GetField("ROL"),
-                        estatus = csv.GetField<int>("ESTATUS")
-                    };
+                        record = new Empleados
+                        {
+                            idsap = csv.GetField<int>("SAP"),
+                            nombre = csv.GetField("NOMBRE"),
+                            area = csv.GetField("AREA"),
+                            banda = csv.GetField("PUESTO"),
+                            fecha_ingreso_grupo = DateTime.ParseExact(csv.GetField("FECHA INGRESO GRUPO"), "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                            fecha_ingreso_uen = DateTime.ParseExact(csv.GetField("INGRESO A LA UEN"), "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                            dias_disponibles = csv.GetField<int>("PENDIENTES POR GOZAR"),
+                            email = csv.GetField("CORREO COLABORADOR"),
+                            idsap_padre = csv.GetField<int>("SAP_LINE"),
+                            nombre_line = csv.GetField("LINE MANAGER"),
+                            email_line = csv.GetField("CORREO LINE"),
+                            esquema = csv.GetField<int>("ESQUEMA"),
+                            rol = csv.GetField("ROL"),
+                            estatus = csv.GetField<int>("ESTATUS"),
+                            ultimo_desconecte = DateTime.ParseExact(csv.GetField("ULTIMO DESCONECTE"), "dd/MM/yyyy", CultureInfo.InvariantCulture)
+                        };
+                    }
+                    else
+                    {
+                        record = new Empleados
+                        {
+                            idsap = csv.GetField<int>("SAP"),
+                            nombre = csv.GetField("NOMBRE"),
+                            area = csv.GetField("AREA"),
+                            banda = csv.GetField("PUESTO"),
+                            fecha_ingreso_grupo = DateTime.ParseExact(csv.GetField("FECHA INGRESO GRUPO"), "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                            fecha_ingreso_uen = DateTime.ParseExact(csv.GetField("INGRESO A LA UEN"), "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                            dias_disponibles = csv.GetField<int>("PENDIENTES POR GOZAR"),
+                            email = csv.GetField("CORREO COLABORADOR"),
+                            idsap_padre = csv.GetField<int>("SAP_LINE"),
+                            nombre_line = csv.GetField("LINE MANAGER"),
+                            email_line = csv.GetField("CORREO LINE"),
+                            esquema = csv.GetField<int>("ESQUEMA"),
+                            rol = csv.GetField("ROL"),
+                            estatus = csv.GetField<int>("ESTATUS"),
+                            ultimo_desconecte = null
+                        };
+                    }
+
+                    
                     records.Add(record);
                 }
                 return records;
