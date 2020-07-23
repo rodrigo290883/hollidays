@@ -92,19 +92,34 @@
       }
 
         var todayDate = this.currentDate;
+        var todayMonth = new Date();
+
+
 
       //For firstDay to lastDay
       for (var day = firstDay; day <= lastDay; day.setDate(day.getDate())) {
-        var tr = $('<tr></tr>');
-        //For each row
+          var tr = $('<tr></tr>');
+
+          //alert('dia actual: ' + day + 'dia forma:' + todayDate);
+
+          //For each row
         for (var i = 0; i < 7; i++) {
           var td = $('<td><div class="day" data-date="' + day.toISOString() + '">' + day.getDate() + '</div></td>');
 
-          /*
-        if (day < todayDate) {
-            td.find(".day").addClass("disabled");
-        }*/
+            if (day.getFullYear() < todayMonth.getFullYear()) {
+                td.find(".day").addClass("disabled");
+            }
+            if (day.getMonth() < todayMonth.getMonth() && day.getFullYear() == todayMonth.getFullYear()) {
+                td.find(".day").addClass("disabled");
+            }
+            if (day.getMonth() == todayMonth.getMonth() && day.getFullYear() == todayMonth.getFullYear()) {
+                if (day.getDate() < todayDate.getDate()) {
+                    td.find(".day").addClass("disabled");
+                }
+            }
+
           //if today is this day
+
           if (day.toDateString() === (new Date).toDateString()) {
               td.find(".day").addClass("today");
               td.find(".day").removeClass("disabled");

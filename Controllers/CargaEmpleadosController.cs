@@ -213,7 +213,12 @@ namespace desconectate.Controllers
                                 fallo++;
                         }
                     }
-                    
+
+                    //actualiza line managers
+
+                    SqlCommand cmd5 = new SqlCommand("UPDATE empleados SET tipo = 'L' WHERE tipo = 'S' AND idsap IN(SELECT idsap_padre FROM empleados);", conn);
+                    cmd5.ExecuteNonQuery();
+
                 }
                 var mensaje = new List<int> {num,insertados,actualizados,fallo };
                 return mensaje;
