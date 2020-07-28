@@ -145,11 +145,14 @@
             </div>
             <div class="col-sm-12 col-md-4">
                 <div class="row mt-5">
-                    <div class="col-6 font-weight-bold">FECHA INICIO:<input name="fecha_inicio" id="i_fecha_inicio" /></div>
-                    <div class="col-6 font-weight-bold">FECHA FIN:<input name="fecha_fin" id="i_fecha_fin" /></div>
+                    <div class="col-6 font-weight-bold">FECHA INICIO:<input name="fecha_inicio" id="i_fecha_inicio" disabled/></div>
+                    <div class="col-6 font-weight-bold">FECHA FIN:<input name="fecha_fin" id="i_fecha_fin" disabled/></div>
+                </div>
+                <div id="d_limpia_fechas" class="row mt-2">
+                    <div class="col-12 text-center align-self-center"><button id="b_limpia_fechas" class="btn btn-secondary btn-sm">Limpiar Fechas</button></div>
                 </div>
                 <div class="row mt-2">
-                    <div class="col-6 text-center">
+                    <div class="col-12 text-center align-self-center">
                         <input style="display:none" name="idsap" value="@empleado.idsap" />
                         <input style="display:none" name="idsap_aprobador" value="@empleado.idsap_padre" />
                         <input style="display:none" id="nombre_aprobador" value="@empleado.nombre_line" />
@@ -330,6 +333,8 @@
 
         //---- Finaliza Contraseña
 
+        $("#d_limpia_fechas").hide();
+
         $("#s_tipo_solicitud").change(function () {
             
             consume_vacaciones = $("#s_tipo_solicitud option:selected").attr("aux2");
@@ -413,6 +418,7 @@
                 //Se agrega la fecha al array de vacaciones
                 //Falta agregar una validacion para remover y no repetir fechas.
                 if (events == 1) {
+                    $("#d_limpia_fechas").show();
 
                     var fecha = date.valueOf();
                     if (vacaciones.indexOf(fecha) == -1) {
@@ -488,12 +494,17 @@
             return this.isSame(fecha);
         }
 
+        $("#b_limpia_fechas").click(function () {
+            limpiaFechas();
+        });
+
         function limpiaFechas() {
             $("#i_fecha_inicio").val('');
             $("#i_fecha_fin").val('');
             vacaciones = new Array();
             $("#d_calendar .day").removeClass("has-event");
             $("#ta_observacion").val('');
+            $("#d_limpia_fechas").hide();
         }
 
         function limpiaForma() {
@@ -506,6 +517,7 @@
             $("#s_tipo_solicitud").selectpicker('val', '0');
             $("#d_calendar .day").removeClass("has-event");
             $("#ta_observacion").val('');
+            $("#d_limpia_fechas").hide();
         }
 
         actualizaLista();
