@@ -17,7 +17,7 @@
       events: [], // List of event
       onInit: function (calendar) {}, // Callback after first initialization
       onMonthChange: function (month, year) {}, // Callback on month change
-      onDateSelect: function (date, events) {} // Callback on date selection
+        onDateSelect: function (date, events) { }, // Callback on date selection
     };
 
   // The actual plugin constructor
@@ -26,7 +26,7 @@
     this.settings = $.extend({}, defaults, options);
     this._defaults = defaults;
     this._name = pluginName;
-    this.currentDate = new Date();
+      this.currentDate = new Date();
     this.init();
   }
 
@@ -34,8 +34,7 @@
   $.extend(Plugin.prototype, {
     init: function () {
       var container = $(this.element);
-      var todayDate = this.currentDate;
-
+          var todayDate = this.currentDate;
       var calendar = $('<div class="calendar"></div>');
       var header = $('<header>' +
         '<h2 class="month"></h2>' +
@@ -100,7 +99,7 @@
       for (var day = firstDay; day <= lastDay; day.setDate(day.getDate())) {
           var tr = $('<tr></tr>');
 
-          //alert('dia actual: ' + day + 'dia forma:' + todayDate);
+          
 
           //For each row
         for (var i = 0; i < 7; i++) {

@@ -23,13 +23,29 @@
         if (empleado.meses_ultimo_desconecte <= 2)
             avatar = avatar + ".png";
         else if (empleado.meses_ultimo_desconecte > 2 && empleado.meses_ultimo_desconecte <= 6)
-            avatar = avatar + ".png";
+            avatar = avatar + "_2.png";
         else
-            avatar = avatar + ".png";
+            avatar = avatar + "_3.png";
     }
 
     string antiguedad = (@empleado.antiguedad / 12) + " años y " + (@empleado.antiguedad % 12) + " meses";
+
+    var ultimo = "";
+
+    if(@empleado.ultimo_desconecte != Convert.ToDateTime("01/01/0001"))
+        ultimo = empleado.ultimo_desconecte.ToString().Substring(0, 10);
+
+    var caduca = empleado.caducidad.ToString().Substring(0, 10);
+    var aniversario = empleado.fecha_ingreso_grupo.ToString().Substring(0, 10);
+
+
+    ultimo = ultimo.Substring(6, 4)+"-"+ultimo.Substring(0, 2)+"-"+ultimo.Substring(3, 2);
+    caduca = caduca.Substring(6, 4) + "-" + caduca.Substring(0, 2) + "-" + caduca.Substring(3, 2);
+    aniversario = aniversario.Substring(6, 4) + "-" + aniversario.Substring(0, 2) + "-" + aniversario.Substring(3, 2);
+
 }
+
+    <link rel="stylesheet" href="lib/simple-calendar/dist/simple-calendar.css" />
 
 <style>
 
@@ -67,9 +83,17 @@
         z-index: 100;
         padding-top: 10px;
     }
+
+    .calendar .day.disabled{
+        cursor: not-allowed;
+    }
+
+    th{
+        text-align:center;
+    }
 </style>
 
-<link rel="stylesheet" href="lib/simple-calendar/dist/simple-calendar.css" />
+
 <link rel="stylesheet" href="lib/bootstrap-select/dist/css/bootstrap-select.css" />
 <link rel="stylesheet" href="lib/fontawesome/css/all.min.css" />
 
@@ -103,11 +127,11 @@
 
             <div class="row">
                 <div class="col-sm-12 col-md-6 font-weight-bold">ANTIGÜEDAD: @antiguedad</div>
-                <div class="col-sm-12 col-md-6 font-weight-bold">FECHA ANIVERSARIO: @empleado.fecha_ingreso_grupo.ToString().Substring(0, 10)</div>
+                <div class="col-sm-12 col-md-6 font-weight-bold">FECHA ANIVERSARIO: @aniversario</div>
             </div>
             <div class="row">
                 <div class="col-sm-12 col-md-6 font-weight-bold">DÍAS POR DISFRUTAR: @empleado.dias_disponibles</div>
-                <div class="col-sm-12 col-md-6 font-weight-bold">DÍAS CADUCAN: @empleado.caducidad.ToString().Substring(0, 10)</div>
+                <div class="col-sm-12 col-md-6 font-weight-bold">DÍAS CADUCAN: @caduca</div>
             </div>
             <div class="row">
                 <div class="col-sm-12 col-md-6 font-weight-bold">DÍAS TOMADOS: @ViewBag.dias_tomados</div>
@@ -115,7 +139,7 @@
             </div>
             <div class="row">
                 <div class="col-sm-12 col-md-6 font-weight-bold"></div>
-                <div class="col-sm-12 col-md-6 font-weight-bold">ÚLTIMO DESCONECTE: @empleado.ultimo_desconecte.ToString().Substring(0, 10)</div>
+                <div class="col-sm-12 col-md-6 font-weight-bold">ÚLTIMO DESCONECTE: @ultimo</div>
             </div>
 
 
@@ -157,7 +181,7 @@
                         <input style="display:none" name="idsap_aprobador" value="@empleado.idsap_padre" />
                         <input style="display:none" id="nombre_aprobador" value="@empleado.nombre_line" />
                         <input style="display:none" id="email_aprobador" value="@empleado.email_line" />
-                        <input data-toggle="modal" data-target="#solicitudModal" class="btn btn-desconectate" value="SOLICITAR" />
+                        <input style="cursor: pointer;" data-toggle="modal" data-target="#solicitudModal" class="btn btn-desconectate" value="SOLICITAR" />
                     </div>
                 </div>
             </div>
@@ -244,6 +268,7 @@
         var rol = [@empleado.rol];
         var dias_habiles = 0;
         var dias_detalle = "";
+        
 
         //-------Se obtienen los dias feriados
 

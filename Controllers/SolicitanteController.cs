@@ -12,6 +12,7 @@ using System.Net.Mail;
 using System.Net;
 using System.IO;
 using System.Net.Http;
+using System.Globalization;
 
 namespace desconectate.Controllers
 {
@@ -31,6 +32,9 @@ namespace desconectate.Controllers
         {
             string usuario = HttpContext.Session.GetString("usuario");
             ViewBag.tipo = HttpContext.Session.GetString("tipo");
+
+            CultureInfo culture = new CultureInfo("es-ES");
+
             if (usuario != null && ViewBag.tipo != "A" && ViewBag.tipo != "P" && ViewBag.tipo != "R")
             {
                 Empleados empleado = new Empleados();
@@ -41,7 +45,7 @@ namespace desconectate.Controllers
                     conn.Open();
                     SqlCommand cmd = new SqlCommand("select top 1 e.idsap,e.nombre,e.email,e.estatus,e.fecha_ingreso_grupo,(select SUM(disponibles) from registros_dias where idsap = @idsap and registro_padre = 0 and caducidad >= GETDATE()) as disponibles,"+
                     "e.ultimo_desconecte, '' as url_poliza, e.idsap_padre, e.esquema, e.sexo, DATEDIFF(month, e.fecha_ingreso_grupo, GETDATE()) as antiguedad, DATEDIFF(month, e.ultimo_desconecte, GETDATE()) as meses_ultimo_desconecte,"+
-                    "rd.periodo, e.avatar, e.email_line, e.nombre_line, r.semana,(select SUM(dias) from registros_dias WHERE idsap = @idsap and registro_padre != 0 and  caducidad >= getdate()) as tomados,rd.caducidad from dbo.empleados e "+
+                    "rd.periodo, e.avatar, e.email_line, e.nombre_line, r.semana,(select SUM(dias) from registros_dias WHERE idsap = @idsap and registro_padre != 0 and id_tipo_solicitud = 0 and  caducidad >= getdate()) as tomados,rd.caducidad from dbo.empleados e "+
                     "left join croles r on e.rol = r.rol LEFT JOIN registros_dias rd on e.idsap = rd.idsap WHERE e.idsap = @idsap and rd.registro_padre = 0 ORDER BY periodo DESC; ", conn);
                     cmd.Parameters.AddWithValue("@idsap", usuario);
 
@@ -66,7 +70,7 @@ namespace desconectate.Controllers
                     ViewBag.dias_tomados = sqlReader[18].ToString();
 
                     empleado.antiguedad = sqlReader.GetInt32(11);
-                    empleado.meses_ultimo_desconecte = sqlReader.IsDBNull(12)?0: sqlReader.GetInt32(12);
+                    empleado.meses_ultimo_desconecte = sqlReader.IsDBNull(12)?100: sqlReader.GetInt32(12);
                     empleado.caducidad = Convert.ToDateTime(sqlReader.IsDBNull(19) ? null : sqlReader[19]);
                     empleado.avatar = sqlReader[14].ToString();
                     empleado.rol = sqlReader[17].ToString();

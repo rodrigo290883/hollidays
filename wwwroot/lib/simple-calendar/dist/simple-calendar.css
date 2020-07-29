@@ -80,12 +80,17 @@
     .calendar .day.has-event:after {
       content: '';
       position: absolute;
-      top: calc(50% + .6em);
-      left: calc(50% - 2px);
-      width: 4px;
-      height: 4px;
+      top: 0px;
+      left: -10%;
+      width: 1.5em;
+      height: 1.5em;
       border-radius: 50%;
-      background: #b41547; }
+      background: #b41547;
+      z-index:-1;
+    }
+    .calendar .day.has-event {
+        color:white;
+    }
     .calendar .day.disabled {
       cursor: default; }
       .calendar .day.disabled:hover {
