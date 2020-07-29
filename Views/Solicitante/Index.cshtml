@@ -32,14 +32,17 @@
 
     var ultimo = "";
 
-    if(@empleado.ultimo_desconecte != Convert.ToDateTime("01/01/0001"))
+    if (@empleado.ultimo_desconecte != Convert.ToDateTime("01/01/0001"))
+    {
         ultimo = empleado.ultimo_desconecte.ToString().Substring(0, 10);
+        ultimo = ultimo.Substring(6, 4) + "-" + ultimo.Substring(0, 2) + "-" + ultimo.Substring(3, 2);
+    }
 
     var caduca = empleado.caducidad.ToString().Substring(0, 10);
     var aniversario = empleado.fecha_ingreso_grupo.ToString().Substring(0, 10);
 
 
-    ultimo = ultimo.Substring(6, 4)+"-"+ultimo.Substring(0, 2)+"-"+ultimo.Substring(3, 2);
+
     caduca = caduca.Substring(6, 4) + "-" + caduca.Substring(0, 2) + "-" + caduca.Substring(3, 2);
     aniversario = aniversario.Substring(6, 4) + "-" + aniversario.Substring(0, 2) + "-" + aniversario.Substring(3, 2);
 
@@ -573,7 +576,7 @@
                             break;
                     }
 
-                    html = "<tr data-toggle='tooltip' title='" + dato.observacion_solicitante + "'><td>" + dato.folio + "</td><td>" + dato.solicitudName + "</td><td>" + dato.fecha_inicio.substring(0, 10) + "</td><td>" + dato.fecha_fin.substring(0, 10) + "</td><td>" + dato.nombre_aprobador + "</td><td>" + estatus + "</td></tr>";
+                    html = "<tr data-toggle='tooltip' title='" + dato.observacion_solicitante + " / " + dato.observacion_aprobador + "'><td>" + dato.folio + "</td><td>" + dato.solicitudName + "</td><td>" + dato.fecha_inicio.substring(0, 10) + "</td><td>" + dato.fecha_fin.substring(0, 10) + "</td><td>" + dato.nombre_aprobador + "</td><td>" + estatus + "</td></tr>";
                     $("#t_solicitudes tbody").append(html);
                 }
                 $('[data-toggle="tooltip"]').tooltip();

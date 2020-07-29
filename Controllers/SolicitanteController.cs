@@ -225,7 +225,7 @@ namespace desconectate.Controllers
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT sol.folio,ts.solicitud,sol.fecha_inicio,sol.fecha_fin,sol.estatus,sol.nombre_aprobador,sol.observacion_solicitante FROM solicitudes sol " +
+                SqlCommand cmd = new SqlCommand("SELECT sol.folio,ts.solicitud,sol.fecha_inicio,sol.fecha_fin,sol.estatus,sol.nombre_aprobador,sol.observacion_solicitante,sol.observacion_aprobador FROM solicitudes sol " +
                     "LEFT JOIN ctipos_solicitud ts ON sol.tipo_solicitud = ts.id_tipo_solicitud WHERE sol.idsap = @idsap and sol.fecha_inicio >= GETDATE()", conn);
                 cmd.Parameters.AddWithValue("@idsap", id_sap);
 
@@ -233,7 +233,7 @@ namespace desconectate.Controllers
 
                 while (sqlReader.Read())
                 {
-                    lst.Add(new Solicitud { folio = sqlReader.GetInt32(0), solicitudName = sqlReader[1].ToString(), fecha_inicio = Convert.ToDateTime(sqlReader.IsDBNull(2) ? null : sqlReader[2]), fecha_fin = Convert.ToDateTime(sqlReader.IsDBNull(3) ? null : sqlReader[3]), estatus = sqlReader.GetInt32(4), nombre_aprobador = sqlReader[5].ToString(),observacion_solicitante = sqlReader[6].ToString() });
+                    lst.Add(new Solicitud { folio = sqlReader.GetInt32(0), solicitudName = sqlReader[1].ToString(), fecha_inicio = Convert.ToDateTime(sqlReader.IsDBNull(2) ? null : sqlReader[2]), fecha_fin = Convert.ToDateTime(sqlReader.IsDBNull(3) ? null : sqlReader[3]), estatus = sqlReader.GetInt32(4), nombre_aprobador = sqlReader[5].ToString(),observacion_solicitante = sqlReader[6].ToString(),observacion_aprobador = sqlReader[7].ToString() });
                 }
 
                 conn.Close();
