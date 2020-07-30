@@ -122,7 +122,7 @@ namespace desconectate.Controllers
                 conn.Open();
                 SqlCommand cmd = new SqlCommand("SELECT TOP 1 s.idsap,e.nombre,DATEDIFF(month,e.fecha_ingreso_grupo,GETDATE()) as antiguedad ,(select SUM(disponibles) from registros_dias where idsap = s.idsap and registro_padre = 0 and caducidad >= GETDATE()) as disponibles, "+
                 "cts.maximo_dias, cts.solicitud as solicitudName, e.fecha_ingreso_grupo as aniversario, s.fecha_inicio, s.fecha_fin, s.folio, s.tipo_solicitud, cts.con_goce as tipo_solicitud_goce, s.observacion_solicitante,"+
-                "rd.periodo, rd.caducidad, (select SUM(dias) from registros_dias WHERE idsap = s.idsap and  registro_padre != 0 and id_tipo_solicitud = 0 and  caducidad >= getdate()) "+
+                "rd.periodo, rd.caducidad, (select SUM(dias) from registros_dias WHERE idsap = s.idsap and  registro_padre != 0 and id_tipo_solicitud = 0 and  caducidad >= getdate()),s.dias "+
                 "FROM solicitudes s inner join empleados e on s.idsap = e.idsap inner join ctipos_solicitud cts on s.tipo_solicitud = cts.id_tipo_solicitud "+
                 "LEFT JOIN registros_dias rd ON s.idsap = rd.idsap AND rd.registro_padre = 0 and rd.caducidad >= getdate()where s.folio = @folio ORDER BY rd.periodo DESC",conn);
 
@@ -148,6 +148,7 @@ namespace desconectate.Controllers
                 infosolicitud.periodo = sqlReader[13].ToString();
                 infosolicitud.caducidad = Convert.ToDateTime(sqlReader.IsDBNull(14) ? null : sqlReader[14]);
                 infosolicitud.dias_tomados = sqlReader.IsDBNull(15)?0:sqlReader.GetInt32(15);
+                infosolicitud.dias = sqlReader.GetInt32(16);
 
 
                 sqlReader.Close();

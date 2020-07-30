@@ -10,6 +10,8 @@
 
 }
 
+<link rel="stylesheet" href="lib/bootstrap-select/dist/css/bootstrap-select.css" />
+
 <style>
 
     body {
@@ -37,9 +39,15 @@
         white-space: -o-pre-wrap; /* Opera 7 */
         word-wrap: break-word; /* Internet Explorer 5.5+ */
     }
+
+    #t_Slt_Pendiente tr {
+        cursor: pointer;
+    }
+
+
 </style>
 
-<link rel="stylesheet" href="lib/bootstrap-select/dist/css/bootstrap-select.css" />
+
 
 <div>
     <img id="i_doodle" src="images/imagen.png">
@@ -60,7 +68,7 @@
         <div class="col-12">
             <Strong><span style="font-size:x-large;">Solicitudes Hechas</span></Strong>
             <table class="table table-responsive table-striped" id="t_Slt_Pendiente">
-                <thead style="background-color: #821c61; color: white;">
+                <thead style="background-color: #821c61; color: white; ">
                     <tr>
                         <th scope="col">FOLIO</th>
                         <th>NOMBRE</th>
@@ -98,8 +106,11 @@
                         <div class="col-6 font-weight-bold">PERIODO: <b id="data_periodo"></b></div>
                     </div>
                     <div class="row">
+                        <hr />
+                    </div>
+                    <div class="row">
                         <div class="col-6 font-weight-bold">SOLICITUD: <b id="data_tipo"></b></div>
-
+                        <div class="col-6 font-weight-bold">DIAS: <b id="data_dias"></b></div>
                     </div>
                     <div class="row">
                         <div class="col-6 font-weight-bold">FECHA INICIO: <b id="data_inicio"></b></div>
@@ -258,6 +269,7 @@
                     $("#data_disfrutar").html(data.dias_disponibles);
                     $("#data_tomados").html(data.dias_tomados);
                     $("#data_periodo").html(data.periodo);
+                    $("#data_dias").html(data.dias);
                     $("#data_inicio").html(data.fecha_inicio.substring(0, 10));
                     $("#data_fin").html(data.fecha_fin.substring(0, 10));
                     $("#id_folio").val(data.folio);
