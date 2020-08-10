@@ -10,8 +10,7 @@ using Microsoft.AspNetCore.Http;
 using System.Data;
 using System.Net.Mail;
 using System.Net;
-using System.IO;
-using System.Net.Http;
+
 using System.Globalization;
 
 namespace desconectate.Controllers
@@ -32,8 +31,6 @@ namespace desconectate.Controllers
         {
             string usuario = HttpContext.Session.GetString("usuario");
             ViewBag.tipo = HttpContext.Session.GetString("tipo");
-
-            CultureInfo culture = new CultureInfo("es-ES");
 
             if (usuario != null && ViewBag.tipo != "A" && ViewBag.tipo != "P" && ViewBag.tipo != "R")
             {
@@ -61,7 +58,7 @@ namespace desconectate.Controllers
                     empleado.fecha_ingreso_grupo = Convert.ToDateTime(sqlReader.IsDBNull(4) ? null : sqlReader[4]);
                     empleado.dias_disponibles = sqlReader.IsDBNull(5)?0:sqlReader.GetInt32(5);
                     empleado.ultimo_desconecte = Convert.ToDateTime(sqlReader.IsDBNull(6) ? null : sqlReader[6]);
-                    //empleado.url_poliza = sqlReader[7].ToString();
+    
                     empleado.idsap_padre = sqlReader.GetInt32(7);
                     empleado.nombre_line = sqlReader[14].ToString();//
                     empleado.email_line = sqlReader[13].ToString();//
