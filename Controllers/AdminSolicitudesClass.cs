@@ -47,7 +47,7 @@ namespace desconectate.Controllers
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("select s.folio, e.nombre, ts.solicitud, s.fecha_inicio,s.fecha_fin,es.descripcion,s.nombre_aprobador,e.area from solicitudes s inner join empleados e on s.idsap = e.idsap inner join ctipos_solicitud ts on s.tipo_solicitud = ts.id_tipo_solicitud inner join cestatus es on es.estatus = s.estatus  where s.estatus = 0 and fecha_inicio >= CONVERT(date,GETDATE())", conn);
+                SqlCommand cmd = new SqlCommand("select s.folio, e.nombre, ts.solicitud, s.fecha_inicio,s.fecha_fin,es.descripcion,s.nombre_aprobador,e.area from solicitudes s inner join empleados e on s.idsap = e.idsap inner join ctipos_solicitud ts on s.tipo_solicitud = ts.id_tipo_solicitud inner join cestatus es on es.estatus = s.estatus  where s.estatus = 0 and fecha_fin >= CONVERT(date,GETDATE())", conn);
 
                 SqlDataReader sqlReader = cmd.ExecuteReader();
 
