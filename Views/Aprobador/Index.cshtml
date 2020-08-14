@@ -219,7 +219,7 @@
                                 estatus = "DENEGADO";
                                 break;
                         }
-                        html = '<tr class="renglon" alt="' + dato.folio + '" id="folio"><th scope="row">' + dato.folio + '</th><td>' + dato.nombre + '</td><td>' + dato.solicitudName + '</td><td>' + dato.fecha_inicio.substring(0, 10) + '</td><td>' + dato.fecha_fin.substring(0, 10) + '</td><td>' + dato.estatusDescripcion + '</td></tr>';
+                        html = '<tr class="renglon" alt="' + dato.folio + '" id="folio"><th scope="row">' + dato.folio + '</th><td>' + dato.nombre + '</td><td>' + dato.solicitudName + '</td><td>' + new Date(dato.fecha_inicio.substring(0, 10)).formatDDMMYYYY() + '</td><td>' + new Date(dato.fecha_fin.substring(0, 10)).formatDDMMYYYY() + '</td><td>' + dato.estatusDescripcion + '</td></tr>';
                         $("#t_Slt_Pendiente tbody").append(html);
                     }
                 });
@@ -236,10 +236,10 @@
 
                         if (dato.ultimo_desconecte.substring(0, 10) == "0001-01-01")
                             var ultimo = '';
-                        else 
-                            var ultimo = dato.ultimo_desconecte.substring(0, 10);
-                        
-                        html = '<tr class="renglon"><th scope="row">' + dato.idsap + '</th><td>' + dato.nombre + '</td><td>' + dato.banda + '</td><td class="wrap_date">' + dato.fecha_ingreso_grupo.substring(0, 10) + '</td><td>' + dato.dias_disponibles + '</td><td  class="wrap_date">' + ultimo + '</td></tr>';
+                        else
+                            var ultimo = new Date(dato.ultimo_desconecte.substring(0, 10)).formatDDMMYYYY();
+
+                        html = '<tr class="renglon"><th scope="row">' + dato.idsap + '</th><td>' + dato.nombre + '</td><td>' + dato.banda + '</td><td class="wrap_date">' + new Date(dato.fecha_ingreso_grupo.substring(0, 10)).formatDDMMYYYY() + '</td><td>' + dato.dias_disponibles + '</td><td  class="wrap_date">' + ultimo + '</td></tr>';
                         $("#t_equipo tbody").append(html);
                     }
                 });
@@ -262,16 +262,16 @@
                     $("#data_idsap").html(data.idsap);
                     $("#data_nombre").html(data.nombre);
                     $("#data_antiguedad").html(parseInt(data.antiguedad / 12) + " años y " + (data.antiguedad % 12) + " meses ");
-                    $("#data_aniversario").html(data.aniversario.substring(0, 10));
+                    $("#data_aniversario").html(new Date(data.aniversario.substring(0, 10)).formatDDMMYYYY());
                     $("#data_disfrutar").html(data.fecha_fin - data.fecha_inicio);
                     $("#data_tipo").html(data.solicitudName);
-                    $("#data_caducan").html(data.caducidad.substring(0, 10));
+                    $("#data_caducan").html(new Date(data.caducidad.substring(0, 10)).formatDDMMYYYY());
                     $("#data_disfrutar").html(data.dias_disponibles);
                     $("#data_tomados").html(data.dias_tomados);
                     $("#data_periodo").html(data.periodo);
                     $("#data_dias").html(data.dias);
-                    $("#data_inicio").html(data.fecha_inicio.substring(0, 10));
-                    $("#data_fin").html(data.fecha_fin.substring(0, 10));
+                    $("#data_inicio").html(new Date(data.fecha_inicio.substring(0, 10)).formatDDMMYYYY());
+                    $("#data_fin").html(new Date(data.fecha_fin.substring(0, 10)).formatDDMMYYYY());
                     $("#id_folio").val(data.folio);
                     $("#observacion_solicitante").html(data.observacion_solicitante);
 

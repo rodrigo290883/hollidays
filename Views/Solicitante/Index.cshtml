@@ -31,18 +31,18 @@
     string antiguedad = (@empleado.antiguedad / 12) + " años y " + (@empleado.antiguedad % 12) + " meses";
 
     var ultimo = "";
-    
+
 
     if (@empleado.ultimo_desconecte != Convert.ToDateTime("01/01/0001"))
     {
         var auxi = empleado.ultimo_desconecte.ToString().Split('/');
-        ultimo = auxi[2].Substring(0,4) + "-" + auxi[0] + "-" + auxi[1];
+        ultimo = auxi[1] + "/" + auxi[0] + "/" + auxi[2].Substring(0, 4);
     }
 
     var aux = empleado.caducidad.ToString().Split('/');
-    var caduca = aux[2].Substring(0, 4) + "-" + aux[0] + "-" + aux[1];
+    var caduca = aux[1] + "/" + aux[0] + "/" + aux[2].Substring(0, 4);
     aux = empleado.fecha_ingreso_grupo.ToString().Split('/');
-    var aniversario = aux[2].Substring(0, 4) + "-" + aux[0] + "-" + aux[1];
+    var aniversario = aux[1] + "/" + aux[0] + "/" + aux[2].Substring(0, 4);
 
 }
 
@@ -170,8 +170,8 @@
             </div>
             <div class="col-sm-12 col-md-4">
                 <div class="row mt-5">
-                    <div class="col-6 font-weight-bold">FECHA INICIO:<input name="fecha_inicio" id="i_fecha_inicio" disabled/></div>
-                    <div class="col-6 font-weight-bold">FECHA FIN:<input name="fecha_fin" id="i_fecha_fin" disabled/></div>
+                    <div class="col-6 font-weight-bold">FECHA INICIO:<input name="fecha_inicio" id="i_fecha_inicio" alt="" disabled/></div>
+                    <div class="col-6 font-weight-bold">FECHA FIN:<input name="fecha_fin" id="i_fecha_fin" alt="" disabled/></div>
                 </div>
                 <div id="d_limpia_fechas" class="row mt-2">
                     <div class="col-12 text-center align-self-center"><button id="b_limpia_fechas" class="btn btn-secondary btn-sm">Limpiar Fechas</button></div>
@@ -387,8 +387,8 @@
                         "idsap_aprobador":@empleado.idsap_padre,
                         "nombre_aprobador": $("#nombre_aprobador").val(),
                         "email_aprobador": $("#email_aprobador").val(),
-                        "fecha_inicio": $("#i_fecha_inicio").val(),
-                        "fecha_fin": $("#i_fecha_fin").val(),
+                        "fecha_inicio": $("#i_fecha_inicio").attr('alt'),
+                        "fecha_fin": $("#i_fecha_fin").attr('alt'),
                         "tipo_solicitud": $("#s_tipo_solicitud").val(),
                         "observacion_solicitante": $("#ta_observacion").val(),
                         "dias": dias_habiles,
@@ -502,11 +502,17 @@
                         // se cuentan los dias habiles
                         var fecha_inicio = new Date(vacaciones[0]);
                         var fecha_fin = new Date(vacaciones[vacaciones.length - 1]);
-                        $("#i_fecha_inicio").val(fecha_inicio.toISOString().substr(0, 10));
-                        $("#i_fecha_fin").val(fecha_fin.toISOString().substr(0, 10));
+
+                        $("#i_fecha_inicio").val(fecha_inicio.formatDDMMYYYY());
+                        $("#i_fecha_inicio").attr('alt', fecha_inicio.toISOString().substr(0, 10));
+
+                        $("#i_fecha_fin").val(fecha_fin.formatDDMMYYYY());
+                        $("#i_fecha_fin").attr('alt', fecha_fin.toISOString().substr(0, 10));
                     } else {
                         $("#i_fecha_inicio").val('');
+                        $("#i_fecha_inicio").attr('alt', '');
                         $("#i_fecha_fin").val('');
+                        $("#i_fecha_fin").attr('alt', '');
                     }
                 }
                 else {
@@ -526,7 +532,9 @@
 
         function limpiaFechas() {
             $("#i_fecha_inicio").val('');
+            $("#i_fecha_inicio").attr('alt', '');
             $("#i_fecha_fin").val('');
+            $("#i_fecha_fin").attr('alt', '');
             vacaciones = new Array();
             $("#d_calendar .day").removeClass("has-event");
             $("#ta_observacion").val('');
@@ -535,7 +543,9 @@
 
         function limpiaForma() {
             $("#i_fecha_inicio").val('');
+            $("#i_fecha_inicio").attr('alt', '');
             $("#i_fecha_fin").val('');
+            $("#i_fecha_fin").attr('alt', '');
             maximo_dias = disfrutar;
             consume_vacaciones = 'S';
             vacaciones = new Array();
@@ -574,7 +584,7 @@
                             break;
                     }
 
-                    html = "<tr data-toggle='tooltip' title='" + dato.observacion_solicitante + " / " + dato.observacion_aprobador + "'><td>" + dato.folio + "</td><td>" + dato.solicitudName + "</td><td>" + dato.fecha_inicio.substring(0, 10) + "</td><td>" + dato.fecha_fin.substring(0, 10) + "</td><td>" + dato.nombre_aprobador + "</td><td>" + estatus + "</td></tr>";
+                    html = "<tr data-toggle='tooltip' title='" + dato.observacion_solicitante + " / " + dato.observacion_aprobador + "'><td>" + dato.folio + "</td><td>" + dato.solicitudName + "</td><td>" + new Date(dato.fecha_inicio.substring(0, 10)).formatDDMMYYYY() + "</td><td>" + new Date(dato.fecha_fin.substring(0, 10)).formatDDMMYYYY() + "</td><td>" + dato.nombre_aprobador + "</td><td>" + estatus + "</td></tr>";
                     $("#t_solicitudes tbody").append(html);
                 }
                 $('[data-toggle="tooltip"]').tooltip();

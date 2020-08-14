@@ -3,3 +3,15 @@
 
 // Write your JavaScript code.
 
+Date.prototype.formatDDMMYYYY = function () {
+
+    var day = this.getDate();
+    day = (day.toString().length == 1) ? '0' + day : day;
+
+    var month = (this.getMonth() + 1);
+    month = (month.toString().length == 1) ? '0' + month : month;
+
+    return day +
+        "/" + month +
+        "/" + this.getFullYear();
+}
