@@ -12,7 +12,6 @@
     string rol = ViewBag.rol;
 
 
-
     string avatar = empleado.avatar;
     if (avatar == "")
     {
@@ -36,13 +35,13 @@
     if (@empleado.ultimo_desconecte != Convert.ToDateTime("01/01/0001"))
     {
         var auxi = Convert.ToDateTime(empleado.ultimo_desconecte);
-        ultimo = auxi.Day + "/" + auxi.Month + "/" + auxi.Year;
+        ultimo = (auxi.Day<10?"0":"") + auxi.Day + "/" + (auxi.Month<10?"0":"") + auxi.Month + "/" + auxi.Year;
     }
 
     var aux = Convert.ToDateTime(empleado.caducidad);
-    var caduca = aux.Day + "/" + aux.Month + "/" + aux.Year;
+    var caduca = (aux.Day<10?"0":"")+ aux.Day + "/" + (aux.Month<10?"0":"")+aux.Month+ "/" + aux.Year;
     var aux2 = Convert.ToDateTime(empleado.fecha_ingreso_grupo);
-    var aniversario = aux2.Day + "/" + aux2.Month + "/" + aux2.Year;
+    var aniversario = (aux2.Day<10?"0":"") + aux2.Day + "/" +(aux2.Month<10?"0":"")+ aux2.Month + "/" + aux2.Year;
 
 }
 
