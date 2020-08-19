@@ -1,0 +1,68 @@
+﻿
+@{
+    ViewData["Title"] = "Reporteador|Desconéctate";
+    Layout = "~/Views/Shared/_LayoutSessionR.cshtml";
+}
+
+<style>
+
+    body {
+        background-image: url("images/doodle-background.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: bottom right;
+        color: #5c2a7e;
+    }
+
+    #i_doodle {
+        width: 30%;
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+    }
+</style>
+
+<link rel="stylesheet" href="lib/bootstrap-select/dist/css/bootstrap-select.css" />
+
+<div>
+    <img id="i_doodle" src="images/imagen.png">
+</div>
+
+<div class="container">
+    <form id="frmReporte">
+    <div class="row">
+        <div class="col-6">
+            <label for="FormControlSelect" class="font-weight-bold">SELECCIONA UN REPORTE:</label>
+            <select id="s_reporte" class="selectpicker" name="reporte">
+                @foreach (var reporte in ViewBag.reportes)
+                {
+                    <option value="@reporte.id_reporte" >@reporte.reporte</option>
+                }
+            </select>
+        </div>
+        <div class="col-6">
+            <input type="submit" class="btn btn-primary" value="Consultar" />
+        </div>
+    </div>
+    </form>
+</div>
+
+<script src="lib/bootstrap-select/dist/js/bootstrap-select.js"></script>
+
+<script>
+
+    $(function () {
+        $('#frmReporte').submit(function (e) {
+            e.preventDefault();
+
+            url = "@Url.Content("~/Reporteador/ConsultaReporte")"
+            parametros = $(this).serialize();
+
+            $.post(url, parametros, function (data) {
+                if (data != "1") {
+                    swal("Ocurrio un Error", data, "error");
+                }
+            });
+        });
+    });
+</script>
