@@ -200,7 +200,7 @@
                             estatus = "DENEGADO";
                             break;
                     }
-                    html = '<tr class="renglon" alt="' + dato.folio + '" id="folio"><th scope="row">' + dato.folio + '</th><td>' + dato.nombre + '</td><td>' + dato.solicitudName + '</td><td>' + new Date(dato.fecha_inicio.substring(0, 10)).formatDDMMYYYY() + '</td><td>' + new Date(dato.fecha_fin.substring(0, 10)).formatDDMMYYYY() + '</td><td>' + dato.area + '</td><td>' + dato.nombre_aprobador + '</td><td>' + dato.estatusDescripcion + '</td></tr>';
+                    html = '<tr class="renglon" alt="' + dato.folio + '" id="folio"><th scope="row">' + dato.folio + '</th><td>' + dato.nombre + '</td><td>' + dato.solicitudName + '</td><td>' + new Date(dato.fecha_inicio).formatDDMMYYYY() + '</td><td>' + new Date(dato.fecha_fin).formatDDMMYYYY() + '</td><td>' + dato.area + '</td><td>' + dato.nombre_aprobador + '</td><td>' + dato.estatusDescripcion + '</td></tr>';
                     $("#t_Slt_Pendiente tbody").append(html);
                     solicitudes++;
                 }
@@ -225,14 +225,14 @@
                 $("#data_idsap").html(data.idsap);
                 $("#data_nombre").html(data.nombre);
                 $("#data_antiguedad").html(parseInt(data.antiguedad / 12) + " años y " + (data.antiguedad % 12) + " meses ");
-                $("#data_aniversario").html(new Date(data.aniversario.substring(0, 10)).formatDDMMYYYY());
+                $("#data_aniversario").html(new Date(data.aniversario).formatDDMMYYYY());
                 $("#data_disfrutar").html(data.fecha_fin - data.fecha_inicio);
                 $("#data_tipo").html(data.solicitudName);
-                $("#data_caducan").html(new Date(data.caducidad.substring(0, 10)).formatDDMMYYYY());
+                $("#data_caducan").html(new Date(data.caducidad).formatDDMMYYYY());
                 $("#data_tomados").html(data.dias_tomados);
                 $("#data_periodo").html(data.periodo);
-                $("#data_inicio").html(new Date(data.fecha_inicio.substring(0, 10)).formatDDMMYYYY());
-                $("#data_fin").html(new Date(data.fecha_fin.substring(0, 10)).formatDDMMYYYY());
+                $("#data_inicio").html(new Date(data.fecha_inicio).formatDDMMYYYY());
+                $("#data_fin").html(new Date(data.fecha_fin).formatDDMMYYYY());
                 $("#id_folio").val(data.folio);
                 $("#observacion_solicitante").html(data.observacion_solicitante);
 

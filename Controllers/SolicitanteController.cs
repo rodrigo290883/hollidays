@@ -85,7 +85,7 @@ namespace desconectate.Controllers
 
                     while (sqlReader.Read())
                     {
-                        lst.Add(new TipoSolicitud{  id_tipo_solicitud = sqlReader.GetInt32(0), solicitud = sqlReader[1].ToString(), maximo_dias = sqlReader.GetInt32(2), consume_vacaciones = sqlReader[4].ToString()[0] });
+                        lst.Add(new TipoSolicitud{  id_tipo_solicitud = sqlReader.GetInt32(0), solicitud = sqlReader[1].ToString(), maximo_dias = sqlReader.GetInt32(2), consume_vacaciones = sqlReader[4].ToString()[0], texto = sqlReader[7].ToString() });
                     }
 
                     ViewBag.Opciones = lst;
