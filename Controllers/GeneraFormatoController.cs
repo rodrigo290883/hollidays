@@ -50,7 +50,7 @@ namespace desconectate.Controllers
                 conn.Open();
                 SqlCommand cmd = new SqlCommand("SELECT rd.registro,tip.clave_as400,tip.solicitud,sol.fecha_inicio,sol.fecha_fin,rd.dias,emp.idsap,CASE WHEN emp.esquema = 0 THEN 'DIBLO' WHEN emp.esquema = 1 THEN 'EDM' END as sociedad, sol.dias_detalle,tip.con_goce,sol.con_goce "+
                                         "FROM registros_dias rd LEFT JOIN solicitudes sol ON rd.folio_solicitud = sol.folio LEFT JOIN ctipos_solicitud tip ON rd.id_tipo_solicitud = tip.id_tipo_solicitud "+
-                                        "LEFT JOIN empleados emp ON rd.idsap = emp.idsap WHERE rd.folio_solicitud != 0 and CONVERT(date, rd.fecha_creacion) between @inicio AND @fin;", conn);
+                                        "LEFT JOIN empleados emp ON rd.idsap = emp.idsap WHERE rd.folio_solicitud != 0 and (CONVERT(date, sol.fecha_inicio) between @inicio AND @fin OR CONVERT(date, sol.fecha_fin) between @inicio AND @fin);", conn);
                 cmd.Parameters.AddWithValue("@inicio", fecha_inicio);
                 cmd.Parameters.AddWithValue("@fin", fecha_fin);
 
@@ -74,7 +74,22 @@ namespace desconectate.Controllers
                         }
 
                     }
-                    
+
+                    var detalle = sqlReader[8].ToString();
+                    string[] detalle_aux = detalle.Split(',');
+
+                    foreach(string dia in detalle_aux)
+                    {
+                        int aux = DateTime.Compare(Convert.ToDateTime(dia), fecha_inicio);
+                        int aux2 = DateTime.Compare(Convert.ToDateTime(dia), fecha_fin);
+                        if (aux < 0 && aux2 > 0)
+                        {
+                            detalle_aux = detalle_aux.Except(new string[] { dia }).ToArray();
+                        }
+                    }
+
+                    detalle = String.Join(',', detalle_aux);
+
                     lista.Add(new RegistroFormato
                     {
                         sociedad = sqlReader[7].ToString(),
