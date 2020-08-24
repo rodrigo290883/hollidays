@@ -40,11 +40,11 @@ namespace desconectate.Controllers
                 using (SqlConnection conn = new SqlConnection(connString))
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("SELECT TOP 1  e.idsap,e.nombre,e.email,e.estatus ,e.fecha_ingreso_grupo ,rd.disponibles,e.ultimo_desconecte,e.idsap_padre,"+
-                    "e.esquema, DATEDIFF(month, e.fecha_ingreso_grupo, GETDATE()) as antiguedad, DATEDIFF(month, e.ultimo_desconecte, GETDATE()) as meses_ultimo_desconecte,rd.periodo, e.avatar," +
-                    " e.email_line, e.nombre_line, cr.semana, (SELECT SUM(dias) FROM registros_dias rd2 WHERE registro_padre = rd.registro AND id_tipo_solicitud = 0) as tomados, rd.caducidad"+
-                    "  FROM registros_dias rd LEFT JOIN empleados e ON rd.idsap = e.idsap LEFT JOIN croles cr ON e.rol = cr.rol"+
-                    " WHERE rd.idsap = @idsap and rd.caducidad >= getdate() and rd.registro_padre = 0 and rd.disponibles != 0 order by rd.fecha_creacion asc; ", conn);
+
+                    SqlCommand cmd = new SqlCommand("SELECT idsap,nombre,email,estatus,fecha_ingreso_grupo,idsap_padre,esquema," +
+                        " DATEDIFF(month,fecha_ingreso_grupo,GETDATE()) as antiguedad, avatar,email_line ,nombre_line, r.semana" +
+                        " FROM empleados e INNER JOIN croles r ON e.rol = r.rol WHERE idsap = @idsap", conn);
+                     
                     cmd.Parameters.AddWithValue("@idsap", usuario);
 
                     SqlDataReader sqlReader = cmd.ExecuteReader();
@@ -56,26 +56,38 @@ namespace desconectate.Controllers
                     empleado.email = sqlReader[2].ToString();
                     empleado.estatus = sqlReader.GetInt32(3);
                     empleado.fecha_ingreso_grupo = Convert.ToDateTime(sqlReader.IsDBNull(4) ? null : sqlReader[4]);
-                    empleado.dias_disponibles = sqlReader.IsDBNull(5)?0:sqlReader.GetInt32(5);
-                    empleado.ultimo_desconecte = Convert.ToDateTime(sqlReader.IsDBNull(6) ? null : sqlReader[6]);
-    
-                    empleado.idsap_padre = sqlReader.GetInt32(7);
-                    empleado.nombre_line = sqlReader[14].ToString();//
-                    empleado.email_line = sqlReader[13].ToString();//
-                    empleado.esquema = sqlReader.GetInt32(8);
-
-                    ViewBag.periodo = sqlReader[11].ToString();
-                    ViewBag.dias_tomados = sqlReader[16].ToString();
-
-                    empleado.antiguedad = sqlReader.GetInt32(9);
-                    empleado.meses_ultimo_desconecte = sqlReader.IsDBNull(10)?100: sqlReader.GetInt32(10);
-                    empleado.caducidad = Convert.ToDateTime(sqlReader.IsDBNull(17) ? null : sqlReader[17]);
-                    empleado.avatar = sqlReader[12].ToString();
-                    empleado.rol = sqlReader[15].ToString();
-
-                    ViewBag.Empleado = empleado;
+                    
+                    empleado.idsap_padre = sqlReader.GetInt32(5);
+                    empleado.esquema = sqlReader.GetInt32(6);
+                    empleado.antiguedad = sqlReader.GetInt32(7);
+                    empleado.avatar = sqlReader[8].ToString();
+                    empleado.email_line = sqlReader[9].ToString();//
+                    empleado.nombre_line = sqlReader[10].ToString();//
+                    empleado.rol = sqlReader[11].ToString();
 
                     sqlReader.Close();
+
+                    SqlCommand cmd2 = new SqlCommand("SELECT TOP 1 disponibles, caducidad , periodo , (dias - disponibles) as tomados," +
+                        " DATEDIFF(month, (SELECT TOP 1 fecha_inicio FROM solicitudes  WHERE estatus = 1 and fecha_inicio <= GETDATE() ORDER BY fecha_inicio DESC), GETDATE()) meses_ultimo," +
+                        "(SELECT TOP 1 fecha_inicio FROM solicitudes  WHERE estatus = 1 and fecha_inicio <= GETDATE() ORDER BY fecha_inicio DESC) as ultimo" +
+                        " FROM registros_dias WHERE idsap = @idsap  and registro_padre = 0 and caducidad >= GETDATE() ORDER BY fecha_creacion", conn);
+
+                    cmd2.Parameters.AddWithValue("@idsap", usuario);
+
+                    SqlDataReader sqlReader2 = cmd2.ExecuteReader();
+
+                    sqlReader2.Read();
+
+                    empleado.dias_disponibles = sqlReader2.IsDBNull(0) ? 0 : sqlReader2.GetInt32(0);
+                    empleado.caducidad = Convert.ToDateTime(sqlReader2.IsDBNull(1) ? null : sqlReader2[1]);
+                    ViewBag.periodo = sqlReader2[2].ToString();
+                    ViewBag.dias_tomados = sqlReader2[3].ToString();
+                    empleado.meses_ultimo_desconecte = sqlReader2.IsDBNull(4) ? 100 : sqlReader2.GetInt32(4);
+                    empleado.ultimo_desconecte = Convert.ToDateTime(sqlReader2.IsDBNull(5) ? null : sqlReader2[5]);
+
+                    sqlReader2.Close();
+
+                    ViewBag.Empleado = empleado;
 
                     List<TipoSolicitud> lst = new List<TipoSolicitud>();
 
