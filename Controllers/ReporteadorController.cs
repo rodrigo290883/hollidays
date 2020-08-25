@@ -33,7 +33,7 @@ namespace desconectate.Controllers
 
                 while (sqlReader.Read())
                 {
-                    lst.Add(new Reporte { id_reporte = sqlReader.GetInt32(0), reporte = sqlReader[1].ToString() });
+                    lst.Add(new Reporte { id_reporte = sqlReader.GetInt32(0), nombre = sqlReader[1].ToString() });
                 }
 
                 ViewBag.reportes = lst;
@@ -50,7 +50,7 @@ namespace desconectate.Controllers
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT reporte,consulta FROM creportes WHERE id_reporte = @id_reporte", conn);
+                SqlCommand cmd = new SqlCommand("SELECT nombre,consulta FROM creportes WHERE id_reporte = @id_reporte", conn);
                 cmd.Parameters.AddWithValue("@id_reporte", reporte.id_reporte);
 
                 SqlDataAdapter adapter = new SqlDataAdapter();

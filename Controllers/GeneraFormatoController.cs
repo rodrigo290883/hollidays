@@ -78,27 +78,25 @@ namespace desconectate.Controllers
                     var detalle = sqlReader[8].ToString();
                     string[] detalle_aux = detalle.Split(',');
 
-                    foreach(string dia in detalle_aux)
+                    foreach (string dia in detalle_aux)
                     {
                         int aux = DateTime.Compare(Convert.ToDateTime(dia), fecha_inicio);
                         int aux2 = DateTime.Compare(Convert.ToDateTime(dia), fecha_fin);
                         if (aux < 0 && aux2 > 0)
                         {
-                            detalle_aux = detalle_aux.Except(new string[] { dia }).ToArray();
+                            lista.Add(new RegistroFormato
+                            {
+                                sociedad = sqlReader[7].ToString(),
+                                sap = sqlReader.GetInt32(6),
+                                concepto = tipo,
+                                dias_detalle = sqlReader[8].ToString()
+                            });
                         }
+
+
+
                     }
-
-                    detalle = String.Join(',', detalle_aux);
-
-                    lista.Add(new RegistroFormato
-                    {
-                        sociedad = sqlReader[7].ToString(),
-                        sap = sqlReader.GetInt32(6),
-                        concepto = tipo,
-                        dias_detalle = sqlReader[8].ToString()
-                    });
                 }
-
                 return lista;
             }
         }

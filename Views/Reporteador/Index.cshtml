@@ -32,11 +32,11 @@
     <form id="frmReporte">
     <div class="row">
         <div class="col-6">
-            <label for="FormControlSelect" class="font-weight-bold">SELECCIONA UN REPORTE:</label>
-            <select id="s_reporte" class="selectpicker" name="reporte">
+            <label for="id_reporte" class="font-weight-bold">SELECCIONA UN REPORTE:</label>
+            <select id="s_reporte" class="selectpicker" name="id_reporte">
                 @foreach (var reporte in ViewBag.reportes)
                 {
-                    <option value="@reporte.id_reporte" >@reporte.reporte</option>
+                    <option value="@reporte.id_reporte" >@reporte.nombre</option>
                 }
             </select>
         </div>
@@ -57,8 +57,9 @@
 
             url = "@Url.Content("~/Reporteador/ConsultaReporte")"
             parametros = $(this).serialize();
-
+            
             $.post(url, parametros, function (data) {
+                alert(data);
                 if (data != "1") {
                     swal("Ocurrio un Error", data, "error");
                 }
