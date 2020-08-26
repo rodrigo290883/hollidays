@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using desconectate.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace desconectate.Controllers
 {
@@ -42,9 +43,9 @@ namespace desconectate.Controllers
             }
         }
 
-        public DataSet ConsultaReporte(Reporte reporte)
+        public IActionResult ConsultaReporte(Reporte reporte)
         {
-            DataSet data = new DataSet();
+            DataTable data = new DataTable();
 
             string connString = _configuration.GetConnectionString("MyConnection"); // Read the connection string from the web.config file
             using (SqlConnection conn = new SqlConnection(connString))
@@ -53,11 +54,21 @@ namespace desconectate.Controllers
                 SqlCommand cmd = new SqlCommand("SELECT nombre,consulta FROM creportes WHERE id_reporte = @id_reporte", conn);
                 cmd.Parameters.AddWithValue("@id_reporte", reporte.id_reporte);
 
-                SqlDataAdapter adapter = new SqlDataAdapter();
-                adapter.SelectCommand = cmd;
+                SqlDataReader sqlReader = cmd.ExecuteReader();
+                sqlReader.Read();
+
+                var nombre = sqlReader[0].ToString();
+                var consulta = sqlReader[1].ToString();
+
+                sqlReader.Close();
+
+                SqlDataAdapter adapter = new SqlDataAdapter(consulta, conn);
                 adapter.Fill(data);
 
-                return data;
+                string JSONresult;
+                JSONresult = JsonConvert.SerializeObject(data);
+
+                return Content(JSONresult);
             }
         }
     }

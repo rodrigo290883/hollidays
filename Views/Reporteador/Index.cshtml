@@ -8,9 +8,9 @@
 
     body {
         background-image: url("images/doodle-background.png");
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: bottom right;
+        background-repeat: repeat-y;
+        background-size: 100%;
+        background-position: top left;
         color: #5c2a7e;
     }
 
@@ -45,6 +45,24 @@
         </div>
     </div>
     </form>
+    <div class="row mt-2">
+        <div class="col-6">
+            <label for="filtro" class="font-weight-bold">Filtro:</label>
+            <input class="form-control ifiltro" tabla="t_reporte" name="filtro" />
+        </div>
+    </div>
+    <div class="row mt-1">
+        <div class="col-12">
+            <table class="table" id="t_reporte">
+                <thead style="background-color: #821c61; color: white;">
+
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <script src="lib/bootstrap-select/dist/js/bootstrap-select.js"></script>
@@ -59,10 +77,29 @@
             parametros = $(this).serialize();
             
             $.post(url, parametros, function (data) {
-                alert(data);
-                if (data != "1") {
-                    swal("Ocurrio un Error", data, "error");
-                }
+                var datos = JSON.parse(data);
+                var dato = datos[0];
+                //alert(JSON.stringify(dato));
+                var keys = Object.keys(dato);
+                $('#t_reporte thead').html('');
+                var html_head = "<tr>";
+                keys.forEach(function (key) {
+
+                    html_head += "<th>"+key+"</th>";
+                });
+               
+                $('#t_reporte thead').append(html_head + "</tr>");
+
+                $('#t_reporte tbody').html('');
+
+                datos.forEach(function (dato) {
+                    var html_body = "<tr>";
+                    for(var valor in dato) {
+                        html_body += "<td>" + dato[valor]+"</td>";
+                    };
+                    html_body += "</tr>";
+                    $('#t_reporte tbody').append(html_body);
+                });
             });
         });
     });
