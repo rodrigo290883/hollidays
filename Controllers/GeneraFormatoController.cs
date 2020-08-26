@@ -92,9 +92,6 @@ namespace desconectate.Controllers
                                 dias_detalle = sqlReader[8].ToString()
                             });
                         }
-
-
-
                     }
                 }
                 return lista;
