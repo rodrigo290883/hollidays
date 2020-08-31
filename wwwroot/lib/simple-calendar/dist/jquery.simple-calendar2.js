@@ -17,7 +17,8 @@
       events: [], // List of event
       onInit: function (calendar) {}, // Callback after first initialization
       onMonthChange: function (month, year) {}, // Callback on month change
-        onDateSelect: function (date, events) { }, // Callback on date selection
+      onDateSelect: function (date, events) { }, // Callback on date selection
+      pastDates: false
     };
 
   // The actual plugin constructor
@@ -51,7 +52,15 @@
       this.bindEvents();
       this.settings.onInit(this);
     },
-
+      refresh: function (past) {
+          var todayDate = this.currentDate;
+          var container = $(this.element);
+          container.find('table').remove();
+          container.find('.event-container').remove();
+          var calendar = container.find(".calendar");
+          this.settings.pastDates = past;
+          this.buildCalendar(todayDate, calendar);
+    },
     //Update the current month header
     updateHeader: function (date, header) {
       var monthText = this.settings.months[date.getMonth()];
@@ -105,15 +114,19 @@
         for (var i = 0; i < 7; i++) {
           var td = $('<td><div class="day" data-date="' + day.toISOString() + '">' + day.getDate() + '</div></td>');
 
-            if (day.getFullYear() < todayMonth.getFullYear()) {
-                td.find(".day").addClass("disabled");
-            }
-            if (day.getMonth() < todayMonth.getMonth() && day.getFullYear() == todayMonth.getFullYear()) {
-                td.find(".day").addClass("disabled");
-            }
-            if (day.getMonth() == todayMonth.getMonth() && day.getFullYear() == todayMonth.getFullYear()) {
-                if (day.getDate() < todayDate.getDate()) {
+            
+            if (plugin.settings.pastDates == false) {
+
+                if (day.getFullYear() < todayMonth.getFullYear()) {
                     td.find(".day").addClass("disabled");
+                }
+                if (day.getMonth() < todayMonth.getMonth() && day.getFullYear() == todayMonth.getFullYear()) {
+                    td.find(".day").addClass("disabled");
+                }
+                if (day.getMonth() == todayMonth.getMonth() && day.getFullYear() == todayMonth.getFullYear()) {
+                    if (day.getDate() < todayDate.getDate()) {
+                        td.find(".day").addClass("disabled");
+                    }
                 }
             }
 
@@ -277,7 +290,8 @@
         formatted += ' to ' + dateEnd.getDate() + ' ' + this.settings.months[dateEnd.getMonth()].substring(0, 3)
       }
       return formatted;
-    }
+      }
+
   });
 
   // A really lightweight plugin wrapper around the constructor,

@@ -119,7 +119,8 @@
         </div>
         <div class="col-sm-12 col-md-5 text-center align-self-center">
             <h4>DESCARGA TU PÓLIZA DE GMM</h4>
-            <button id="b_descargar" class="btn btn-desconectate">DESCARGAR</button>
+
+            <button id="" class="btn btn-desconectate">PRÓXIMAMENTE</button>
         </div>
     </div>
     <div class="row">
@@ -169,7 +170,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-12 col-md-4">
+            <div class="col-sm-12 col-md-4" id="div_calendario">
                 <label for="FormControlSelect" class="font-weight-bold">SELECCIONA INICIO Y FIN DE TU DESCONECTE:</label>
                 <div id="d_calendar"></div>
             </div>
@@ -274,6 +275,7 @@
         var rol = [@empleado.rol];
         var dias_habiles = 0;
         var dias_detalle = "";
+        var dias_pasados = false;
         
 
         //-------Se obtienen los dias feriados
@@ -381,7 +383,16 @@
             var texto = $("#s_tipo_solicitud option:selected").attr('aux3');
             
             $("#d_descripcion_select").html(texto);
+
+            if ($("#s_tipo_solicitud option:selected").val() == 5) {
+                dias_pasados = true;
+            }
+            else {
+                dias_pasados = false;
+            }
+
             limpiaFechas();
+            actualizaCalendario();
         });
 
 
@@ -445,93 +456,99 @@
 
         }
 
-        $("#d_calendar").simpleCalendar({
-            //Defaults options below
-            //string of months starting from january
+        function actualizaCalendario() {
+            $("#d_calendar").simpleCalendar().data('plugin_simpleCalendar').refresh(dias_pasados);
+        };
 
-            months: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
-            days: ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'],
-            onDateSelect: function (date, events) {
-                //Se agrega la fecha al array de vacaciones
-                //Falta agregar una validacion para remover y no repetir fechas.
-                if (events == 1) {
-                    $("#d_limpia_fechas").show();
+            $("#d_calendar").simpleCalendar({
+                //Defaults options below
+                //string of months starting from january
 
-                    var fecha = date.valueOf();
-                    if (vacaciones.indexOf(fecha) == -1) {
-                        vacaciones.push(fecha);
-                    }
-                    else {
-                        vacaciones.splice(vacaciones.indexOf(fecha), 1);
-                    }
+                months: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
+                days: ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'],
+                pastDates: dias_pasados,
+                onDateSelect: function (date, events) {
+                    //Se agrega la fecha al array de vacaciones
+                    //Falta agregar una validacion para remover y no repetir fechas.
+                    if (events == 1) {
+                        $("#d_limpia_fechas").show();
 
-                    if (vacaciones.length != 0) {
-                        vacaciones.sort(function (a, b) { return a - b });
-                        // se cuentan los dias habiles
-                        var cont_habiles = 0;
-                        var cont_inhabiles = 0;
-                        var cont_feriados = 0;
-
-                        var inicio = moment(vacaciones[0]);
-
-                        var fin = moment(vacaciones[(vacaciones.length - 1)]);
-                        var fin2 = fin.add(1, 'd');
-
-                        dias_detalle = "";
-
-                        for (var i = inicio; !i.isSame(fin2); i.add(1, 'd')) {
-
-                            var diasemana = i.isoWeekday();
-                            diasemana--;
-
-                            if (rol[diasemana] == "1") {
-
-                                if (feriados.find(contieneMoment, i) != undefined)
-                                    cont_feriados++;
-                                else {
-                                    dias_detalle = dias_detalle + i.format("YYYY-MM-DD") + ",";
-                                    cont_habiles++;
-                                }
-                            }
-                            else {
-                                cont_inhabiles++;
-                            }
-                        }
-
-                        dias_detalle = dias_detalle.substring(0, dias_detalle.length - 1);
-
-                        dias_habiles = cont_habiles;
-                        //swal("Detalle Solicitud", "Max_dias:" + maximo_dias + "\nDias habiles:" + cont_habiles + "\n Feriados:" + cont_feriados + "\n inhabiles:" + cont_inhabiles + "\n Detalle: " + dias_detalle, "success");
-
-                        if (cont_habiles > maximo_dias) {
-                            swal("Cuidado", "Tu seleccion sobrepasa los dias permitidos", "warning");
-                            bandera = 1;
+                        var fecha = date.valueOf();
+                        if (vacaciones.indexOf(fecha) == -1) {
+                            vacaciones.push(fecha);
                         }
                         else {
-                            bandera = 0;
+                            vacaciones.splice(vacaciones.indexOf(fecha), 1);
                         }
-                        // se cuentan los dias habiles
-                        var fecha_inicio = new Date(vacaciones[0]);
-                        var fecha_fin = new Date(vacaciones[vacaciones.length - 1]);
 
-                        $("#i_fecha_inicio").val(fecha_inicio.formatDDMMYYYY());
-                        $("#i_fecha_inicio").attr('alt', fecha_inicio.toISOString().substr(0, 10));
+                        if (vacaciones.length != 0) {
+                            vacaciones.sort(function (a, b) { return a - b });
+                            // se cuentan los dias habiles
+                            var cont_habiles = 0;
+                            var cont_inhabiles = 0;
+                            var cont_feriados = 0;
 
-                        $("#i_fecha_fin").val(fecha_fin.formatDDMMYYYY());
-                        $("#i_fecha_fin").attr('alt', fecha_fin.toISOString().substr(0, 10));
-                    } else {
-                        $("#i_fecha_inicio").val('');
-                        $("#i_fecha_inicio").attr('alt', '');
-                        $("#i_fecha_fin").val('');
-                        $("#i_fecha_fin").attr('alt', '');
+                            var inicio = moment(vacaciones[0]);
+
+                            var fin = moment(vacaciones[(vacaciones.length - 1)]);
+                            var fin2 = fin.add(1, 'd');
+
+                            dias_detalle = "";
+
+                            for (var i = inicio; !i.isSame(fin2); i.add(1, 'd')) {
+
+                                var diasemana = i.isoWeekday();
+                                diasemana--;
+
+                                if (rol[diasemana] == "1") {
+
+                                    if (feriados.find(contieneMoment, i) != undefined)
+                                        cont_feriados++;
+                                    else {
+                                        dias_detalle = dias_detalle + i.format("YYYY-MM-DD") + ",";
+                                        cont_habiles++;
+                                    }
+                                }
+                                else {
+                                    cont_inhabiles++;
+                                }
+                            }
+
+                            dias_detalle = dias_detalle.substring(0, dias_detalle.length - 1);
+
+                            dias_habiles = cont_habiles;
+                            //swal("Detalle Solicitud", "Max_dias:" + maximo_dias + "\nDias habiles:" + cont_habiles + "\n Feriados:" + cont_feriados + "\n inhabiles:" + cont_inhabiles + "\n Detalle: " + dias_detalle, "success");
+
+                            if (cont_habiles > maximo_dias) {
+                                swal("Cuidado", "Tu seleccion sobrepasa los dias permitidos", "warning");
+                                bandera = 1;
+                            }
+                            else {
+                                bandera = 0;
+                            }
+                            // se cuentan los dias habiles
+                            var fecha_inicio = new Date(vacaciones[0]);
+                            var fecha_fin = new Date(vacaciones[vacaciones.length - 1]);
+
+                            $("#i_fecha_inicio").val(fecha_inicio.formatDDMMYYYY());
+                            $("#i_fecha_inicio").attr('alt', fecha_inicio.toISOString().substr(0, 10));
+
+                            $("#i_fecha_fin").val(fecha_fin.formatDDMMYYYY());
+                            $("#i_fecha_fin").attr('alt', fecha_fin.toISOString().substr(0, 10));
+                        } else {
+                            $("#i_fecha_inicio").val('');
+                            $("#i_fecha_inicio").attr('alt', '');
+                            $("#i_fecha_fin").val('');
+                            $("#i_fecha_fin").attr('alt', '');
+                        }
                     }
+                    else {
+                        swal("Cuidado", "No es posible seleccionar fechas pasadas", "warning");
+                    }
+                    //console.log(vacaciones);
                 }
-                else {
-                    swal("Cuidado", "No es posible seleccionar fechas pasadas", "warning");
-                }
-                //console.log(vacaciones);
-            }
-        });
+            });
+
 
         function contieneMoment(fecha) {
             return this.isSame(fecha);
@@ -564,7 +581,7 @@
             $("#s_tipo_solicitud").selectpicker('val', '0');
             var texto = $("#s_tipo_solicitud option:selected").attr('aux3')
             $("#d_descripcion_select").html(texto);
-            $("#d_calendar .day").removeClass("has-event");
+            
             $("#ta_observacion").val('');
             $("#d_limpia_fechas").hide();
         }
