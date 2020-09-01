@@ -1,6 +1,11 @@
 ﻿@{
     ViewData["Title"] = "AdminPolizas|Desconéctate";
-    Layout = "~/Views/Shared/_LayoutSessionA.cshtml";
+    var tipo = ViewBag.tipo;
+    if(tipo=="P")
+        Layout = "~/Views/Shared/_LayoutSessionP.cshtml";
+    else
+        Layout = "~/Views/Shared/_LayoutSessionA.cshtml";
+    
 }
 
 <style>

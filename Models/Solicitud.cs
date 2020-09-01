@@ -15,6 +15,7 @@ namespace desconectate.Models
         public Nullable<System.DateTime> fecha_inicio { get; set; }
         public Nullable<System.DateTime> fecha_fin { get; set; }
         public int dias { get; set; }
+        public string dias_detalle { get; set; }
         public string observacion_solicitante { get; set; }
         public Nullable<int> estatus { get; set; }
         public Nullable<int> idsap_aprobador { get; set; }
@@ -27,6 +28,9 @@ namespace desconectate.Models
         public int dias_disponibles { get; set; }
         public Nullable<System.DateTime> aniversario { get; set; }
         public string con_goce { get; set; }
-
+        public string area { get; set; }
+        public Nullable<System.DateTime> caducidad { get; set; }
+        public string periodo { get; set; }
+        public int dias_tomados { get; set; }
     }
 }

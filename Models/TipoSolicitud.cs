@@ -8,6 +8,7 @@ namespace desconectate.Models
         public string solicitud { get; set; }
         public Nullable<int> maximo_dias { get; set; }
         public char consume_vacaciones { get; set; }
+        public string texto { get; set; }
     
     }
 }

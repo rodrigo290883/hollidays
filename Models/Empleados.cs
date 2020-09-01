@@ -6,7 +6,7 @@ namespace desconectate.Models
     {
         public int idsap { get; set; }
         public string nombre { get; set; }
-        public char sexo { get; set; }
+        public string pais { get; set; }
         public string email { get; set; }
         public string contrasena { get; set; }
         public Nullable<int> estatus { get; set; }
@@ -23,7 +23,7 @@ namespace desconectate.Models
         public string nombre_line { get; set; }
         public string email_line { get; set; }
         public Nullable<int> meses_ultimo_desconecte { get; set; }
-        public string esquema { get; set; }
+        public int esquema { get; set; }
         public string rol { get; set; }
         public string avatar { get; set; }
         public int procesado { get; set; }

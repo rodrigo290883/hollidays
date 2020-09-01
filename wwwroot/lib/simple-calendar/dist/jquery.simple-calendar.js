@@ -91,6 +91,8 @@
         lastDay.setDate(lastDay.getDate() + 1);
       }
 
+       
+
       //For firstDay to lastDay
       for (var day = firstDay; day <= lastDay; day.setDate(day.getDate())) {
         var tr = $('<tr></tr>');
@@ -98,10 +100,16 @@
         for (var i = 0; i < 7; i++) {
           var td = $('<td><div class="day" data-date="' + day.toISOString() + '">' + day.getDate() + '</div></td>');
 
+
+        
           //if today is this day
           if (day.toDateString() === (new Date).toDateString()) {
-            td.find(".day").addClass("today");
+              td.find(".day").addClass("today");
+             
           }
+
+
+           
 
           //if day is not in this month
           if (day.getMonth() != fromDate.getMonth()) {
@@ -154,19 +162,19 @@
       //Binding day event
       $(plugin.element).on('click', '.day', function (e) {
         var date = new Date($(this).data('date'));
-        var events = plugin.getDateEvents(date);
-        if (!$(this).hasClass('disabled')) {
-            if (!$(this).hasClass("has-event")) {
-                $(this).addClass("has-event");
-                
-            }
-            else {
-                $(this).removeClass("has-event");
-                
-            }
-          //plugin.fillUp(e.pageX, e.pageY);
-          //plugin.displayEvents(events);
-        }
+          var events = 0;
+          if (!$(this).hasClass('disabled')) {
+              if (!$(this).hasClass("has-event")) {
+                  $(this).addClass("has-event");
+
+              }
+              else {
+                  $(this).removeClass("has-event");
+
+              }
+              events = 1;
+          }
+          
         plugin.settings.onDateSelect(date, events);
       });
 

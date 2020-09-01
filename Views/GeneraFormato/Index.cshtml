@@ -1,0 +1,171 @@
+﻿
+@{
+    ViewData["Title"] = "GeneraFormato|Desconéctate";
+    Layout = "~/Views/Shared/_LayoutSessionA.cshtml";
+}
+
+<style>
+
+    body {
+        background-image: url("images/doodle-background.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: bottom right;
+        color: #5c2a7e;
+    }
+
+    #i_doodle {
+        width: 30%;
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+    }
+</style>
+
+<link rel="stylesheet" href="lib/simple-calendar/dist/simple-calendar.css" />
+<link rel="stylesheet" href="lib/bootstrap-select/dist/css/bootstrap-select.css" />
+
+
+<div>
+    <img id="i_doodle" src="images/imagen.png">
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 offset-md-1 col-md-4">
+            <div id="d_calendar"></div>
+        </div>
+        <div class="col-6">
+            <div class="row mt-5">
+                <div class="col-sm-12 col-md-6  text-center align-self-center">
+                    <input class="form-control" id="i_fecha_inicio" />
+                </div>
+                <div class="col-sm-12 col-md-6  text-center align-self-center">
+                    <input class="form-control" id="i_fecha_fin" />
+                </div>
+            </div>
+            <div class="row mt-4">            
+                <div class="col-sm-6 text-center align-self-center">
+                    <button class="btn btn-primary" id="b_consulta">Consulta</button>
+                </div>
+                <div class="col-sm-6 text-center align-self-center">
+                    <button class="btn btn-success" id="b_genera">Descarga Formato</button>
+                </div>
+            </div>
+        </div> 
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <table class="table table-striped" id="t_reporte">
+                <thead>
+                    <tr>
+                        <th>SOCIEDAD</th>
+                        <th>SAP</th>
+                        <th>CONCEPTO</th>
+                        <th>DETALLE</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="lib/simple-calendar/dist/jquery.simple-calendar.js"></script>
+<script src="lib/bootstrap-select/dist/js/bootstrap-select.js"></script>
+<script src="lib/moment/dist/js/moment.js"></script>
+
+<script>
+    $(function () {
+        var vacaciones = new Array();
+
+        $("#b_genera").hide();
+
+        $("#b_genera").click(function () {
+            
+            if ($("#i_fecha_inicio").val() != '') {
+                url = "@Url.Content("~/GeneraFormato/DescargaFormato")";
+
+                //window.open(url + "?fecha_inicio=" + $("#i_fecha_inicio").val() + "&fecha_fin=" + $("#i_fecha_fin").val());
+
+                parametros = {
+                    "fecha_inicio": $("#i_fecha_inicio").val(),
+                    "fecha_fin": $("#i_fecha_fin").val()
+                };
+                $.post(url, parametros, function (data) {
+                    if (data == "1") {
+                        url = "@Url.Content("~/Descarga")";
+                        window.open(url);
+                    }
+                });
+            }
+        });
+
+        $("#b_consulta").click(function () {
+
+            if ($("#i_fecha_inicio").val() != '') {
+                url = "@Url.Content("~/GeneraFormato/GeneraReporte")";
+
+                parametros = {
+                    "fecha_inicio": $("#i_fecha_inicio").val(),
+                    "fecha_fin": $("#i_fecha_fin").val()
+                };
+
+                $.post(url, parametros, function (data) {
+                    var num = data.length;
+                    var html = "";
+                    $("#t_reporte tbody").html("");
+
+                    for (var i = 0; i < num; i++) {
+                        var dato = data[i];
+
+                        html = "<tr><td>" + dato.sociedad + "</td><td>" + dato.sap + "</td><td>" + dato.concepto + "</td><td>" + dato.dias_detalle + "</td></tr>";
+                        $("#t_reporte tbody").append(html);
+                    }
+                    if (num > 0) {
+                        $("#b_genera").show();
+                    }
+                    else {
+                        $("#b_genera").hide();
+                    }
+                });
+            }
+        });
+
+        $("#d_calendar").simpleCalendar({
+            //Defaults options below
+            //string of months starting from january
+
+            months: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
+            days: ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'],
+            onDateSelect: function (date, events) {
+
+                $("#b_genera").hide();
+                //Se agrega la fecha al array de vacaciones
+                //Falta agregar una validacion para remover y no repetir fechas.
+                var fecha = date.valueOf();
+                if (vacaciones.indexOf(fecha) == -1) {
+                    vacaciones.push(fecha);
+                }
+                else {
+                    vacaciones.splice(vacaciones.indexOf(fecha), 1);
+                }
+
+                if (vacaciones.length != 0) {
+                    vacaciones.sort(function (a, b) { return a - b });
+
+                    // se cuentan los dias habiles
+                    var fecha_inicio = new Date(vacaciones[0]);
+                    var fecha_fin = new Date(vacaciones[vacaciones.length - 1]);
+                    $("#i_fecha_inicio").val(fecha_inicio.toISOString().substr(0, 10));
+                    $("#i_fecha_fin").val(fecha_fin.toISOString().substr(0, 10));
+                } else {
+                    $("#i_fecha_inicio").val('');
+                    $("#i_fecha_fin").val('');
+                }
+
+                //console.log(vacaciones);
+            }
+        });
+
+    });
+</script>

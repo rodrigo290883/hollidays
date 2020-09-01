@@ -2972,7 +2972,7 @@
 
       classNames.DIVIDER = 'dropdown-divider';
       classNames.SHOW = 'show';
-      classNames.BUTTONCLASS = 'btn-light';
+      classNames.BUTTONCLASS = 'btn-desconectate';
       classNames.POPOVERHEADER = 'popover-header';
       classNames.ICONBASE = '';
       classNames.TICKICON = 'bs-ok-default';

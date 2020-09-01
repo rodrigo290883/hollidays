@@ -1,0 +1,249 @@
+﻿@{
+
+    ViewData["Title"] = "AdminSolicitudes|Desconéctate";
+    Layout = "~/Views/Shared/_LayoutSessionA.cshtml";
+}
+
+<style>
+    body {
+        background-image: url("images/doodle-background.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: bottom right;
+        color: #5c2a7e;
+    }
+
+    #i_doodle {
+        width: 30%;
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+    }
+
+    #t_Slt_Pendiente{
+       height:400px;
+    }
+</style>
+
+<link rel="stylesheet" href="lib/bootstrap-select/dist/css/bootstrap-select.css" />
+
+<div>
+    <img id="i_doodle" src="images/imagen.png">
+</div>
+
+<div class="container">
+    <div class="row mt-2">
+        <div class="col-12">
+            <Strong><span style="font-size: x-large;">Solicitudes Pendientes de Atención </span><b style="font-size: x-large;" id="num_solicitudes"></b></Strong><br />
+            Filtro:<input class="ifiltro" tabla="t_Slt_Pendiente" />
+            <table class="table table-responsive table-striped" id="t_Slt_Pendiente">
+                <thead style="background-color: #821c61; color: white;">
+                    <tr>
+                        <th scope="col">FOLIO</th>
+                        <th>NOMBRE</th>
+                        <th scope="col">SOLICITUD</th>
+                        <th scope="col">FECHA INICIO</th>
+                        <th scope="col">FECHA FINAL</th>
+                        <th scope="col">AREA</th>
+                        <th scope="col">APROBADOR</th>
+                        <th scope="col">ESTATUS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <form id="frmAprobadorSolicitud">
+        <div class="row mt-2">
+            <div class="col-sm-12 col-md-8">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-8">
+                            SOLICITANTE: <b id="data_nombre"></b> <br />
+                            IDSAP: <b id="data_idsap"></b>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 font-weight-bold">ANTIGÜEDAD: <b id="data_antiguedad"></b></div>
+                        <div class="col-6 font-weight-bold">FECHA ANIVERSARIO: <b id="data_aniversario"></b></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 font-weight-bold">DÍAS POR DISFRUTAR: <b id="data_disfrutar"></b></div>
+                        <div class="col-6 font-weight-bold">DÍAS CADUCAN: <b id="data_caducan"></b></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 font-weight-bold">DÍAS TOMADOS: <b id="data_tomados"></b></div>
+                        <div class="col-6 font-weight-bold">PERIODO: <b id="data_periodo"></b></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 font-weight-bold">SOLICITUD: <b id="data_tipo"></b></div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-6 font-weight-bold">FECHA INICIO: <b id="data_inicio"></b></div>
+                        <div class="col-6 font-weight-bold">FECHA FIN: <b id="data_fin"></b></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 font-weight-bold">
+                            OBSERVACION SOLICITANTE: <b id="observacion_solicitante"></b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4 mt-2">
+                <div class="container">
+                    <div class="row">
+                        <label>CAMBIAR ESTATUS:</label>
+                        <select id="s_estatus" name="s_estatus" class="selectpicker">
+                            <option value="0">PENDIENTE</option>
+                            <option value="1">APROBADO</option>
+                            <option value="2">DENEGADO</option>
+                        </select>
+                    </div>
+                    <div id="d_con_goce" class="row">
+                        <label> Permiso:  </label>
+                        <div class="form-check">
+                            <input id="i_con_goce_s" type="radio" class="form-check-input" name="con_goce" value="S" checked />
+                            <label class="form-check-label" for="i_con_goce_s">Con goce   </label>
+                        </div>
+                        <div class="form-check">
+                            <input id="i_con_goce_n" type="radio" class="form-check-input" name="con_goce" value="N" />
+                            <label class="form-check-label" for="i_con_goce_n">Sin goce</label>
+                        </div>
+                    </div>
+                    <div class="row rounded mt-2">
+                        <textarea id="ta_comentarios" name="comentarios" class="form-control" rows="3" placeholder="Observaciones..."></textarea>
+                    </div>
+                    <div class="row mt-2 text-center">
+                        <input type="hidden" name="id_folio" id="id_folio" value="" />
+                        <input type="submit" class="btn btn-desconectate" value="GUARDAR" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<script src="lib/bootstrap-select/dist/js/bootstrap-select.js"></script>
+
+<script>
+    $(function () {
+        var solicitudes = 0;
+        actualizaLista();
+        limpiarForma();
+
+        
+
+        function actualizaLista() {
+            url = "@Url.Content("~/AdminSolicitudes/SolicitudesPendientes")"
+            solicitudes = 0;
+            $.post(url, {}, function (data) {
+                var num = data.length;
+                $("#t_Slt_Pendiente tbody").html("");
+                for (var i = 0; i < num; i++) {
+                    var dato = data[i];
+
+                    switch (dato.estatus) {
+                        case 0:
+                            estatus = "PENDIENTE";
+                            break;
+                        case 1:
+                            estatus = "APROBADO";
+                            break;
+                        case 2:
+                            estatus = "DENEGADO";
+                            break;
+                    }
+                    html = '<tr class="renglon" alt="' + dato.folio + '" id="folio"><th scope="row">' + dato.folio + '</th><td>' + dato.nombre + '</td><td>' + dato.solicitudName + '</td><td>' + new Date(dato.fecha_inicio).formatDDMMYYYY() + '</td><td>' + new Date(dato.fecha_fin).formatDDMMYYYY() + '</td><td>' + dato.area + '</td><td>' + dato.nombre_aprobador + '</td><td>' + dato.estatusDescripcion + '</td></tr>';
+                    $("#t_Slt_Pendiente tbody").append(html);
+                    solicitudes++;
+                }
+                $("#num_solicitudes").html(solicitudes);
+            });
+        }
+
+        $("#t_Slt_Pendiente tbody").on("click", "tr", function () {
+            limpiarForma();
+            folio = $(this).attr('alt');
+
+            url = "@Url.Content("~/Aprobador/solicitudInfo")"
+
+            $.post(url, { "id_folio": folio }, function (data) {
+                //alert(JSON.stringify(data));
+                if (data.tipo_solicitud_goce == 1)
+                    $("#d_con_goce").show();
+                else
+                    $("#d_con_goce").hide();
+
+
+                $("#data_idsap").html(data.idsap);
+                $("#data_nombre").html(data.nombre);
+                $("#data_antiguedad").html(parseInt(data.antiguedad / 12) + " años y " + (data.antiguedad % 12) + " meses ");
+                $("#data_aniversario").html(new Date(data.aniversario).formatDDMMYYYY());
+                $("#data_disfrutar").html(data.fecha_fin - data.fecha_inicio);
+                $("#data_tipo").html(data.solicitudName);
+                $("#data_caducan").html(new Date(data.caducidad).formatDDMMYYYY());
+                $("#data_tomados").html(data.dias_tomados);
+                $("#data_periodo").html(data.periodo);
+                $("#data_inicio").html(new Date(data.fecha_inicio).formatDDMMYYYY());
+                $("#data_fin").html(new Date(data.fecha_fin).formatDDMMYYYY());
+                $("#id_folio").val(data.folio);
+                $("#observacion_solicitante").html(data.observacion_solicitante);
+
+            });
+        });
+
+        function limpiarForma() {
+                $("b").html('');
+                $("#id_folio").val('');
+                $("#ta_comentarios").val('');
+                $("#s_estatus").selectpicker('val', '0');
+                $("#i_con_goce_s").prop("checked", true);
+                $("#d_con_goce").hide();
+        }
+
+
+            $("#frmAprobadorSolicitud").submit(function (e) {
+                e.preventDefault();
+
+                url = "@Url.Content("~/AdminSolicitudes/ActualizarSolicitud")"
+                parametros = $(this).serialize();
+
+                //alert(JSON.stringify(parametros));
+
+                if ($("#id_folio").val() == '') {
+                    swal("Ocurrio un Error", "Debes seleccionar un registro de solicitud", "warning");
+                }
+                else {
+                    if ($("#ta_comentarios").val() == '' || $("#s_estatus").val() == 0) {
+                        swal("Ocurrio un Error", "Debes ingresar una observacion y cambiar el estatus de la solicitud", "warning");
+                    }
+                    else {
+
+                        //alert(JSON.stringify(parametros));
+
+                        $.post(url, parametros, function (data) {
+                            if (data == "1") {
+
+                                url2 = "@Url.Content("~/AdminSolicitudes/EnviaCorreo")"
+                                $.post(url2, { "folio": $("#id_folio").val() }, function (data2) {
+                                    if (data2 != 1) {
+                                        swal("Ocurrio un Error en el envio de correo", data, "error");
+                                    }
+                                });
+                                limpiarForma();
+                                actualizaLista();
+                                swal("Se actualizo la solicitud correctamente", "Ok", "success");
+                            } else {
+                                swal("Ocurrio un Error", data, "error");
+                            }
+                        });
+                    }
+                }
+            });
+
+    });
+
+</script>
