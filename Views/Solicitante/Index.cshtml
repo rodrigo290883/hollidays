@@ -42,6 +42,8 @@
     var caduca = (aux.Day<10?"0":"")+ aux.Day + "/" + (aux.Month<10?"0":"")+aux.Month+ "/" + aux.Year;
     var aux2 = Convert.ToDateTime(empleado.fecha_ingreso_grupo);
     var aniversario = (aux2.Day<10?"0":"") + aux2.Day + "/" +(aux2.Month<10?"0":"")+ aux2.Month + "/" + aux2.Year;
+    var aux3 = Convert.ToDateTime(empleado.fecha_ingreso_uen);
+    var ingreso_uen = (aux3.Day < 10 ? "0" : "") + aux3.Day + "/" + (aux3.Month < 10 ? "0" : "") + aux3.Month;
 
 }
 
@@ -63,8 +65,6 @@
         bottom: 0px;
         right: 0px;
     }
-
-
 
 
     #i_avatar {
@@ -127,8 +127,8 @@
         <div class="col-sm-12 col-md-8">
 
             <div class="row">
-                <div class="col-sm-12 col-md-6 font-weight-bold">ANTIGÜEDAD: @antiguedad</div>
-                <div class="col-sm-12 col-md-6 font-weight-bold">FECHA ANIVERSARIO: @aniversario</div>
+                <div class="col-sm-12 col-md-6 font-weight-bold" title="Ingreso al Grupo: @aniversario">ANTIGÜEDAD: @antiguedad</div>
+                <div class="col-sm-12 col-md-6 font-weight-bold">ANIVERSARIOS: @ingreso_uen</div>
             </div>
             <div class="row">
                 <div class="col-sm-12 col-md-6 font-weight-bold">DÍAS POR DISFRUTAR: @empleado.dias_disponibles</div>

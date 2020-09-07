@@ -42,7 +42,7 @@ namespace desconectate.Controllers
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand("SELECT idsap,nombre,email,estatus,fecha_ingreso_grupo,idsap_padre,esquema," +
-                        " DATEDIFF(month,fecha_ingreso_grupo,GETDATE()) as antiguedad, avatar,email_line ,nombre_line, r.semana" +
+                        " DATEDIFF(month,fecha_ingreso_grupo,GETDATE()) as antiguedad, avatar,email_line ,nombre_line, r.semana, e.fecha_ingreso_uen " +
                         " FROM empleados e INNER JOIN croles r ON e.rol = r.rol WHERE idsap = @idsap", conn);
                      
                     cmd.Parameters.AddWithValue("@idsap", usuario);
@@ -64,6 +64,7 @@ namespace desconectate.Controllers
                     empleado.email_line = sqlReader[9].ToString();//
                     empleado.nombre_line = sqlReader[10].ToString();//
                     empleado.rol = sqlReader[11].ToString();
+                    empleado.fecha_ingreso_uen = Convert.ToDateTime(sqlReader.IsDBNull(12) ? null : sqlReader[12]);
 
                     sqlReader.Close();
 
