@@ -143,10 +143,24 @@ namespace desconectate.Controllers
                                 log.idsap_creacion = 101010;
                                 log.createLog();
 
+                                var hoy = DateTime.Now;
+                                var periodo = hoy.Year;
+                                var ingreso_uen = (DateTime)registro.fecha_ingreso_uen;
+
+                                if (ingreso_uen.Month > hoy.Month)
+                                {
+                                    periodo = hoy.Year - 1;
+                                }
+                                else if(ingreso_uen.Month == hoy.Month && ingreso_uen.Day > hoy.Day)
+                                {
+                                    periodo = hoy.Year - 1;
+                                }
+
 
                                 //Crear registro en registros_dias con los datos iniciales
                              
-                                SqlCommand cmd2 = new SqlCommand("INSERT INTO registros_dias(idsap,periodo,registro_padre,dias,disponibles,caducidad) VALUES (@idsap,datepart(yyyy,getdate()),0,@dias,@dias,DATEADD(month, 13, Convert(date, CONCAT(datepart(yyyy, getdate()), '-', (datepart(mm, @ingreso)), '-', datepart(dd, @ingreso)))));", conn);
+                                SqlCommand cmd2 = new SqlCommand("INSERT INTO registros_dias(idsap,periodo,registro_padre,dias,disponibles,caducidad) VALUES (@idsap,@periodo,0,@dias,@dias,DATEADD(month, 13, Convert(date, CONCAT(@periodo, '-', (datepart(mm, @ingreso)), '-', datepart(dd, @ingreso)))));", conn);
+                                cmd2.Parameters.AddWithValue("@periodo", periodo);
                                 cmd2.Parameters.AddWithValue("@idsap", registro.idsap);
                                 cmd2.Parameters.AddWithValue("@dias", registro.dias_disponibles);
                                 cmd2.Parameters.AddWithValue("@ingreso", registro.fecha_ingreso_uen);
