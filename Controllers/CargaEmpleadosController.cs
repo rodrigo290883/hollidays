@@ -159,10 +159,11 @@ namespace desconectate.Controllers
 
                                 //Crear registro en registros_dias con los datos iniciales
                              
-                                SqlCommand cmd2 = new SqlCommand("INSERT INTO registros_dias(idsap,periodo,registro_padre,dias,disponibles,caducidad) VALUES (@idsap,@periodo,0,@dias,@dias,DATEADD(month, 13, Convert(date, CONCAT(@periodo, '-', (datepart(mm, @ingreso)), '-', datepart(dd, @ingreso)))));", conn);
+                                SqlCommand cmd2 = new SqlCommand("INSERT INTO registros_dias(idsap,periodo,registro_padre,dias,disponibles,caducidad) VALUES (@idsap,@periodo,0,@dias,@dias_disponibles,DATEADD(month, 13, Convert(date, CONCAT(@periodo, '-', (datepart(mm, @ingreso)), '-', datepart(dd, @ingreso)))));", conn);
                                 cmd2.Parameters.AddWithValue("@periodo", periodo);
                                 cmd2.Parameters.AddWithValue("@idsap", registro.idsap);
                                 cmd2.Parameters.AddWithValue("@dias", registro.dias_disponibles);
+                                cmd2.Parameters.AddWithValue("@dias_disponibles", registro.dias_disponibles - registro.dias_gozados);
                                 cmd2.Parameters.AddWithValue("@ingreso", registro.fecha_ingreso_uen);
 
                                 cmd2.ExecuteNonQuery();
@@ -268,7 +269,8 @@ namespace desconectate.Controllers
                             banda = csv.GetField("PUESTO"),
                             fecha_ingreso_grupo = DateTime.ParseExact(csv.GetField("FECHA INGRESO GRUPO"), "dd/MM/yyyy", CultureInfo.InvariantCulture),
                             fecha_ingreso_uen = DateTime.ParseExact(csv.GetField("INGRESO A LA UEN"), "dd/MM/yyyy", CultureInfo.InvariantCulture),
-                            dias_disponibles = csv.GetField<int>("PENDIENTES POR GOZAR"),
+                            dias_disponibles = csv.GetField<int>("DERECHO A DISFRUTAR"),
+                            dias_gozados = csv.GetField<int>("DIAS GOZADOS"),
                             email = csv.GetField("CORREO COLABORADOR"),
                             idsap_padre = csv.GetField<int>("SAP_LINE"),
                             nombre_line = csv.GetField("LINE MANAGER"),
@@ -289,7 +291,8 @@ namespace desconectate.Controllers
                             banda = csv.GetField("PUESTO"),
                             fecha_ingreso_grupo = DateTime.ParseExact(csv.GetField("FECHA INGRESO GRUPO"), "dd/MM/yyyy", CultureInfo.InvariantCulture),
                             fecha_ingreso_uen = DateTime.ParseExact(csv.GetField("INGRESO A LA UEN"), "dd/MM/yyyy", CultureInfo.InvariantCulture),
-                            dias_disponibles = csv.GetField<int>("PENDIENTES POR GOZAR"),
+                            dias_disponibles = csv.GetField<int>("DERECHO A DISFRUTAR"),
+                            dias_gozados = csv.GetField<int>("DIAS GOZADOS"),
                             email = csv.GetField("CORREO COLABORADOR"),
                             idsap_padre = csv.GetField<int>("SAP_LINE"),
                             nombre_line = csv.GetField("LINE MANAGER"),
