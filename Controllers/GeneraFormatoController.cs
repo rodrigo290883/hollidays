@@ -82,14 +82,14 @@ namespace desconectate.Controllers
                     {
                         int aux = DateTime.Compare(Convert.ToDateTime(dia), fecha_inicio);
                         int aux2 = DateTime.Compare(Convert.ToDateTime(dia), fecha_fin);
-                        if (aux < 0 && aux2 > 0)
+                        if (aux >= 0 && aux2 <= 0)
                         {
                             lista.Add(new RegistroFormato
                             {
                                 sociedad = sqlReader[7].ToString(),
                                 sap = sqlReader.GetInt32(6),
                                 concepto = tipo,
-                                dias_detalle = sqlReader[8].ToString()
+                                dias_detalle = dia
                             });
                         }
                     }
