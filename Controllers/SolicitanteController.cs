@@ -105,7 +105,7 @@ namespace desconectate.Controllers
 
                     sqlReader.Close();
 
-                    cmd = new SqlCommand("SELECT fecha FROM cdias_festivos WHERE pais = 'MX'", conn);
+                    cmd = new SqlCommand("SELECT convert(varchar,fecha) FROM cdias_festivos WHERE pais = 'MX'", conn);
 
                     sqlReader = cmd.ExecuteReader();
                     string cadena = "'0'";
