@@ -421,6 +421,7 @@
                         if (!isNaN(data)) {
                             $('#solicitudModal').modal('hide');
                             actualizaLista();
+                            limpiaFechas();
                             limpiaForma();
                             swal("Felicidades", "Tu solicitud se registro Correctamente", "success");
                             EnviaCorreo(data);
