@@ -85,13 +85,9 @@ namespace desconectate.Controllers
                         {
                             //Se inserta el empleado
                             if (registro.estatus == 2)
-                            {
                                 estatus = 2;
-                            }
                             else
-                            {
                                 estatus = 0;
-                            }
 
                             if (registro.ultimo_desconecte != null)
                             {
@@ -156,15 +152,32 @@ namespace desconectate.Controllers
                                     periodo = hoy.Year - 1;
                                 }
 
+                                var cmd1 = new SqlCommand("SELECT DATEDIFF(month,CONVERT(date,@ingreso_grupo),GETDATE());", conn);
+                                cmd1.Parameters.AddWithValue("@ingreso_grupo", registro.fecha_ingreso_grupo);
+
+                                int diferencia = (int)cmd1.ExecuteScalar();
+                                var tipo = 0;
+
+                                if (diferencia < 6)
+                                {
+                                    tipo = 2;
+                                }
+                                else if(diferencia >= 6 && diferencia < 12)
+                                {
+                                    tipo = 1;
+                                }
+                                
+
 
                                 //Crear registro en registros_dias con los datos iniciales
-                             
-                                SqlCommand cmd2 = new SqlCommand("INSERT INTO registros_dias(idsap,periodo,registro_padre,dias,disponibles,caducidad) VALUES (@idsap,@periodo,0,@dias,@dias_disponibles,DATEADD(month, 13, Convert(date, CONCAT(@periodo, '-', (datepart(mm, @ingreso)), '-', datepart(dd, @ingreso)))));", conn);
+
+                                SqlCommand cmd2 = new SqlCommand("INSERT INTO registros_dias(idsap,periodo,registro_padre,dias,disponibles,caducidad,tipo) VALUES (@idsap,@periodo,0,@dias,@dias_disponibles,DATEADD(month, 13, Convert(date, CONCAT(@periodo, '-', (datepart(mm, @ingreso)), '-', datepart(dd, @ingreso)))),@tipo);", conn);
                                 cmd2.Parameters.AddWithValue("@periodo", periodo);
                                 cmd2.Parameters.AddWithValue("@idsap", registro.idsap);
                                 cmd2.Parameters.AddWithValue("@dias", registro.dias_disponibles);
                                 cmd2.Parameters.AddWithValue("@dias_disponibles", registro.dias_disponibles - registro.dias_gozados);
                                 cmd2.Parameters.AddWithValue("@ingreso", registro.fecha_ingreso_uen);
+                                cmd2.Parameters.AddWithValue("@tipo", tipo);
 
                                 cmd2.ExecuteNonQuery();
 
