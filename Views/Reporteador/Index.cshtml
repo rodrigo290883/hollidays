@@ -79,8 +79,8 @@
             $.post(url, parametros, function (data) {
                 var datos = JSON.parse(data);
                 var dato = datos[0];
-                //alert(JSON.stringify(dato));
                 var keys = Object.keys(dato);
+
                 $('#t_reporte thead').html('');
                 var html_head = "<tr>";
                 keys.forEach(function (key) {

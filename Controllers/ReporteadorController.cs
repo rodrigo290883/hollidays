@@ -43,6 +43,8 @@ namespace desconectate.Controllers
             }
         }
 
+
+
         public IActionResult ConsultaReporte(Reporte reporte)
         {
             DataTable data = new DataTable();
@@ -69,6 +71,22 @@ namespace desconectate.Controllers
                 JSONresult = JsonConvert.SerializeObject(data);
 
                 return Content(JSONresult);
+            }
+        }
+
+        public IActionResult resetConstrasena(int idsap)
+        {
+
+            string connString = _configuration.GetConnectionString("MyConnection"); // Read the connection string from the web.config file
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("UPDATE empleados SET estatus = 0, contrasena = '12345' WHERE idsap = @idsap", conn);
+                cmd.Parameters.AddWithValue("@idsap", idsap);
+
+                cmd.ExecuteNonQuery();
+
+                return Content("1");
             }
         }
     }
