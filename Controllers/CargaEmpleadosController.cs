@@ -167,19 +167,37 @@ namespace desconectate.Controllers
                                     tipo = 1;
                                 }
                                 
+                                if(registro.previo != 0)
+                                {
+                                    SqlCommand cmd3 = new SqlCommand("INSERT INTO registros_dias(idsap,periodo,registro_padre,dias,disponibles,caducidad) VALUES (@idsap,@periodo,0,@dias,@dias_disponibles,DATEADD(month, 13, Convert(date, CONCAT(@periodo, '-', (datepart(mm, @ingreso)), '-', datepart(dd, @ingreso)))));", conn);
+                                    cmd3.Parameters.AddWithValue("@periodo", periodo - 1);
+                                    cmd3.Parameters.AddWithValue("@idsap", registro.idsap);
+                                    cmd3.Parameters.AddWithValue("@dias", registro.previo);
+                                    cmd3.Parameters.AddWithValue("@dias_disponibles", registro.previo - registro.dias_gozados);
+                                    cmd3.Parameters.AddWithValue("@ingreso", registro.fecha_ingreso_uen);
 
+                                    cmd3.ExecuteNonQuery();
 
-                                //Crear registro en registros_dias con los datos iniciales
+                                    SqlCommand cmd2 = new SqlCommand("INSERT INTO registros_dias(idsap,periodo,registro_padre,dias,disponibles,caducidad) VALUES (@idsap,@periodo,0,@dias,@dias_disponibles,DATEADD(month, 13, Convert(date, CONCAT(@periodo, '-', (datepart(mm, @ingreso)), '-', datepart(dd, @ingreso)))));", conn);
+                                    cmd2.Parameters.AddWithValue("@periodo", periodo);
+                                    cmd2.Parameters.AddWithValue("@idsap", registro.idsap);
+                                    cmd2.Parameters.AddWithValue("@dias", registro.dias_disponibles);
+                                    cmd2.Parameters.AddWithValue("@dias_disponibles", registro.dias_disponibles);
+                                    cmd2.Parameters.AddWithValue("@ingreso", registro.fecha_ingreso_uen);
 
-                                SqlCommand cmd2 = new SqlCommand("INSERT INTO registros_dias(idsap,periodo,registro_padre,dias,disponibles,caducidad,tipo) VALUES (@idsap,@periodo,0,@dias,@dias_disponibles,DATEADD(month, 13, Convert(date, CONCAT(@periodo, '-', (datepart(mm, @ingreso)), '-', datepart(dd, @ingreso)))),@tipo);", conn);
-                                cmd2.Parameters.AddWithValue("@periodo", periodo);
-                                cmd2.Parameters.AddWithValue("@idsap", registro.idsap);
-                                cmd2.Parameters.AddWithValue("@dias", registro.dias_disponibles);
-                                cmd2.Parameters.AddWithValue("@dias_disponibles", registro.dias_disponibles - registro.dias_gozados);
-                                cmd2.Parameters.AddWithValue("@ingreso", registro.fecha_ingreso_uen);
-                                cmd2.Parameters.AddWithValue("@tipo", tipo);
+                                    cmd2.ExecuteNonQuery();
+                                }
+                                else
+                                {
+                                    SqlCommand cmd2 = new SqlCommand("INSERT INTO registros_dias(idsap,periodo,registro_padre,dias,disponibles,caducidad) VALUES (@idsap,@periodo,0,@dias,@dias_disponibles,DATEADD(month, 13, Convert(date, CONCAT(@periodo, '-', (datepart(mm, @ingreso)), '-', datepart(dd, @ingreso)))));", conn);
+                                    cmd2.Parameters.AddWithValue("@periodo", periodo);
+                                    cmd2.Parameters.AddWithValue("@idsap", registro.idsap);
+                                    cmd2.Parameters.AddWithValue("@dias", registro.dias_disponibles);
+                                    cmd2.Parameters.AddWithValue("@dias_disponibles", registro.dias_disponibles - registro.dias_gozados);
+                                    cmd2.Parameters.AddWithValue("@ingreso", registro.fecha_ingreso_uen);
 
-                                cmd2.ExecuteNonQuery();
+                                    cmd2.ExecuteNonQuery();
+                                }
 
                                 insertados++;
                             }
@@ -201,7 +219,7 @@ namespace desconectate.Controllers
                             cmd.Parameters.AddWithValue("@area", registro.area);
                             cmd.Parameters.AddWithValue("@banda", registro.banda);
                             cmd.Parameters.AddWithValue("@fecha_ingreso_grupo", registro.fecha_ingreso_grupo);
-                            cmd.Parameters.AddWithValue("@fecha_ingreso_uen", registro.fecha_ingreso_uen);
+                            cmd.Parameters.AddWithValue("@fecha_ingreso_uen", registro.fecha_ingreso_uen);                                                                                                                
                             cmd.Parameters.AddWithValue("@dias_disponibles", registro.dias_disponibles);
                             cmd.Parameters.AddWithValue("@idsap_padre", registro.idsap_padre);
                             cmd.Parameters.AddWithValue("@nombre_line", registro.nombre_line);
@@ -272,6 +290,7 @@ namespace desconectate.Controllers
                 {
                     Empleados record;
                     var ultimo = csv.GetField("ULTIMO DESCONECTE");
+                    
                     if (ultimo != "-")
                     {
                         record = new Empleados
@@ -282,7 +301,7 @@ namespace desconectate.Controllers
                             banda = csv.GetField("PUESTO"),
                             fecha_ingreso_grupo = DateTime.ParseExact(csv.GetField("FECHA INGRESO GRUPO"), "dd/MM/yyyy", CultureInfo.InvariantCulture),
                             fecha_ingreso_uen = DateTime.ParseExact(csv.GetField("INGRESO A LA UEN"), "dd/MM/yyyy", CultureInfo.InvariantCulture),
-                            dias_disponibles = csv.GetField<int>("DERECHO A DISFRUTAR"),
+                            dias_disponibles = csv.GetField<int>("VACACIONES"),
                             dias_gozados = csv.GetField<int>("DIAS GOZADOS"),
                             email = csv.GetField("CORREO COLABORADOR"),
                             idsap_padre = csv.GetField<int>("SAP_LINE"),
@@ -304,7 +323,7 @@ namespace desconectate.Controllers
                             banda = csv.GetField("PUESTO"),
                             fecha_ingreso_grupo = DateTime.ParseExact(csv.GetField("FECHA INGRESO GRUPO"), "dd/MM/yyyy", CultureInfo.InvariantCulture),
                             fecha_ingreso_uen = DateTime.ParseExact(csv.GetField("INGRESO A LA UEN"), "dd/MM/yyyy", CultureInfo.InvariantCulture),
-                            dias_disponibles = csv.GetField<int>("DERECHO A DISFRUTAR"),
+                            dias_disponibles = csv.GetField<int>("VACACIONES"),
                             dias_gozados = csv.GetField<int>("DIAS GOZADOS"),
                             email = csv.GetField("CORREO COLABORADOR"),
                             idsap_padre = csv.GetField<int>("SAP_LINE"),
@@ -317,7 +336,17 @@ namespace desconectate.Controllers
                         };
                     }
 
+                    var previo = csv.GetField("AÑO PREVIO");
+                    if(previo == "")
+                    {
+                        record.previo = 0;
+                    }
+                    else
+                    {
+                        record.previo = Int32.Parse(previo);
+                    }
                     
+
                     records.Add(record);
                 }
                 return records;
