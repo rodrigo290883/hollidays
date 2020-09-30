@@ -29,5 +29,6 @@ namespace desconectate.Models
         public int procesado { get; set; }
         public string puesto { get; set; }
         public Nullable<int> dias_gozados { get; set; }
+        public int previo { get; set; }
     }
 }

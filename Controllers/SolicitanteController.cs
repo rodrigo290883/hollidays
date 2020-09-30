@@ -68,16 +68,23 @@ namespace desconectate.Controllers
 
                     sqlReader.Close();
 
-                    SqlCommand cmd2 = new SqlCommand("SELECT TOP 1 disponibles, caducidad , periodo , (dias - disponibles) as tomados," +
+                    SqlCommand cmd2 = new SqlCommand("SELECT disponibles, caducidad , periodo , (dias - disponibles) as tomados," +
                         " DATEDIFF(month, (SELECT TOP 1 fecha_inicio FROM solicitudes  WHERE estatus = 1 and fecha_inicio <= GETDATE() ORDER BY fecha_inicio DESC), GETDATE()) meses_ultimo," +
                         "ISNULL((SELECT TOP 1 fecha_inicio FROM solicitudes  WHERE idsap = @idsap  and estatus = 1 and fecha_inicio <= GETDATE() ORDER BY fecha_inicio DESC),e.ultimo_desconecte) as ultimo" +
-                        " FROM registros_dias r LEFT JOIN empleados e ON r.idsap = e.idsap WHERE r.idsap = @idsap  and registro_padre = 0 and caducidad >= GETDATE() ORDER BY fecha_creacion", conn);
+                        " FROM registros_dias r LEFT JOIN empleados e ON r.idsap = e.idsap WHERE r.idsap = @idsap  and registro_padre = 0 and caducidad >= GETDATE() ORDER BY fecha_creacion,caducidad", conn);
 
                     cmd2.Parameters.AddWithValue("@idsap", usuario);
 
                     SqlDataReader sqlReader2 = cmd2.ExecuteReader();
 
-                    sqlReader2.Read();
+                    while (sqlReader2.Read())
+                    {
+                        if(sqlReader2.GetInt32(0) > 0)
+                        {
+                            break;
+                        }
+                    }
+
 
                     empleado.dias_disponibles = sqlReader2.IsDBNull(0) ? 0 : sqlReader2.GetInt32(0);
                     empleado.caducidad = Convert.ToDateTime(sqlReader2.IsDBNull(1) ? null : sqlReader2[1]);
