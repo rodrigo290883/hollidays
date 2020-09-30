@@ -77,14 +77,27 @@ namespace desconectate.Controllers
 
                     SqlDataReader sqlReader2 = cmd2.ExecuteReader();
 
+                    var count = 0;
+
                     while (sqlReader2.Read())
                     {
-                        if(sqlReader2.GetInt32(0) > 0)
-                        {
-                            break;
-                        }
+                        count++;
                     }
 
+                    sqlReader2.Close();
+                    sqlReader2 = cmd2.ExecuteReader();
+
+                    if(count > 1)
+                    {
+                        sqlReader2.Read();
+                        if(sqlReader2.GetInt32(0) == 0)
+                            sqlReader2.Read();
+
+                    }
+                    else
+                    {
+                        sqlReader2.Read();
+                    }
 
                     empleado.dias_disponibles = sqlReader2.IsDBNull(0) ? 0 : sqlReader2.GetInt32(0);
                     empleado.caducidad = Convert.ToDateTime(sqlReader2.IsDBNull(1) ? null : sqlReader2[1]);
