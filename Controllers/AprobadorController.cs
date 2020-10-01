@@ -118,7 +118,74 @@ namespace desconectate.Controllers
             string connString = _configuration.GetConnectionString("MyConnection");
             using (SqlConnection conn = new SqlConnection(connString))
             {
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand("SELECT s.idsap,s.tipo_solicitud,cs.solicitud,s.dias,s.dias_detalle,s.fecha_inicio,s.fecha_fin,s.observacion_solicitante,cs.con_goce,e.nombre,e.fecha_ingreso_uen,DATEDIFF(month,e.fecha_ingreso_grupo,GETDATE()) as antiguedad FROM solicitudes s " +
+                "LEFT JOIN ctipos_solicitud cs ON s.tipo_solicitud = cs.id_tipo_solicitud LEFT JOIN empleados e ON s.idsap = e.idsap WHERE folio = @folio", conn);
+
+                cmd.Parameters.AddWithValue("@folio", id_folio);
+
+                SqlDataReader sqlReader = cmd.ExecuteReader();
+
+                sqlReader.Read();
+
+                var idsap = sqlReader.GetInt32(0);
+                infosolicitud.idsap = idsap;
+                infosolicitud.nombre = sqlReader[9].ToString();
+                infosolicitud.antiguedad = sqlReader.GetInt32(11);
+                infosolicitud.aniversario = Convert.ToDateTime(sqlReader.IsDBNull(10) ? null : sqlReader[10]);
+                infosolicitud.tipo_solicitud = sqlReader.GetInt32(1);
+                infosolicitud.solicitudName = sqlReader[2].ToString();
+                infosolicitud.dias = sqlReader.GetInt32(3);
+
+                infosolicitud.fecha_inicio = Convert.ToDateTime(sqlReader.IsDBNull(5) ? null : sqlReader[5]);
+                infosolicitud.fecha_fin = Convert.ToDateTime(sqlReader.IsDBNull(6) ? null : sqlReader[6]);
+                infosolicitud.folio = id_folio;
                 
+                infosolicitud.observacion_solicitante = sqlReader[7].ToString();
+                infosolicitud.tipo_solicitud_goce = sqlReader.GetInt32(8);
+
+                sqlReader.Close();
+
+                SqlCommand cmd2 = new SqlCommand("SELECT dias,disponibles,CONVERT(varchar,caducidad),periodo FROM registros_dias rd WHERE idsap = @idsap and registro_padre = 0 and caducidad >= GETDATE();", conn);
+
+                cmd2.Parameters.AddWithValue("@idsap", idsap);
+
+                SqlDataReader sqlReader2 = cmd2.ExecuteReader();
+
+
+                var dias_disponibles = 0;
+                var periodo = "";
+                var caducidad = "";
+                var dias_tomados = 0;
+
+                while (sqlReader2.Read())
+                {
+                    dias_disponibles = dias_disponibles + sqlReader2.GetInt32(1);
+                    periodo = periodo + ',' + sqlReader2[3].ToString();
+                    caducidad = caducidad + ',' + sqlReader2[2].ToString(); 
+                    dias_tomados = dias_tomados + (sqlReader2.GetInt32(0) - sqlReader2.GetInt32(1));
+                }
+
+                infosolicitud.dias_disponibles = dias_disponibles;
+                infosolicitud.periodo = periodo.Substring(1);
+                infosolicitud.caducidades = caducidad.Substring(1);
+                infosolicitud.dias_tomados = dias_tomados;
+                
+                sqlReader2.Close();
+
+
+
+
+
+
+
+
+
+
+                /*
+
+                // Antigua Forma
                 conn.Open();
                 SqlCommand cmd = new SqlCommand("SELECT TOP 1 s.idsap,e.nombre,DATEDIFF(month,e.fecha_ingreso_grupo,GETDATE()) as antiguedad ,(select SUM(disponibles) from registros_dias where idsap = s.idsap and registro_padre = 0 and caducidad >= GETDATE()) as disponibles, "+
                 "cts.maximo_dias, cts.solicitud as solicitudName, e.fecha_ingreso_grupo as aniversario, s.fecha_inicio, s.fecha_fin, s.folio, s.tipo_solicitud, cts.con_goce as tipo_solicitud_goce, s.observacion_solicitante,"+
@@ -152,7 +219,7 @@ namespace desconectate.Controllers
 
 
                 sqlReader.Close();
-
+                */
                 conn.Close();
                 return infosolicitud;
             }

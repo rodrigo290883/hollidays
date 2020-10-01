@@ -32,5 +32,6 @@ namespace desconectate.Models
         public Nullable<System.DateTime> caducidad { get; set; }
         public string periodo { get; set; }
         public int dias_tomados { get; set; }
+        public string caducidades { get; set; }
     }
 }
