@@ -13,6 +13,7 @@
     <Folder Include="Views\AdminSolicitudes\" />
     <Folder Include="Views\AdminBase\" />
     <Folder Include="Views\GeneraFormato\" />
+    <Folder Include="Views\CargaPolizas\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
@@ -22,6 +23,7 @@
     <PackageReference Include="CsvHelper" Version="15.0.5" />
     <PackageReference Include="NPOI" Version="2.5.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="System.IO.Compression" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
     <None Update="concentrado.csv">
