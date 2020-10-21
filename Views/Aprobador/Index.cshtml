@@ -3,6 +3,8 @@
     ViewData["Title"] = "Aprobador|Desconéctate";
     if (ViewBag.tipo == "S")
         Layout = "~/Views/Shared/_LayoutSessionS.cshtml";
+    else if(ViewBag.tipo == "D")
+        Layout = "~/Views/Shared/_LayoutSessionD.cshtml";
     else
         Layout = "~/Views/Shared/_LayoutSessionL.cshtml";
 

@@ -32,7 +32,7 @@ namespace desconectate.Controllers
             string usuario = HttpContext.Session.GetString("usuario");
             ViewBag.tipo = HttpContext.Session.GetString("tipo");
 
-            if (usuario != null && ViewBag.tipo != "A" && ViewBag.tipo != "P" && ViewBag.tipo != "R")
+            if (usuario != null && ViewBag.tipo != "A" && ViewBag.tipo != "P" && ViewBag.tipo != "R" && ViewBag.tipo != "D")
             {
                 Empleados empleado = new Empleados();
 
@@ -153,6 +153,10 @@ namespace desconectate.Controllers
             {
                 return RedirectToAction("Index", "AdminBase");
             }
+            else if (usuario != null && ViewBag.tipo == "D")
+            {
+                return RedirectToAction("Index", "Aprobador");
+            }
             else
                 return RedirectToAction("Index", "Home");
             
@@ -248,7 +252,7 @@ namespace desconectate.Controllers
             }
         }
 
-            public List<Solicitud> EnlistaSolicitudes(int id_sap)
+        public List<Solicitud> EnlistaSolicitudes(int id_sap)
         {
             List<Solicitud> lst = new List<Solicitud>();
 
@@ -272,6 +276,28 @@ namespace desconectate.Controllers
             }
         }
 
+        public ActionResult CancelaSolicitud(int folio)
+        {
+            try
+            {
+                string connString = _configuration.GetConnectionString("MyConnection"); // Read the connection string from the web.config file
+                using (SqlConnection conn = new SqlConnection(connString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("UPDATE solicitudes SET estatus = 3 WHERE folio = @folio", conn);
+                    cmd.Parameters.AddWithValue("@folio", folio);
+
+                    cmd.ExecuteNonQuery();
+
+                    return Content("1");
+                }
+            }
+            catch(Exception ex)
+            {
+                return Content("No se pudo realizar la cancelacion:"+ex.Message);
+            }
+        }
+
 
         public ActionResult DescargaPoliza()
         {
@@ -282,7 +308,7 @@ namespace desconectate.Controllers
             try
             {
 
-                byte[] archivo = cliente.DownloadData("GMM/"+idsap + ".pdf");
+                byte[] archivo = cliente.DownloadData("Polizas/"+idsap + ".pdf");
                 return File(archivo, "application/pdf", "PGMM_" + idsap + ".pdf");
             }
             catch (Exception ex)

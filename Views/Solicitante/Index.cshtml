@@ -228,7 +228,8 @@
                 <th>FECHA FIN</th>
                 <th>APROBADOR</th>
                 <th>ESTATUS</th>
-                </thead>
+                <th>ACCIÓN</th>
+                </th>
                 <tbody>
                 </tbody>
             </table>
@@ -276,7 +277,7 @@
         var dias_habiles = 0;
         var dias_detalle = "";
         var dias_pasados = false;
-        
+
 
         //-------Se obtienen los dias feriados
 
@@ -372,7 +373,7 @@
         $("#d_descripcion_select").html(texto);
 
         $("#s_tipo_solicitud").change(function () {
-            
+
             consume_vacaciones = $("#s_tipo_solicitud option:selected").attr("aux2");
             if (consume_vacaciones == 'S') {
                 maximo_dias = disfrutar;
@@ -381,7 +382,7 @@
                 maximo_dias = $("#s_tipo_solicitud option:selected").attr("aux");
             }
             var texto = $("#s_tipo_solicitud option:selected").attr('aux3');
-            
+
             $("#d_descripcion_select").html(texto);
 
             if ($("#s_tipo_solicitud option:selected").val() == 5) {
@@ -584,12 +585,30 @@
             $("#s_tipo_solicitud").selectpicker('val', '0');
             var texto = $("#s_tipo_solicitud option:selected").attr('aux3')
             $("#d_descripcion_select").html(texto);
-            
+
             $("#ta_observacion").val('');
             $("#d_limpia_fechas").hide();
         }
 
         actualizaLista();
+
+        $("#t_solicitudes").on('click','.b_cancelar',function () {
+
+            var folio = $(this).attr('folio');
+
+            url = "@Url.Content("~/Solicitante/CancelaSolicitud")";
+
+            $.post(url, { "folio": folio }, function (data) {
+                if (data != 1) {
+                    swal("Ocurrio un Error", data, "error");
+                }
+                else {
+                    swal("Se Canceló", "Tu solicitud se cancelo Correctamente", "success");
+                    actualizaLista();
+                }
+            });
+
+        });
 
 
         function actualizaLista() {
@@ -601,6 +620,7 @@
                 var num = data.length;
                 var html = "";
                 var estatus = "";
+                var accion = "";
                 $("#t_solicitudes tbody").html("");
                 for (var i = 0; i < num; i++) {
                     var dato = data[i];
@@ -608,6 +628,7 @@
                     switch (dato.estatus) {
                         case 0:
                             estatus = "PENDIENTE";
+                            accion = "<button class='b_cancelar' folio='" + dato.folio + "'>CANCELAR</button>";
                             break;
                         case 1:
                             estatus = "APROBADO";
@@ -615,9 +636,16 @@
                         case 2:
                             estatus = "DENEGADO";
                             break;
+                        case 3:
+                            estatus = "CANCELADO";
+                            
+                            break;
                     }
 
-                    html = "<tr data-toggle='tooltip' title='" + dato.observacion_solicitante + " / " + dato.observacion_aprobador + "'><td>" + dato.folio + "</td><td>" + dato.solicitudName + "</td><td>" + new Date(dato.fecha_inicio).formatDDMMYYYY() + "</td><td>" + new Date(dato.fecha_fin).formatDDMMYYYY() + "</td><td>" + dato.nombre_aprobador + "</td><td>" + estatus + "</td></tr>";
+
+
+
+                    html = "<tr data-toggle='tooltip' title='" + dato.observacion_solicitante + " / " + dato.observacion_aprobador + "'><td>" + dato.folio + "</td><td>" + dato.solicitudName + "</td><td>" + new Date(dato.fecha_inicio).formatDDMMYYYY() + "</td><td>" + new Date(dato.fecha_fin).formatDDMMYYYY() + "</td><td>" + dato.nombre_aprobador + "</td><td>" + estatus + "</td><td>" + accion + "</td></tr>";
                     $("#t_solicitudes tbody").append(html);
                 }
                 $('[data-toggle="tooltip"]').tooltip();

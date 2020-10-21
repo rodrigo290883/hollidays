@@ -1,3 +1,91 @@
-﻿@page
+﻿
 @{
+    var tipo = ViewBag.tipo;
+    Layout = "~/Views/Shared/_LayoutSessionP.cshtml";
 }
+
+
+<style>
+
+    body {
+        background-image: url("images/doodle-background.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: bottom right;
+        color: #5c2a7e;
+    }
+
+    #t_preview {
+        font-size: 11px;
+        width: 100%;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            <h2>Pantalla de Carga de Polizas</h2>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <form id="form_archivo" method="post" enctype="multipart/form-data" asp-controller="CargaPolizas" asp-action="SubeArchivo">
+                <div class="form-group">
+                    <label>Selecciona un Archivo:&nbsp;&nbsp;</label><input id="i_file" type="file" name="files" />&nbsp;&nbsp;
+                </div>
+            </form>
+            <button id="b_subir">Cargar</button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+     
+
+        $("#d_procesar").hide();
+
+        $("#b_subir").click(function () {
+            var archivo = $("#i_file").val();
+
+            if (archivo != "") {
+                var extension = archivo.substring(archivo.length - 3, archivo.length);
+
+                if (extension=="zip"||extension=="ZIP")
+                    $('#form_archivo').submit();
+                else
+                    swal("Cuidado", "Solo se permiten archivos ZIP", "warning");
+            }
+        });
+
+
+
+        $('#form_archivo').on("submit", function (e) {
+            e.preventDefault();
+            var f = $(this);
+            var formData = new FormData(document.getElementById("form_archivo"));
+
+            url = "@Url.Content("~/CargaPolizas/SubeArchivo")";
+
+            $.ajax({
+                url: url,
+                type: "post",
+                dataType: "html",
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false
+            }).done(function (res) {
+                if (res) {
+                    swal("Se procesaron correctamente los archivos de polizas", "success");
+
+
+                } else {
+                    swal("Error", "Sucedio un Error al procesar el archivo", "warning");
+                }
+            });
+        });
+
+
+
+
+    });
+</script>
