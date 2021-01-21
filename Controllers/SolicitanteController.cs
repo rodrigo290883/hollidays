@@ -32,7 +32,7 @@ namespace desconectate.Controllers
             string usuario = HttpContext.Session.GetString("usuario");
             ViewBag.tipo = HttpContext.Session.GetString("tipo");
 
-            if (usuario != null && ViewBag.tipo != "A" && ViewBag.tipo != "P" && ViewBag.tipo != "R" && ViewBag.tipo != "D")
+            if (usuario != null && ViewBag.tipo != "A" && ViewBag.tipo != "P" && ViewBag.tipo != "R" && ViewBag.tipo != "D" && ViewBag.tipo != "E")
             {
                 Empleados empleado = new Empleados();
 
@@ -152,6 +152,10 @@ namespace desconectate.Controllers
             else if (usuario != null && ViewBag.tipo == "R")
             {
                 return RedirectToAction("Index", "AdminBase");
+            }
+            else if (usuario != null && ViewBag.tipo == "E")
+            {
+                return RedirectToAction("Index", "Extraccion");
             }
             else if (usuario != null && ViewBag.tipo == "D")
             {
