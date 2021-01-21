@@ -273,6 +273,8 @@ namespace desconectate.Controllers
             using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
             {
                 var records = new List<Empleados>();
+                //csv.Configuration.Delimiter = ";";
+               
                 csv.Read();
                 csv.ReadHeader();
                 while (csv.Read())
@@ -288,8 +290,8 @@ namespace desconectate.Controllers
                             nombre = csv.GetField("NOMBRE"),
                             area = csv.GetField("AREA"),
                             banda = csv.GetField("PUESTO"),
-                            fecha_ingreso_grupo = DateTime.ParseExact(csv.GetField("FECHA INGRESO GRUPO"), "dd/MM/yyyy", CultureInfo.InvariantCulture),
-                            fecha_ingreso_uen = DateTime.ParseExact(csv.GetField("INGRESO A LA UEN"), "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                            fecha_ingreso_grupo = DateTime.ParseExact(csv.GetField("FECHA INGRESO GRUPO"), "dd/MM/yy", CultureInfo.InvariantCulture),
+                            fecha_ingreso_uen = DateTime.ParseExact(csv.GetField("INGRESO A LA UEN"), "dd/MM/yy", CultureInfo.InvariantCulture),
                             dias_disponibles = csv.GetField<int>("VACACIONES"),
                             dias_gozados = csv.GetField<int>("DIAS GOZADOS"),
                             email = csv.GetField("CORREO COLABORADOR"),
@@ -299,7 +301,7 @@ namespace desconectate.Controllers
                             esquema = csv.GetField<int>("ESQUEMA"),
                             rol = csv.GetField("ROL"),
                             estatus = csv.GetField<int>("ESTATUS"),
-                            ultimo_desconecte = DateTime.ParseExact(csv.GetField("ULTIMO DESCONECTE"), "dd/MM/yyyy", CultureInfo.InvariantCulture)
+                            ultimo_desconecte = DateTime.ParseExact(csv.GetField("ULTIMO DESCONECTE"), "dd/MM/yy", CultureInfo.InvariantCulture)
                         };
                     }
                     else
@@ -310,8 +312,8 @@ namespace desconectate.Controllers
                             nombre = csv.GetField("NOMBRE"),
                             area = csv.GetField("AREA"),
                             banda = csv.GetField("PUESTO"),
-                            fecha_ingreso_grupo = DateTime.ParseExact(csv.GetField("FECHA INGRESO GRUPO"), "dd/MM/yyyy", CultureInfo.InvariantCulture),
-                            fecha_ingreso_uen = DateTime.ParseExact(csv.GetField("INGRESO A LA UEN"), "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                            fecha_ingreso_grupo = DateTime.ParseExact(csv.GetField("FECHA INGRESO GRUPO"), "dd/MM/yy", CultureInfo.InvariantCulture),
+                            fecha_ingreso_uen = DateTime.ParseExact(csv.GetField("INGRESO A LA UEN"), "dd/MM/yy", CultureInfo.InvariantCulture),
                             dias_disponibles = csv.GetField<int>("VACACIONES"),
                             dias_gozados = csv.GetField<int>("DIAS GOZADOS"),
                             email = csv.GetField("CORREO COLABORADOR"),
