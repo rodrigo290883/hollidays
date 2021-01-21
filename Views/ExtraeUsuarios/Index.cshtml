@@ -1,0 +1,119 @@
+﻿
+@{
+    ViewData["Title"] = "Extracción Usuarios|Desconéctate";
+    Layout = "~/Views/Shared/_LayoutSessionA.cshtml";
+}
+
+<style>
+
+    body {
+        background-image: url("images/doodle-background.png");
+        background-repeat: repeat-y;
+        background-size: 100%;
+        background-position: top left;
+        color: #5c2a7e;
+    }
+
+    #i_doodle {
+        width: 30%;
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+    }
+</style>
+
+<div>
+    <img id="i_doodle" src="images/imagen.png">
+</div>
+
+<div class="container-fluid">
+
+    <div class="row mt-2">
+        <div class="col-sm-12 offset-md-1 col-md-4">
+            <div id="d_calendar"></div>
+        </div>
+        <div class="col-6">
+            <div class="row mt-3">
+                <div class="col-sm-6 text-center align-self-center">
+                    <button class="btn btn-primary" id="b_consulta">Consulta</button>
+                </div>
+                <div class="col-sm-6 text-center align-self-center">
+                    <button class="btn btn-success" id="b_descarga">Descarga CSV</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-1">
+        <div class="col-12">
+            <table class="table" id="t_reporte">
+                <thead style="background-color: #821c61; color: white;">
+
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+    $(function () {
+
+        $("#b_descarga").hide();
+
+        $("#b_descarga").click(function () {
+            url = "@Url.Content("~/ExtraeUsuarios/DescargaCsv")";
+
+            window.open(url)
+        });
+
+
+
+        $("#b_consulta").click(function () {
+            $("#b_descarga").hide();
+           
+                url = "@Url.Content("~/ExtraeUsuarios/ConsultaReporte")";
+
+                var parametros = {};
+
+                $.post(url, parametros, function (data) {
+                    if (data != "") {
+                        var datos = data;
+                        var dato = datos[0];
+                        //alert(JSON.stringify(dato));
+                        var keys = Object.keys(dato);
+                        $('#t_reporte thead').html('');
+                        var html_head = "<tr>";
+                        keys.forEach(function (key) {
+
+                            html_head += "<th>" + key + "</th>";
+                        });
+
+                        $('#t_reporte thead').append(html_head + "</tr>");
+
+                        $('#t_reporte tbody').html('');
+
+                        datos.forEach(function (dato) {
+                            var html_body = "<tr>";
+                            for (var valor in dato) {
+                                html_body += "<td>" + dato[valor] + "</td>";
+                            };
+                            html_body += "</tr>";
+                            $('#t_reporte tbody').append(html_body);
+                        });
+
+                        $("#b_descarga").show();
+                    }
+                    else {
+                        swal("Sin Resultado", "No hay registros a mostrar", "error");
+                    }
+                });
+            
+        });
+
+        
+    });
+</script>
