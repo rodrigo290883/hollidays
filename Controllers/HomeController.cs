@@ -60,6 +60,12 @@ namespace desconectate.Controllers
                         HttpContext.Session.SetString("tipo", "R");
                         return Content("1");
                     }
+                    else if (usuario == "digital" & contrasena == "Modelo2021")
+                    {
+                        HttpContext.Session.SetString("usuario", usuario);
+                        HttpContext.Session.SetString("tipo", "E");
+                        return Content("1");
+                    }
                     else
                     {
                         conn.Open();
