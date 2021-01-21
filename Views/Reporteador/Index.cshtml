@@ -1,7 +1,13 @@
 ﻿
 @{
     ViewData["Title"] = "Reporteador|Desconéctate";
-    Layout = "~/Views/Shared/_LayoutSessionR.cshtml";
+    if (ViewBag.tipo == "R") 
+        Layout = "~/Views/Shared/_LayoutSessionR.cshtml";
+    else if (ViewBag.tipo == "P")
+        Layout = "~/Views/Shared/_LayoutSessionP.cshtml";
+    else if (ViewBag.tipo == "A")
+        Layout = "~/Views/Shared/_LayoutSessionA.cshtml";
+
 }
 
 <style>

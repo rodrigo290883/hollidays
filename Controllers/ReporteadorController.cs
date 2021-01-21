@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using desconectate.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -21,12 +22,14 @@ namespace desconectate.Controllers
 
         public IActionResult Index()
         {
-
+            string tipo = HttpContext.Session.GetString("tipo");
+            ViewBag.tipo = tipo;
             string connString = _configuration.GetConnectionString("MyConnection"); // Read the connection string from the web.config file
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT * FROM creportes", conn);
+                SqlCommand cmd = new SqlCommand("SELECT * FROM creportes WHERE tipo = @tipo;", conn);
+                cmd.Parameters.AddWithValue("@tipo", tipo);
 
                 SqlDataReader sqlReader = cmd.ExecuteReader();
 
