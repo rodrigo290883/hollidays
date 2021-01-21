@@ -81,7 +81,7 @@ namespace desconectate.Controllers
             }
         }
 
-        public ActionResult DescargaPoliza(int idsap)
+        public ActionResult DescargaPoliza(int id)
         {
         
             WebClient cliente = new WebClient();
@@ -90,12 +90,12 @@ namespace desconectate.Controllers
             try
             {
 
-                byte[] archivo = cliente.DownloadData("GMM/"+idsap + ".pdf");
-                return File(archivo, "application/pdf", "PGMM_" + idsap + ".pdf");
+                byte[] archivo = cliente.DownloadData("Polizas/"+id + ".pdf");
+                return File(archivo, "application/pdf", "PGMM_" + id + ".pdf");
             }
             catch (Exception ex)
             {
-                return Content("No se encontro el archivo de poliza, favor de contactar a recursos humanos.   "+idsap);
+                return Content("No se encontro el archivo de poliza, favor de contactar a recursos humanos.   "+id);
             }
         
         }

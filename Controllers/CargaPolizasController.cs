@@ -27,7 +27,7 @@ namespace desconectate.Controllers
                 return RedirectToAction("Index", "Home");
         }
 
-        public bool SubeArchivo(List<IFormFile> files)
+        public IActionResult SubeArchivo(List<IFormFile> files)
         {
             long size = files.Sum(f => f.Length);
 
@@ -55,11 +55,11 @@ namespace desconectate.Controllers
 
                 ZipFile.ExtractToDirectory("temp.zip", extractPath);
 
-                return true;
+                return Content("1");
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(Convert.ToString(ex.Message));
             }
         }
     }

@@ -74,12 +74,12 @@
                 contentType: false,
                 processData: false
             }).done(function (res) {
-                if (res) {
+                if (res=="1") {
                     swal("Se procesaron correctamente los archivos de polizas", "success");
 
 
                 } else {
-                    swal("Error", "Sucedio un Error al procesar el archivo", "warning");
+                    swal("Error", "Sucedio un Error:"+res, "warning");
                 }
             });
         });
