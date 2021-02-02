@@ -273,7 +273,7 @@ namespace desconectate.Controllers
             using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
             {
                 var records = new List<Empleados>();
-                //csv.Configuration.Delimiter = ";";
+                csv.Configuration.Delimiter = ";";
                
                 csv.Read();
                 csv.ReadHeader();
@@ -281,7 +281,34 @@ namespace desconectate.Controllers
                 {
                     Empleados record;
                     var ultimo = csv.GetField("ULTIMO DESCONECTE");
-                    
+                
+
+                    var ingreso_grupo = csv.GetField("FECHA INGRESO GRUPO");
+                    DateTime ingreso_g;
+
+                    if (ingreso_grupo.Length > 8)
+                    {
+                        ingreso_g = DateTime.ParseExact(ingreso_grupo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    }
+                    else
+                    {
+                        ingreso_g = DateTime.ParseExact(ingreso_grupo, "dd/MM/yy", CultureInfo.InvariantCulture);
+                    }
+
+                    var ingreso_uen = csv.GetField("INGRESO A LA UEN");
+                    DateTime ingreso_u;
+
+                    if (ingreso_uen.Length > 8)
+                    {
+                        ingreso_u = DateTime.ParseExact(ingreso_uen, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    }
+                    else
+                    {
+                        ingreso_u = DateTime.ParseExact(ingreso_uen, "dd/MM/yy", CultureInfo.InvariantCulture);
+                    }
+
+
+
                     if (ultimo != "-")
                     {
                         record = new Empleados
@@ -290,8 +317,8 @@ namespace desconectate.Controllers
                             nombre = csv.GetField("NOMBRE"),
                             area = csv.GetField("AREA"),
                             banda = csv.GetField("PUESTO"),
-                            fecha_ingreso_grupo = DateTime.ParseExact(csv.GetField("FECHA INGRESO GRUPO"), "dd/MM/yy", CultureInfo.InvariantCulture),
-                            fecha_ingreso_uen = DateTime.ParseExact(csv.GetField("INGRESO A LA UEN"), "dd/MM/yy", CultureInfo.InvariantCulture),
+                            fecha_ingreso_grupo = ingreso_g,
+                            fecha_ingreso_uen = ingreso_u,
                             dias_disponibles = csv.GetField<int>("VACACIONES"),
                             dias_gozados = csv.GetField<int>("DIAS GOZADOS"),
                             email = csv.GetField("CORREO COLABORADOR"),
@@ -312,8 +339,8 @@ namespace desconectate.Controllers
                             nombre = csv.GetField("NOMBRE"),
                             area = csv.GetField("AREA"),
                             banda = csv.GetField("PUESTO"),
-                            fecha_ingreso_grupo = DateTime.ParseExact(csv.GetField("FECHA INGRESO GRUPO"), "dd/MM/yy", CultureInfo.InvariantCulture),
-                            fecha_ingreso_uen = DateTime.ParseExact(csv.GetField("INGRESO A LA UEN"), "dd/MM/yy", CultureInfo.InvariantCulture),
+                            fecha_ingreso_grupo = ingreso_g,
+                            fecha_ingreso_uen = ingreso_u,
                             dias_disponibles = csv.GetField<int>("VACACIONES"),
                             dias_gozados = csv.GetField<int>("DIAS GOZADOS"),
                             email = csv.GetField("CORREO COLABORADOR"),
@@ -327,16 +354,8 @@ namespace desconectate.Controllers
                         };
                     }
 
-                    var previo = csv.GetField("AÑO PREVIO");
-                    if(previo == "")
-                    {
-                        record.previo = 0;
-                    }
-                    else
-                    {
-                        record.previo = Int32.Parse(previo);
-                    }
                     
+                    record.previo = 0;
 
                     records.Add(record);
                 }
