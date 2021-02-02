@@ -45,23 +45,33 @@
 
         $("#b_subir").click(function () {
             var archivo = $("#i_file").val();
+            $('#b_subir').prop("disabled", true);
 
             if (archivo != "") {
                 var extension = archivo.substring(archivo.length - 3, archivo.length);
 
-                if (extension=="zip"||extension=="ZIP")
+                if (extension == "zip" || extension == "ZIP")
                     $('#form_archivo').submit();
-                else
+                else {
                     swal("Cuidado", "Solo se permiten archivos ZIP", "warning");
+                    $('#b_subir').prop("disabled", false);
+                }
             }
         });
 
 
 
         $('#form_archivo').on("submit", function (e) {
+            
             e.preventDefault();
             var f = $(this);
             var formData = new FormData(document.getElementById("form_archivo"));
+
+            swal({
+                title: "Procesando...",
+                text: "En unos segundos terminara el proceso",
+                imageUrl: "images/procesando.gif"
+            });
 
             url = "@Url.Content("~/CargaPolizas/SubeArchivo")";
 
@@ -75,12 +85,12 @@
                 processData: false
             }).done(function (res) {
                 if (res=="1") {
-                    swal("Se procesaron correctamente los archivos de polizas", "success");
-
-
+                    swal("Se procesaron correctamente los archivos de polizas", "success");   
                 } else {
-                    swal("Error", "Sucedio un Error:"+res, "warning");
+                    swal("Error", "Sucedio un Error:" + res, "warning");
                 }
+
+                $('#b_subir').prop("disabled", false);
             });
         });
 
