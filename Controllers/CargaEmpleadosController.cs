@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using CsvHelper;
-using CsvHelper.TypeConversion;
 using System.IO;
 using System.Globalization;
 using desconectate.Models;
@@ -53,6 +51,7 @@ namespace desconectate.Controllers
                 int existe;
                 int esquema = 0;
                 int estatus;
+                int idsap_padre = 0;
 
                 string connString = _configuration.GetConnectionString("MyConnection"); // Read the connection string from the web.config file
                 using (SqlConnection conn = new SqlConnection(connString))
@@ -60,14 +59,15 @@ namespace desconectate.Controllers
                     conn.Open();
                     foreach(Empleados registro in registros)
                     {
-                        SqlCommand cmd = new SqlCommand("SELECT esquema,idsap FROM empleados WHERE idsap = @idsap;", conn);
-                        cmd.Parameters.AddWithValue("@idsap", registro.idsap);
+                        SqlCommand select = new SqlCommand("SELECT esquema,idsap,idsap_padre FROM empleados WHERE idsap = @idsap;", conn);
+                        select.Parameters.AddWithValue("@idsap", registro.idsap);
 
-                        SqlDataReader sqlReader = cmd.ExecuteReader();
+                        SqlDataReader sqlReader = select.ExecuteReader();
 
                         if(sqlReader.Read()){
                             existe = 1;
                             esquema = sqlReader.GetInt32(0);
+                            idsap_padre = sqlReader.GetInt32(2);
                         }
                         else
                         {
@@ -77,26 +77,23 @@ namespace desconectate.Controllers
                         
 
                         sqlReader.Close();
+                       
 
                         LogClass log = new LogClass(_configuration);
 
 
-                        if (existe == 0)
+                        if (existe == 0)// Si es alta de empleado se crean los registros necesarios
                         {
                             //Se inserta el empleado
-                            if (registro.estatus == 2)
-                            {
-                                estatus = 2;
-                            }
-                            else
-                            {
-                                estatus = 0;
-                            }
+                            
+                            estatus = 0;
+
+                            SqlCommand cmd;
 
                             if (registro.ultimo_desconecte != null)
                             {
-                                cmd = new SqlCommand("INSERT INTO empleados(idsap,nombre,email,area,banda,fecha_ingreso_grupo,fecha_ingreso_uen,dias_disponibles,ultimo_desconecte,idsap_padre,nombre_line,email_line,contrasena,tipo,esquema,rol,estatus) " +
-                                    "VALUES (@idsap,@nombre,@email,@area,@banda,@fecha_ingreso_grupo,@fecha_ingreso_uen,@dias_disponibles,@ultimo_desconecte,@idsap_padre,@nombre_line,@email_line,'12345','S',@esquema,@rol,@estatus)", conn);
+                                cmd = new SqlCommand("INSERT INTO empleados(idsap,nombre,email,area,banda,fecha_ingreso_grupo,fecha_ingreso_uen,dias_disponibles,ultimo_desconecte,idsap_padre,nombre_line,email_line,contrasena,tipo,esquema,rol,estatus,rfc) " +
+                                    "VALUES (@idsap,@nombre,@email,@area,@banda,@fecha_ingreso_grupo,@fecha_ingreso_uen,@dias_disponibles,@ultimo_desconecte,@idsap_padre,@nombre_line,@email_line,'12345','S',@esquema,@rol,@estatus,@rfc)", conn);
                                 cmd.Parameters.AddWithValue("@idsap", registro.idsap);
                                 cmd.Parameters.AddWithValue("@nombre", registro.nombre);
                                 cmd.Parameters.AddWithValue("@email", registro.email);
@@ -112,11 +109,12 @@ namespace desconectate.Controllers
                                 cmd.Parameters.AddWithValue("@esquema", registro.esquema);
                                 cmd.Parameters.AddWithValue("@rol", registro.rol);
                                 cmd.Parameters.AddWithValue("@estatus", estatus);
+                                cmd.Parameters.AddWithValue("@rfc", registro.rfc);
                             }
                             else
                             {
-                                cmd = new SqlCommand("INSERT INTO empleados(idsap,nombre,email,area,banda,fecha_ingreso_grupo,fecha_ingreso_uen,dias_disponibles,idsap_padre,nombre_line,email_line,contrasena,tipo,esquema,rol,estatus) " +
-                                    "VALUES (@idsap,@nombre,@email,@area,@banda,@fecha_ingreso_grupo,@fecha_ingreso_uen,@dias_disponibles,@idsap_padre,@nombre_line,@email_line,'12345','S',@esquema,@rol,@estatus)", conn);
+                                cmd = new SqlCommand("INSERT INTO empleados(idsap,nombre,email,area,banda,fecha_ingreso_grupo,fecha_ingreso_uen,dias_disponibles,idsap_padre,nombre_line,email_line,contrasena,tipo,esquema,rol,estatus,rfc) " +
+                                    "VALUES (@idsap,@nombre,@email,@area,@banda,@fecha_ingreso_grupo,@fecha_ingreso_uen,@dias_disponibles,@idsap_padre,@nombre_line,@email_line,'12345','S',@esquema,@rol,@estatus,@rfc)", conn);
                                 cmd.Parameters.AddWithValue("@idsap", registro.idsap);
                                 cmd.Parameters.AddWithValue("@nombre", registro.nombre);
                                 cmd.Parameters.AddWithValue("@email", registro.email);
@@ -131,6 +129,7 @@ namespace desconectate.Controllers
                                 cmd.Parameters.AddWithValue("@esquema", registro.esquema);
                                 cmd.Parameters.AddWithValue("@rol", registro.rol);
                                 cmd.Parameters.AddWithValue("@estatus", estatus);
+                                cmd.Parameters.AddWithValue("@rfc", registro.rfc);
                             }
 
                             int n = cmd.ExecuteNonQuery();
@@ -156,13 +155,29 @@ namespace desconectate.Controllers
                                     periodo = hoy.Year - 1;
                                 }
 
+
+                                // Creacion de registros de dias disponibles
                                 if(registro.previo != 0)
                                 {
+                                    int dias_previo = 0;
+                                    int dias_gozados = 0;
+
+                                    if(registro.dias_gozados >= registro.previo)
+                                    {
+                                        dias_previo = 0;
+                                        dias_gozados = (int)(registro.dias_gozados - registro.previo);
+                                    }
+                                    else
+                                    {
+                                        dias_previo = (int)(registro.previo - registro.dias_gozados);
+                                        dias_gozados = 0;
+                                    }
+                                    // Si tiene 
                                     SqlCommand cmd3 = new SqlCommand("INSERT INTO registros_dias(idsap,periodo,registro_padre,dias,disponibles,caducidad) VALUES (@idsap,@periodo,0,@dias,@dias_disponibles,DATEADD(month, 13, Convert(date, CONCAT(@periodo, '-', (datepart(mm, @ingreso)), '-', datepart(dd, @ingreso)))));", conn);
                                     cmd3.Parameters.AddWithValue("@periodo", periodo - 1);
                                     cmd3.Parameters.AddWithValue("@idsap", registro.idsap);
                                     cmd3.Parameters.AddWithValue("@dias", registro.previo);
-                                    cmd3.Parameters.AddWithValue("@dias_disponibles", registro.previo - registro.dias_gozados);
+                                    cmd3.Parameters.AddWithValue("@dias_disponibles", dias_previo);
                                     cmd3.Parameters.AddWithValue("@ingreso", registro.fecha_ingreso_uen);
 
                                     cmd3.ExecuteNonQuery();
@@ -171,7 +186,7 @@ namespace desconectate.Controllers
                                     cmd2.Parameters.AddWithValue("@periodo", periodo);
                                     cmd2.Parameters.AddWithValue("@idsap", registro.idsap);
                                     cmd2.Parameters.AddWithValue("@dias", registro.dias_disponibles);
-                                    cmd2.Parameters.AddWithValue("@dias_disponibles", registro.dias_disponibles);
+                                    cmd2.Parameters.AddWithValue("@dias_disponibles", registro.dias_disponibles - dias_gozados);
                                     cmd2.Parameters.AddWithValue("@ingreso", registro.fecha_ingreso_uen);
 
                                     cmd2.ExecuteNonQuery();
@@ -198,10 +213,20 @@ namespace desconectate.Controllers
 
                         else
                         {
-                            var bandera = 0; 
+                            var bandera = 0;
+
+                            if (registro.estatus == 2)
+                            {
+                                estatus = 2;
+                            }
+                            else 
+                            {
+                                estatus = 1;
+                            }
+                            SqlCommand cmd;
                             //Se actualiza el empleado
                             cmd = new SqlCommand("UPDATE empleados SET email=@email,area=@area,banda=@banda,fecha_ingreso_grupo=@fecha_ingreso_grupo,fecha_ingreso_uen=fecha_ingreso_uen, "+
-                                "dias_disponibles=@dias_disponibles,idsap_padre=@idsap_padre,nombre_line=@nombre_line,email_line=@email_line,esquema=@esquema,rol=@rol " +
+                                "dias_disponibles=@dias_disponibles,idsap_padre=@idsap_padre,nombre_line=@nombre_line,email_line=@email_line,esquema=@esquema,rol=@rol,estatus=@estatus,rfc=@rfc " +
                                 "WHERE idsap = @idsap", conn);
                             cmd.Parameters.AddWithValue("@idsap", registro.idsap);
                             cmd.Parameters.AddWithValue("@email", registro.email);
@@ -215,16 +240,30 @@ namespace desconectate.Controllers
                             cmd.Parameters.AddWithValue("@email_line", registro.email_line);
                             cmd.Parameters.AddWithValue("@esquema", registro.esquema);
                             cmd.Parameters.AddWithValue("@rol", registro.rol);
+                            cmd.Parameters.AddWithValue("@estatus", estatus);
+                            cmd.Parameters.AddWithValue("@rfc", registro.rfc);
 
                             if (esquema != registro.esquema)//Hay un cambio de esquema
                             {
                                 bandera = 1;
                             }
                             
-
                             int n = cmd.ExecuteNonQuery();
-                            if (n != 0)
+                            if (n != 0) // Se actualizo el empleado
                             {
+                                if (idsap_padre != registro.idsap_padre) //Hay cambio de line manager
+                                {
+
+                                    SqlCommand cmd2 = new SqlCommand("UPDATE solicitudes SET idsap_aprobador = @idsap_aprobador, nombre_aprobador = @nombre_aprobador, email_aprobador = @email_aprobador WHERE idsap = @idsap and estatus = 0 and fecha_inicio >= getdate();", conn);
+                                    cmd2.Parameters.AddWithValue("@idsap_aprobador", registro.idsap_padre);
+                                    cmd2.Parameters.AddWithValue("@nombre_aprobador", registro.nombre_line);
+                                    cmd2.Parameters.AddWithValue("@email_aprobador", registro.email_line);
+                                    cmd2.Parameters.AddWithValue("@idsap", registro.idsap);
+
+                                    int m = cmd2.ExecuteNonQuery();
+
+                                }
+
                                 if (bandera == 0)
                                 {
                                     log.idsap = registro.idsap;
@@ -266,6 +305,28 @@ namespace desconectate.Controllers
             
         }
 
+        public string SeparadorArchivo()
+        {
+            using (var reader = new StreamReader("con.csv"))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                csv.Configuration.Delimiter = ";";
+                csv.Read();
+                csv.ReadHeader();
+                csv.Read();
+                try
+                {
+                    var aux = csv.GetField("SAP"); 
+                }
+                catch(Exception ex)
+                {
+                    return ",";
+                }
+
+                return ";";
+            }
+        }
+
         public List<Empleados> LeeArchivo()
         {
 
@@ -273,91 +334,128 @@ namespace desconectate.Controllers
             using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
             {
                 var records = new List<Empleados>();
-                csv.Configuration.Delimiter = ";";
+                csv.Configuration.Delimiter = SeparadorArchivo();
                
                 csv.Read();
                 csv.ReadHeader();
                 while (csv.Read())
                 {
-                    Empleados record;
-                    var ultimo = csv.GetField("ULTIMO DESCONECTE");
-                
-
-                    var ingreso_grupo = csv.GetField("FECHA INGRESO GRUPO");
-                    DateTime ingreso_g;
-
-                    if (ingreso_grupo.Length > 8)
-                    {
-                        ingreso_g = DateTime.ParseExact(ingreso_grupo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                    }
-                    else
-                    {
-                        ingreso_g = DateTime.ParseExact(ingreso_grupo, "dd/MM/yy", CultureInfo.InvariantCulture);
-                    }
-
-                    var ingreso_uen = csv.GetField("INGRESO A LA UEN");
-                    DateTime ingreso_u;
-
-                    if (ingreso_uen.Length > 8)
-                    {
-                        ingreso_u = DateTime.ParseExact(ingreso_uen, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                    }
-                    else
-                    {
-                        ingreso_u = DateTime.ParseExact(ingreso_uen, "dd/MM/yy", CultureInfo.InvariantCulture);
-                    }
-
-
-
-                    if (ultimo != "-")
-                    {
-                        record = new Empleados
-                        {
-                            idsap = csv.GetField<int>("SAP"),
-                            nombre = csv.GetField("NOMBRE"),
-                            area = csv.GetField("AREA"),
-                            banda = csv.GetField("PUESTO"),
-                            fecha_ingreso_grupo = ingreso_g,
-                            fecha_ingreso_uen = ingreso_u,
-                            dias_disponibles = csv.GetField<int>("VACACIONES"),
-                            dias_gozados = csv.GetField<int>("DIAS GOZADOS"),
-                            email = csv.GetField("CORREO COLABORADOR"),
-                            idsap_padre = csv.GetField<int>("SAP_LINE"),
-                            nombre_line = csv.GetField("LINE MANAGER"),
-                            email_line = csv.GetField("CORREO LINE"),
-                            esquema = csv.GetField<int>("ESQUEMA"),
-                            rol = csv.GetField("ROL"),
-                            estatus = csv.GetField<int>("ESTATUS"),
-                            ultimo_desconecte = DateTime.ParseExact(csv.GetField("ULTIMO DESCONECTE"), "dd/MM/yy", CultureInfo.InvariantCulture)
-                        };
-                    }
-                    else
-                    {
-                        record = new Empleados
-                        {
-                            idsap = csv.GetField<int>("SAP"),
-                            nombre = csv.GetField("NOMBRE"),
-                            area = csv.GetField("AREA"),
-                            banda = csv.GetField("PUESTO"),
-                            fecha_ingreso_grupo = ingreso_g,
-                            fecha_ingreso_uen = ingreso_u,
-                            dias_disponibles = csv.GetField<int>("VACACIONES"),
-                            dias_gozados = csv.GetField<int>("DIAS GOZADOS"),
-                            email = csv.GetField("CORREO COLABORADOR"),
-                            idsap_padre = csv.GetField<int>("SAP_LINE"),
-                            nombre_line = csv.GetField("LINE MANAGER"),
-                            email_line = csv.GetField("CORREO LINE"),
-                            esquema = csv.GetField<int>("ESQUEMA"),
-                            rol = csv.GetField("ROL"),
-                            estatus = csv.GetField<int>("ESTATUS"),
-                            ultimo_desconecte = null
-                        };
-                    }
-
                     
-                    record.previo = 0;
+                        Empleados record;
+                        var ultimo = csv.GetField("ULTIMO DESCONECTE");
 
-                    records.Add(record);
+
+                        var ingreso_grupo = csv.GetField("FECHA INGRESO GRUPO");
+                        if (ingreso_grupo != "")
+                        {
+                            DateTime ingreso_g;
+
+                            if (ingreso_grupo.Length > 8)
+                            {
+                                ingreso_g = DateTime.ParseExact(ingreso_grupo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                            }
+                            else
+                            {
+                                ingreso_g = DateTime.ParseExact(ingreso_grupo, "dd/MM/yy", CultureInfo.InvariantCulture);
+                            }
+
+                            var ingreso_uen = csv.GetField("INGRESO A LA UEN");
+                            DateTime ingreso_u;
+
+                            if (ingreso_uen.Length > 8)
+                            {
+                                ingreso_u = DateTime.ParseExact(ingreso_uen, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                            }
+                            else
+                            {
+                                ingreso_u = DateTime.ParseExact(ingreso_uen, "dd/MM/yy", CultureInfo.InvariantCulture);
+                            }
+
+                            
+
+                            int d_idsap = csv.GetField<int>("SAP");
+                            string d_nombre = csv.GetField("NOMBRE");
+                            string d_rfc = csv.GetField("RFC");
+                            string d_area = csv.GetField("AREA");
+                            string d_banda = csv.GetField("PUESTO");
+                            DateTime d_fecha_ingreso_grupo = ingreso_g;
+                            DateTime d_fecha_ingreso_uen = ingreso_u;
+                            int d_dias_disponibles = csv.GetField<int>("VACACIONES");
+                            int d_dias_gozados = csv.GetField<int>("DIAS GOZADOS");
+                            string d_email = csv.GetField("CORREO COLABORADOR");
+                            int d_idsap_padre = csv.GetField<int>("SAP_LINE");
+                            string d_nombre_line = csv.GetField("LINE MANAGER");
+                            string d_email_line = csv.GetField("CORREO LINE");
+                            int d_esquema = csv.GetField<int>("ESQUEMA");
+                            string d_rol = csv.GetField("ROL");
+                            int d_estatus = csv.GetField<int>("ESTATUS");
+
+                            string previo = csv.GetField("PREVIO");
+
+                           
+                            if (ultimo != "-")
+                            {
+                                DateTime d_ultimo;
+                                if (ultimo.Length > 8)
+                                {
+                                    d_ultimo = DateTime.ParseExact(ultimo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                                }
+                                else
+                                {
+                                    d_ultimo = DateTime.ParseExact(ultimo, "dd/MM/yy", CultureInfo.InvariantCulture);
+                                }
+
+                                record = new Empleados
+                                {
+                                    idsap = d_idsap,
+                                    nombre = d_nombre,
+                                    area = d_area,
+                                    banda = d_banda,
+                                    fecha_ingreso_grupo = d_fecha_ingreso_grupo,
+                                    fecha_ingreso_uen = d_fecha_ingreso_uen,
+                                    dias_disponibles = d_dias_disponibles,
+                                    dias_gozados = d_dias_gozados,
+                                    email = d_email,
+                                    idsap_padre = d_idsap_padre,
+                                    nombre_line = d_nombre_line,
+                                    email_line = d_email_line,
+                                    esquema = d_esquema,
+                                    rol = d_rol,
+                                    estatus = d_estatus,
+                                    ultimo_desconecte = d_ultimo,
+                                    rfc =d_rfc
+                                };
+                            }
+                            else
+                            {
+                                record = new Empleados
+                                {
+                                    idsap = d_idsap,
+                                    nombre = d_nombre,
+                                    area = d_area,
+                                    banda = d_banda,
+                                    fecha_ingreso_grupo = d_fecha_ingreso_grupo,
+                                    fecha_ingreso_uen = d_fecha_ingreso_uen,
+                                    dias_disponibles = d_dias_disponibles,
+                                    dias_gozados = d_dias_gozados,
+                                    email = d_email,
+                                    idsap_padre = d_idsap_padre,
+                                    nombre_line = d_nombre_line,
+                                    email_line = d_email_line,
+                                    esquema = d_esquema,
+                                    rol = d_rol,
+                                    estatus = d_estatus,
+                                    ultimo_desconecte = null,
+                                    rfc = d_rfc
+                                };
+                            }
+
+
+                            record.previo = (previo == "") ? 0 : Convert.ToInt32(previo);
+
+                            records.Add(record);
+                        }
+                   
                 }
                 return records;
             }
@@ -395,6 +493,7 @@ namespace desconectate.Controllers
             }
             catch(Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return false;
             }
         }

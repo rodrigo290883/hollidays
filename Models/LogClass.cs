@@ -41,7 +41,7 @@ namespace desconectate.Models
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine(ex.Message);
                 return 0;
             }
 

@@ -163,6 +163,7 @@ namespace desconectate.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return false;
             }
         }

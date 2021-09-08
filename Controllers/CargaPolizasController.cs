@@ -53,7 +53,23 @@ namespace desconectate.Controllers
 
                 var extractPath = @"./Polizas";
 
-                ZipFile.ExtractToDirectory("temp.zip", extractPath,true);
+                extractPath = Path.GetFullPath(extractPath);
+
+                //ZipFile.ExtractToDirectory("temp.zip", extractPath,true);
+
+                using (ZipArchive archive = ZipFile.OpenRead("temp.zip"))
+                {
+                    foreach (ZipArchiveEntry entry in archive.Entries)
+                    {
+                        if (entry.FullName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var destino_path = Path.Combine(extractPath, entry.FullName);
+                            
+                            entry.ExtractToFile(destino_path,true);
+                        }
+                    }
+                }
+
 
                 return Content("1");
             }

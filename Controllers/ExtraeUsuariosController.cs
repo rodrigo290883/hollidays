@@ -42,15 +42,15 @@ namespace desconectate.Controllers
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("select e.idsap,e.nombre,e.email,e.contrasena,CONVERT(date,e.fecha_ingreso_grupo) as fecha_ingreso_grupo ,CONVERT(date,e.fecha_ingreso_uen) as fecha_ingreso_uen ,e.idsap_padre as idsap_line,e.nombre_line,e.esquema,e.rol,rd.periodo,rd.disponibles " +
-                    "from empleados e left join registros_dias rd on e.idsap = rd.idsap and rd.registro_padre = 0 and rd.caducidad >= getdate() and rd.disponibles != 0  WHERE estatus != 2", conn);
+                SqlCommand cmd = new SqlCommand("select e.idsap,e.nombre,e.email,e.contrasena,CONVERT(date,e.fecha_ingreso_grupo) as fecha_ingreso_grupo ,CONVERT(date,e.fecha_ingreso_uen) as fecha_ingreso_uen ,e.idsap_padre as idsap_line,e.nombre_line,e.esquema,e.rol,rd.periodo,rd.dias,rd.disponibles " +
+                    ",(select SUM(dias) from registros_dias r where r.idsap = e.idsap and r.registro_padre = rd.registro and r.tipo = 0 and folio_solicitud IS NOT NULL GROUP BY r.registro_padre ) as solicitados from empleados e left join registros_dias rd on e.idsap = rd.idsap and rd.registro_padre = 0 and rd.caducidad >= getdate()  WHERE estatus != 2", conn);
                 
 
                 SqlDataReader sqlReader = cmd.ExecuteReader();
 
                 while (sqlReader.Read())
                 {
-                    records.Add(new Registro { IDSAP = sqlReader[0].ToString(), NOMBRE = sqlReader[1].ToString(), EMAIL = sqlReader[2].ToString(), CONTRASENA = sqlReader[3].ToString(), FECHA_INGRESO_GRUPO = sqlReader[4].ToString(), FECHA_INGRESO_UEN = sqlReader[5].ToString(), IDSAP_LINE = sqlReader[6].ToString(), NOMBRE_LINE = sqlReader[7].ToString(), ESQUEMA = sqlReader[8].ToString(), ROL = sqlReader[9].ToString(), PERIODO = sqlReader[10].ToString(), DISPONIBLES = sqlReader[11].ToString() });
+                    records.Add(new Registro { IDSAP = sqlReader[0].ToString(), NOMBRE = sqlReader[1].ToString(), EMAIL = sqlReader[2].ToString(), CONTRASENA = sqlReader[3].ToString(), FECHA_INGRESO_GRUPO = sqlReader[4].ToString(), FECHA_INGRESO_UEN = sqlReader[5].ToString(), IDSAP_LINE = sqlReader[6].ToString(), NOMBRE_LINE = sqlReader[7].ToString(), ESQUEMA = sqlReader[8].ToString(), ROL = sqlReader[9].ToString(), PERIODO = sqlReader[10].ToString(), DIAS = sqlReader[11].ToString(), DISPONIBLES = sqlReader[12].ToString(), SOLICITADOS= sqlReader[13].ToString() });
                 }
 
                 sqlReader.Close();
@@ -85,7 +85,9 @@ namespace desconectate.Controllers
             public string ESQUEMA { get; set; }
             public string ROL { get; set; }
             public string PERIODO { get; set; }
+            public string DIAS { get; set; }
             public string DISPONIBLES { get; set; }
+            public string SOLICITADOS { get; set; }
         }
 
 
@@ -103,6 +105,7 @@ namespace desconectate.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return Content("No se encontro el archivo de poliza, favor de contactar a recursos humanos.");
             }
 

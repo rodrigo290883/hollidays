@@ -95,6 +95,7 @@ namespace desconectate.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return Content("No se encontro el archivo de poliza, favor de contactar a recursos humanos.   "+id);
             }
         

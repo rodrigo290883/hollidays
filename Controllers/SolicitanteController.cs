@@ -77,32 +77,24 @@ namespace desconectate.Controllers
 
                     SqlDataReader sqlReader2 = cmd2.ExecuteReader();
 
-                    var count = 0;
+                    var disponibles = 0;
+                    var tomados = 0;
+
 
                     while (sqlReader2.Read())
                     {
-                        count++;
+                        disponibles = disponibles + sqlReader2.GetInt32(0);
+                        tomados = tomados + sqlReader2.GetInt32(3);
                     }
-
                     sqlReader2.Close();
+
                     sqlReader2 = cmd2.ExecuteReader();
+                    sqlReader2.Read();
 
-                    if(count > 1)
-                    {
-                        sqlReader2.Read();
-                        if(sqlReader2.GetInt32(0) == 0)
-                            sqlReader2.Read();
-
-                    }
-                    else
-                    {
-                        sqlReader2.Read();
-                    }
-
-                    empleado.dias_disponibles = sqlReader2.IsDBNull(0) ? 0 : sqlReader2.GetInt32(0);
+                    empleado.dias_disponibles = disponibles;
                     empleado.caducidad = Convert.ToDateTime(sqlReader2.IsDBNull(1) ? null : sqlReader2[1]);
                     ViewBag.periodo = sqlReader2[2].ToString();
-                    ViewBag.dias_tomados = sqlReader2[3].ToString();
+                    ViewBag.dias_tomados = tomados;
                     empleado.meses_ultimo_desconecte = sqlReader2.IsDBNull(4) ? 100 : sqlReader2.GetInt32(4);
                     empleado.ultimo_desconecte = Convert.ToDateTime(sqlReader2.IsDBNull(5) ? null : sqlReader2[5]);
 
@@ -112,7 +104,13 @@ namespace desconectate.Controllers
 
                     List<TipoSolicitud> lst = new List<TipoSolicitud>();
 
-                    cmd = new SqlCommand("SELECT * FROM ctipos_solicitud WHERE seleccionable = 1", conn);
+                    if (empleado.esquema == 1)
+                    {
+                        cmd = new SqlCommand("SELECT * FROM ctipos_solicitud WHERE seleccionable = 1 and id_tipo_solicitud != 6", conn);
+                    }
+                    else {
+                        cmd = new SqlCommand("SELECT * FROM ctipos_solicitud WHERE seleccionable = 1", conn);
+                    }
 
                     sqlReader = cmd.ExecuteReader();
 
@@ -125,7 +123,8 @@ namespace desconectate.Controllers
 
                     sqlReader.Close();
 
-                    cmd = new SqlCommand("SELECT convert(varchar,fecha) FROM cdias_festivos WHERE pais = 'MX'", conn);
+                    cmd = new SqlCommand("SELECT convert(varchar,fecha) FROM cdias_festivos WHERE pais = 'MX' and esquema = @esquema ;", conn);
+                    cmd.Parameters.AddWithValue("@esquema", empleado.esquema);
 
                     sqlReader = cmd.ExecuteReader();
                     string cadena = "'0'";
@@ -317,7 +316,7 @@ namespace desconectate.Controllers
             }
             catch (Exception ex)
             {
-                return Content("No se encontro el archivo de poliza, favor de contactar a recursos humanos.");
+                return Content("Upss!!, tu póliza básica no se encuentra disponible. Solicítala a: seguros.modelo@aon.com     \nY en una emergencia busca a tu BP de People");
             }
         
         }

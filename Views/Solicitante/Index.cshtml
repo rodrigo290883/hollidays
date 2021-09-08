@@ -253,6 +253,10 @@
                         <i class="far fa-eye" id="ShowPass" name="ShowPass"></i>
                     </div>
                 </div>
+                <br />
+                <p>Tu contraseña debe ser mayor a 8 caracteres</p>
+                <p>Contener por lo menos una Mayuscula, minuscula y un caracter especial (. ó *)</p>
+                
             </div>
             <div class="modal-footer">
                 <button id="SavePass" type="button" class="btn btn-primary">Guardar Contraseña</button>
@@ -277,6 +281,7 @@
         var dias_habiles = 0;
         var dias_detalle = "";
         var dias_pasados = false;
+        var esquema = @empleado.esquema;
 
 
         //-------Se obtienen los dias feriados
@@ -319,17 +324,39 @@
             }
         });
 
+        function ValidatePass(pass) {
+            var mensaje = "";
+
+            if (pass.length < 8 || pass.length > 20) {
+                mensaje = mensaje + "\nEl password debe ser por lo menos de 8 caracteres, y un maximo de 20";
+            }
+
+            if (!/^(?=.*[a-z])/.test(pass)){
+                mensaje = mensaje + "\nEl password debe contener por lo menos una minuscula";
+            }
+            if (!/^(?=.*[A-Z])/.test(pass)){
+                mensaje = mensaje + "\nEl password debe contener por lo menos una mayuscula";
+            }
+            if (!/^(?=.*[.*])/.test(pass)) {
+                mensaje = mensaje + "\nEl password debe contener por lo menos un punto o asterisco";
+            }
+
+            return mensaje;
+        }
+
         $("#SavePass").click(function () {
 
             var passnew = $("#nuevoPass").val();
 
-            if(passnew != '') {
-                SavePass();
-            } else {
+            var mensaje = ValidatePass(passnew)
 
+            if (mensaje == '') {
+                SavePass();
+            }
+            else {
                 swal({
                     title: 'Error!',
-                    text: "El campo nueva contraseña esta vacío ",
+                    text: mensaje,
                     icon: 'error',
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
@@ -398,39 +425,44 @@
 
 
         $("#b_solicitud").bind('click', function () {
+            debugger;
             if (bandera == 0) {
+                if (dias_detalle != '') {
+                    if ($("#i_fecha_inicio").val() == "" || $("#ta_observacion").val() == "") {
+                        swal("Ocurrio un Error", "Debes seleccionar una fecha e ingresar una observacion", "warning");
+                    }
+                    else {
+                        url = "@Url.Content("~/Solicitante/CreaSolicitud")";
+                        parametros = {
+                            "idsap":@empleado.idsap,
+                            "idsap_aprobador":@empleado.idsap_padre,
+                            "nombre_aprobador": $("#nombre_aprobador").val(),
+                            "email_aprobador": $("#email_aprobador").val(),
+                            "fecha_inicio": $("#i_fecha_inicio").attr('alt'),
+                            "fecha_fin": $("#i_fecha_fin").attr('alt'),
+                            "tipo_solicitud": $("#s_tipo_solicitud").val(),
+                            "observacion_solicitante": $("#ta_observacion").val(),
+                            "dias": dias_habiles,
+                            "dias_detalle": dias_detalle
+                        };
 
-                if ($("#i_fecha_inicio").val() == "" || $("#ta_observacion").val() == "") {
-                    swal("Ocurrio un Error", "Debes seleccionar una fecha e ingresar una observacion", "warning");
+                        $.post(url, parametros, function (data) {
+                            if (!isNaN(data)) {
+                                $('#solicitudModal').modal('hide');
+                                actualizaLista();
+                                limpiaFechas();
+                                limpiaForma();
+                                swal("Felicidades", "Tu solicitud se registro Correctamente", "success");
+                                EnviaCorreo(data);
+
+                            } else {
+                                swal("Ocurrio un Error", data, "error");
+                            }
+                        });
+                    }
                 }
                 else {
-                    url = "@Url.Content("~/Solicitante/CreaSolicitud")";
-                    parametros = {
-                        "idsap":@empleado.idsap,
-                        "idsap_aprobador":@empleado.idsap_padre,
-                        "nombre_aprobador": $("#nombre_aprobador").val(),
-                        "email_aprobador": $("#email_aprobador").val(),
-                        "fecha_inicio": $("#i_fecha_inicio").attr('alt'),
-                        "fecha_fin": $("#i_fecha_fin").attr('alt'),
-                        "tipo_solicitud": $("#s_tipo_solicitud").val(),
-                        "observacion_solicitante": $("#ta_observacion").val(),
-                        "dias": dias_habiles,
-                        "dias_detalle": dias_detalle
-                    };
-
-                    $.post(url, parametros, function (data) {
-                        if (!isNaN(data)) {
-                            $('#solicitudModal').modal('hide');
-                            actualizaLista();
-                            limpiaFechas();
-                            limpiaForma();
-                            swal("Felicidades", "Tu solicitud se registro Correctamente", "success");
-                            EnviaCorreo(data);
-
-                        } else {
-                            swal("Ocurrio un Error", data, "error");
-                        }
-                    });
+                    swal("Ocurrio un Error", "Tu seleccion no se puede crear, los dias seleccionados no contienen dias laborales", "error");
                 }
             }
             else {
@@ -489,6 +521,7 @@
                             var cont_habiles = 0;
                             var cont_inhabiles = 0;
                             var cont_feriados = 0;
+                            var cont_naturales = 0;
 
                             var inicio = moment(vacaciones[0]);
 
@@ -503,7 +536,7 @@
 
                                 var diasemana = i.isoWeekday();
                                 diasemana--;
-
+                                cont_naturales++;
                                 if (rol[diasemana] == "1") {
 
                                     if (feriados.find(contieneMoment, i) != undefined)
@@ -511,6 +544,7 @@
                                     else {
                                         dias_detalle = dias_detalle + i.format("YYYY-MM-DD") + ",";
                                         cont_habiles++;
+
                                     }
                                 }
                                 else {
@@ -521,14 +555,26 @@
                             dias_detalle = dias_detalle.substring(0, dias_detalle.length - 1);
 
                             dias_habiles = cont_habiles;
+
                             //swal("Detalle Solicitud", "Max_dias:" + maximo_dias + "\nDias habiles:" + cont_habiles + "\n Feriados:" + cont_feriados + "\n inhabiles:" + cont_inhabiles + "\n Detalle: " + dias_detalle, "success");
 
-                            if (cont_habiles > maximo_dias) {
-                                swal("Cuidado", "Tu seleccion sobrepasa los dias permitidos", "warning");
-                                bandera = 1;
+                            if (esquema == 1) {
+                                if (cont_naturales > maximo_dias) {
+                                    swal("Cuidado", "Tu seleccion sobrepasa los dias permitidos", "warning");
+                                    bandera = 1;
+                                }
+                                else {
+                                    bandera = 0;
+                                }
                             }
                             else {
-                                bandera = 0;
+                                if (cont_habiles > maximo_dias) {
+                                    swal("Cuidado", "Tu seleccion sobrepasa los dias permitidos", "warning");
+                                    bandera = 1;
+                                }
+                                else {
+                                    bandera = 0;
+                                }
                             }
                             // se cuentan los dias habiles
                             var fecha_inicio = new Date(vacaciones[0]);

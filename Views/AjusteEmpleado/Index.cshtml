@@ -1,0 +1,536 @@
+﻿@{
+
+    ViewData["Title"] = "AjusteEmpleado|Desconéctate";
+
+    var tipo = ViewBag.tipo;
+    if (tipo == "A")
+        Layout = "~/Views/Shared/_LayoutSessionA.cshtml";
+    else if (tipo == "R")
+        Layout = "~/Views/Shared/_LayoutSessionR.cshtml";
+
+}
+
+<link rel="stylesheet" href="lib/bootstrap-select/dist/css/bootstrap-select.css" />
+
+<style>
+
+    body {
+        background-image: url("images/doodle-background.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: bottom right;
+        color: #5c2a7e;
+    }
+
+    #i_doodle {
+        width: 30%;
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+    }
+
+
+    .wrap_date {
+        width: 150px; /* adjust to desired wrapping */
+        display: table;
+        white-space: pre-wrap; /* css-3 */
+        white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+        white-space: -pre-wrap; /* Opera 4-6 */
+        white-space: -o-pre-wrap; /* Opera 7 */
+        word-wrap: break-word; /* Internet Explorer 5.5+ */
+    }
+
+    #t_resultados{
+        width: 100%;
+        height: 300px;
+        overflow: auto;
+    }
+
+    .renglon_resultados{
+        cursor: pointer;
+    }
+</style>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <label class="form-label" for="i_busqueda">Busqueda: </label>
+            <input id="i_busqueda" type="text" class="form-control" name="busqueda" />
+        </div>
+    </div>
+    <div class="row mt-1">
+        <div class="col-12">
+            <table class="table table-responsive table-striped" id="t_resultados">
+                <thead style="background-color: #821c61; color: white; ">
+                    <tr>
+                        <th scope="col">IDSAP</th>
+                        <th>NOMBRE</th>
+                        <th scope="col">AREA</th>
+                        <th scope="col">PUESTO</th>
+                        <th scope="col">CORREO</th>
+                        <th scope="col">LINE MANAGER</th>
+                        <th scope="col">ESQUEMA</th>
+                        <th scope="col">ESTATUS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="d_info">
+    <div class="row align-items-center">
+        <div class="col-10">
+            <div class="row mt-1">
+                <div class="col-12">
+                    <h3>NOMBRE: <b id="data_nombre"></b></h3>
+                    <h4>IDSAP: <b id="data_idsap"></b></h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6 font-weight-bold">AREA: <b id="data_area"></b></div>
+                <div class="col-6 font-weight-bold">PUESTO: <b id="data_banda"></b></div>
+            </div>
+            <div class="row">
+                <div class="col-6 font-weight-bold">ANTIGÜEDAD: <b id="data_antiguedad"></b></div>
+                <div class="col-6 font-weight-bold">FECHA INGRESO GRUPO: <b id="data_ingreso_grupo"></b></div>
+            </div>
+            <div class="row">
+                <div class="col-6 font-weight-bold">EMAIL: <b id="data_email"></b></div>
+                <div class="col-6 font-weight-bold">FECHA INGRESO UEN: <b id="data_ingreso_uen"></b></div>
+            </div>
+            <div class="row">
+                <div class="col-6 font-weight-bold">LINE MANAGER: <b id="data_nombre_line"></b></div>
+                <div class="col-6 font-weight-bold">ID LINE: <b id="data_idsap_line"></b></div>
+            </div>
+            <div class="row">
+                <div class="col-6 font-weight-bold">EMAIL LINE: <b id="data_email_line"></b></div>
+                <div class="col-6 font-weight-bold">ESTATUS: <b id="data_estatus"></b></div>
+            </div>
+            <div class="row">
+                <div class="col-6 font-weight-bold">ESQUEMA: <b id="data_esquema"></b></div>
+                <div class="col-6 font-weight-bold">ROL: <b id="data_rol"></b></div>
+            </div>
+        </div>
+        <div class="col-2">
+            <button class="btn btn-desconectate" data-toggle="modal" data-target="#editarModal" id="b_editar_empleado" alt="" >Editar Usuario</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <table id="t_registros" class="table">
+                <thead style="background-color: #821c61; color: white; ">
+                    <tr>
+                        <th scope="col">REGISTRO</th>
+                        <th>GENERADO</th>
+                        <th scope="col">PERIODO</th>
+                        <th scope="col">CADUCIDAD</th>
+                        <th scope="col">DIAS</th>
+                        <th scope="col">DISPONIBLES</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="editarModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edición de Empleado</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                
+                <div class="container">
+                    <form id="form_edit">
+                        <div class="row">
+                            <div class="col-6"><label>idSAP:</label><p id="edit_idsap"></p></div>
+                            <div class="col-6"><label>Nombre:</label><input class="form-control" id="edit_nombre" /></div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-6"><label class="form-label" for="edit_area">Area:</label><input class="form-control" id="edit_area" /></div>
+                            <div class="col-6"><label class="form-label" for="edit_banda">Puesto:</label><input class="form-control" id="edit_banda" /></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6"><label class="form-label" for="edit_ingreso_grupo">Fecha Ingreso Grupo:</label><input class="form-control" id="edit_ingreso_grupo" /></div>
+                            <div class="col-6"><label class="form-label" for="edit_ingreso_uen">Fecha Ingreso UEN:</label><input class="form-control" id="edit_ingreso_uen" /></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6"><label class="form-label" for="edit_email">Email:</label><input class="form-control" id="edit_email" /></div>
+                            <div class="col-6"><label class="form-label" for="edit_nombre_line">Nombre Line:</label><input class="form-control" id="edit_nombre_line" /></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6"><label class="form-label" for="edit_idsap_line">idSAP Line:</label><input class="form-control" id="edit_idsap_line" /></div>
+                            <div class="col-6"><label class="form-label" for="edit_email_line">Email Line:</label><input class="form-control" id="edit_email_line" /></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="form-label" for="edit_esquema">Esquema:</label><br />
+                                <select class="selectpicker" id="edit_esquema">
+                                    <option value="0">Diblo</option>
+                                    <option value="1">EDM</option>
+                                    <option value="2">EDM Corporativo</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label" for="edit_rol">Rol:</label><br />
+                                <select class="selectpicker" id="edit_rol">
+                                    @foreach (var opt in ViewBag.Roles)
+                                    {
+                                        <option value="@opt.value">@opt.desc</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="form-label" for="edit_estatus">Estatus:</label><br />
+                                <select class="selectpicker" id="edit_estatus">
+                                    <option value="0">CREADO</option>
+                                    <option value="1">ACTIVO</option>
+                                    <option value="2">BAJA</option>
+                                </select>
+                            </div>  
+                        </div>
+                    </form>
+                </div>
+                        
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-desconectate" id="b_editar">Save</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="editarRegistroModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edición de Registro</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col-6"><label class="form-label" for="edit_periodo">Periodo:</label><p id="edit_periodo"></p></div>
+                        <div class="col-6"><label class="form-label" for="edit_caducidad">Caducidad:</label><input class="form-control" id="edit_caducidad" /></div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-6"><label class="form-label" for="edit_dias">Dias:</label><input class="form-control" id="edit_dias" /></div>
+                        <div class="col-6"><label class="form-label" for="edit_disponibles">Disponibles:</label><input class="form-control" id="edit_disponibles" /></div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-desconectate" id="b_editar_registro" alt="">Save</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="lib/bootstrap-select/dist/js/bootstrap-select.js"></script>
+<script src="lib/moment/dist/js/moment.js"></script>
+
+<script>
+    var idsap_selected = 0;
+
+    $(function () {
+
+        $("#d_info").hide();
+        $("#t_resultados").hide();
+
+        $("#i_busqueda").change(function () {
+            var valor = $(this).val();
+
+            if (valor.length >= 3) {
+
+                url = "@Url.Content("~/AjusteEmpleado/Buscar")"
+
+
+                $.post(url, {'valor': valor}, function (data) {
+                    var num = data.length;
+
+                    if (num > 0) {
+                        $("#t_resultados").show();
+                    } else {
+                        $("#t_resultados").hide();
+                    }
+
+                    $("#t_resultados tbody").html("");
+                    for (var i = 0; i < num; i++) {
+                        var dato = data[i];
+
+                        html = '<tr class="renglon_resultados" alt="' + dato.idsap + '"><td>' + dato.idsap + '</td><td>' + dato.nombre + '</td><td>' + dato.area + '</td><td>' + dato.banda + '</td><td>' + dato.email + '</td><td>' + dato.nombre_line + '</td><td>' + dato.esquema + '</td><td>' + dato.estatus + '</td></tr>';
+                        $("#t_resultados tbody").append(html);
+                    }
+                });
+
+            }
+        });
+
+        $('#t_resultados').on('click', '.renglon_resultados', function () {
+            var idsap = $(this).attr('alt');
+
+            url = "@Url.Content("~/AjusteEmpleado/solicitudInfo")"
+
+                $.post(url, { "valor": idsap }, function (data) {
+
+                    $("#data_idsap").html(data.idsap);
+                    $("#edit_idsap").html(data.idsap);
+                    $("#data_nombre").html(data.nombre);
+                    $("#edit_nombre").val(data.nombre);
+                    $("#data_area").html(data.area);
+                    $("#edit_area").val(data.area);
+                    $("#data_banda").html(data.banda);
+                    $("#edit_banda").val(data.banda);
+
+                    $("#data_antiguedad").html(parseInt(data.antiguedad / 12) + " años y " + (data.antiguedad % 12) + " meses ");
+                    $("#data_ingreso_grupo").html(new Date(data.fecha_ingreso_grupo).formatDDMMYYYY());
+                    $("#edit_ingreso_grupo").val(new Date(data.fecha_ingreso_grupo).formatDDMMYYYY());
+                    $("#data_ingreso_uen").html(new Date(data.fecha_ingreso_uen).formatDDMMYYYY());
+                    $("#edit_ingreso_uen").val(new Date(data.fecha_ingreso_uen).formatDDMMYYYY());
+                    $("#data_email").html(data.email);
+                    $("#edit_email").val(data.email);
+
+                    $("#data_nombre_line").html(data.nombre_line);
+                    $("#edit_nombre_line").val(data.nombre_line);
+                    $("#data_idsap_line").html(data.idsap_padre);
+                    $("#edit_idsap_line").val(data.idsap_padre);
+                    $("#data_email_line").html(data.email_line);
+                    $("#edit_email_line").val(data.email_line);
+
+                    $("#data_estatus").html(data.estatus);
+                    $("#edit_estatus").selectpicker('val', data.estatus);
+
+                    $("#data_pais").html(data.pais);
+
+                    $("#data_esquema").html(data.nombre_esquema);
+                    $("#edit_esquema").selectpicker('val', data.esquema);
+                    $("#data_rol").html(data.nombre_rol);
+                    $("#edit_rol").selectpicker('val', data.rol);
+
+                    $("#b_editar_empleado").attr('alt', data.idsap);
+
+                    idsap_selected = data.idsap;
+
+                    $("#d_info").show();
+
+                });
+
+            url = "@Url.Content("~/AjusteEmpleado/solicitudRegistros")"
+
+            $.post(url, { "valor": idsap }, function (data) {
+
+                var num = data.length;
+
+                if (num > 0) {
+                    $("#t_registros").show();
+                } else {
+                    $("#t_registros").hide();
+                }
+
+                $("#t_registros tbody").html("");
+                for (var i = 0; i < num; i++) {
+                    var dato = data[i];
+
+                    html = '<tr class="renglon_registros" alt="' + dato.registro + '"><td>' + dato.registro + '</td><td>' + new Date(dato.generado).formatDDMMYYYY() + '</td><td>' + dato.periodo + '</td><td>' + new Date(dato.caducidad).formatDDMMYYYY() + '</td><td>' + dato.dias + '</td><td>' + dato.disponibles + '</td><td><button class="btn btn-desconectate btn_editar_registro" alt="' + dato.registro + '">EDITAR</button></td></tr>';
+                    $("#t_registros tbody").append(html);
+                }
+
+            });
+        });
+
+        $("#t_registros").on('click',".btn_editar_registro",function(){
+            var registro = $(this).attr('alt');
+
+    
+
+            url = "@Url.Content("~/AjusteEmpleado/solicitudInfoRegistro")"
+
+            $.post(url, { "valor": registro }, function (data) {
+
+                $("#edit_periodo").html(data.periodo);
+
+
+                $("#edit_caducidad").val(new Date(data.caducidad).formatDDMMYYYY());
+                $("#edit_dias").val(data.dias);
+                $("#edit_disponibles").val(data.disponibles);
+
+                $("#b_editar_registro").attr('alt', data.registro);
+
+                $("#editarRegistroModal").modal('show');
+
+            });
+        });
+
+        $("#b_editar_registro").click(function () {
+            var registro = $(this).attr('alt');
+
+            try {
+                var fecha = $("#edit_caducidad").val().formatYYYYMMDD();
+                var caducidad = moment(fecha);
+                if (caducidad.isSameOrAfter(moment())) {
+                    if (caducidad.isValid()) {
+                        var options = { 'registro': registro, 'caducidad': $("#edit_caducidad").val().formatYYYYMMDD(), 'dias': $("#edit_dias").val(), 'disponibles': $("#edit_disponibles").val() }
+
+                        url = "@Url.Content("~/AjusteEmpleado/EditarRegistro")"
+
+                        $.post(url, options, function (data) {
+
+                            if (data == 1) {
+                                url = "@Url.Content("~/AjusteEmpleado/solicitudRegistros")"
+
+                                $.post(url, { "valor": idsap_selected }, function (data) {
+
+                                    var num = data.length;
+
+                                    if (num > 0) {
+                                        $("#t_registros").show();
+                                    } else {
+                                        $("#t_registros").hide();
+                                    }
+
+                                    $("#t_registros tbody").html("");
+                                    for (var i = 0; i < num; i++) {
+                                        var dato = data[i];
+
+                                        html = '<tr class="renglon_registros" alt="' + dato.registro + '"><td>' + dato.registro + '</td><td>' + new Date(dato.generado).formatDDMMYYYY() + '</td><td>' + dato.periodo + '</td><td>' + new Date(dato.caducidad).formatDDMMYYYY() + '</td><td>' + dato.dias + '</td><td>' + dato.disponibles + '</td><td><button class="btn btn-desconectate btn_editar_registro" alt="' + dato.registro + '">EDITAR</button></td></tr>';
+                                        $("#t_registros tbody").append(html);
+                                    }
+
+                                    $("#editarRegistroModal").modal('hide');
+
+                                    url = "@Url.Content("~/AjusteEmpleado/logCambios")"
+
+                                    $.post(url, { "idsap": idsap_selected, "cambios": JSON.stringify(options) }, function (data2) { });
+
+                                    swal("Correcto!", "El registro se edito de manera correcta", "success");
+                                });
+                            }
+                            else {
+                                swal("Error!", "No se actualizó la información", "error");
+                            }
+                        });
+                    }
+                    else {
+                        swal("Error!", "Formato de Fecha incorrecto", "error");
+                    }
+                }
+                else {
+                    swal("Error!", "La fecha no puede ser menor o igual al dia de hoy", "error");
+                }
+            }
+            catch (error) {
+                swal("Error!", "Formato de Fecha incorrecto", "error");
+            }
+
+
+        });
+
+
+        $("#b_editar").click(function () {
+
+            var options = {
+                'idsap': $("#edit_idsap").html(),
+                'nombre': $("#edit_nombre").val(),
+                'area': $("#edit_area").val(),
+                'banda': $("#edit_banda").val(),
+                'fecha_ingreso_grupo': $("#edit_ingreso_grupo").val().formatYYYYMMDD(),
+                'fecha_ingreso_uen': $("#edit_ingreso_uen").val().formatYYYYMMDD(),
+                'email': $("#edit_email").val(),
+                'nombre_line': $("#edit_nombre_line").val(),
+                'idsap_padre': $("#edit_idsap_line").val(),
+                'email_line': $("#edit_email_line").val(),
+                'estatus': $("#edit_estatus").val(),
+                'esquema': $("#edit_esquema").val(),
+                'rol': $("#edit_rol").val()
+                };
+
+            //alert(JSON.stringify(options));
+
+            url = "@Url.Content("~/AjusteEmpleado/EditarInfo")"
+
+            $.post(url, options, function (data) {
+
+                if (data == 1) {
+                    $("#i_busqueda").change();
+
+                    url = "@Url.Content("~/AjusteEmpleado/solicitudInfo")"
+
+                    $.post(url, { "valor": idsap_selected }, function (data) {
+
+                        $("#data_idsap").html(data.idsap);
+                        $("#edit_idsap").html(data.idsap);
+                        $("#data_nombre").html(data.nombre);
+                        $("#edit_nombre").val(data.nombre);
+                        $("#data_area").html(data.area);
+                        $("#edit_area").val(data.area);
+                        $("#data_banda").html(data.banda);
+                        $("#edit_banda").val(data.banda);
+
+                        $("#data_antiguedad").html(parseInt(data.antiguedad / 12) + " años y " + (data.antiguedad % 12) + " meses ");
+                        $("#data_ingreso_grupo").html(new Date(data.fecha_ingreso_grupo).formatDDMMYYYY());
+                        $("#edit_ingreso_grupo").val(new Date(data.fecha_ingreso_grupo).formatDDMMYYYY());
+                        $("#data_ingreso_uen").html(new Date(data.fecha_ingreso_uen).formatDDMMYYYY());
+                        $("#edit_ingreso_uen").val(new Date(data.fecha_ingreso_uen).formatDDMMYYYY());
+                        $("#data_email").html(data.email);
+                        $("#edit_email").val(data.email);
+
+                        $("#data_nombre_line").html(data.nombre_line);
+                        $("#edit_nombre_line").val(data.nombre_line);
+                        $("#data_idsap_line").html(data.idsap_padre);
+                        $("#edit_idsap_line").val(data.idsap_padre);
+                        $("#data_email_line").html(data.email_line);
+                        $("#edit_email_line").val(data.email_line);
+
+                        $("#data_estatus").html(data.estatus);
+                        $("#edit_estatus").selectpicker('val', data.estatus);
+                        $("#data_pais").html(data.pais);
+
+                        $("#data_esquema").html(data.nombre_esquema);
+                        $("#edit_esquema").selectpicker('val', data.esquema);
+                        $("#data_rol").html(data.nombre_rol);
+                        $("#edit_rol").selectpicker('val', data.rol);
+
+                        $("#b_editar_empleado").attr('alt', data.idsap);
+
+                        $("#editarModal").modal('hide');
+
+                        url = "@Url.Content("~/AjusteEmpleado/logCambios")"
+
+                        $.post(url, { "idsap": idsap_selected, "cambios": JSON.stringify(options) }, function (data2) { });
+
+                        swal("Correcto!", "El registro se edito de manera correcta", "success");
+
+                    });
+                }
+                else {
+                    swal("Error!", "No se actualizó la información", "error");
+                }
+
+            });
+
+        });
+
+    });
+
+</script>

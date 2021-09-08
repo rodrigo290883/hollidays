@@ -16,6 +16,17 @@ Date.prototype.formatDDMMYYYY = function () {
         "/" + this.getFullYear();
 }
 
+String.prototype.formatYYYYMMDD = function () {
+
+    var aux = this.split('/');
+
+    var day = aux[0];
+    var month = aux[1];
+    var year = aux[2];
+
+    return new Date(year + "-" + month + "-" + day +" 00:00:00").toISOString();
+}
+
 $.expr[':'].contains = $.expr.createPseudo(function (arg) {
     return function (elem) {
         return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;

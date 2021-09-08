@@ -1,0 +1,82 @@
+﻿@{
+
+    ViewData["Title"] = "Reporte Polizas|Desconéctate";
+    Layout = "~/Views/Shared/_LayoutSessionP.cshtml";
+
+}
+
+<style>
+
+    body {
+        background-image: url("images/doodle-background.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: bottom right;
+        color: #5c2a7e;
+    }
+
+    #i_doodle {
+        width: 30%;
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+    }
+
+
+    .wrap_date {
+        width: 150px; /* adjust to desired wrapping */
+        display: table;
+        white-space: pre-wrap; /* css-3 */
+        white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+        white-space: -pre-wrap; /* Opera 4-6 */
+        white-space: -o-pre-wrap; /* Opera 7 */
+        word-wrap: break-word; /* Internet Explorer 5.5+ */
+    }
+
+    #t_Slt_Pendiente tr {
+        cursor: pointer;
+    }
+</style>
+
+
+
+<div>
+    <img id="i_doodle" src="images/imagen.png">
+</div>
+
+<div class="container">
+
+    <div class="row mt-2">
+        <div class="col-12">
+            <Strong><span style="font-size:x-large;">Polizas Cargadas</span></Strong>
+            <input class="ifiltro" tabla="t_polizas">
+            <table class="table table-responsive table-striped" id="t_polizas">
+                <thead style="background-color: #821c61; color: white; ">
+                    <tr>
+                        <th scope="col">IDSAP</th>
+                        <th>NOMBRE</th>
+                        <th scope="col">AREA</th>
+                        <th scope="col">PUESTO</th>
+                        <th scope="col">FECHA INGRESO</th>
+                        <th scope="col">ARCHIVO POLIZA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Poliza poliza in ViewBag.polizas)
+                    {
+                        <tr>
+                            <td>@poliza.idsap</td>
+                            <td>@poliza.nombre</td>
+                            <td>@poliza.area</td>
+                            <td>@poliza.banda</td>
+                            <td>@poliza.fecha_ingreso_grupo</td>
+                            <td>@poliza.archivo_poliza</td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+   
+</div>
